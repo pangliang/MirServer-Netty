@@ -1,14 +1,14 @@
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
-import io.netty.util.CharsetUtil;
 
 import java.util.List;
 
 /**
  * Created by liangwei on 16/2/16.
  */
-public class Bit6BufDecoder extends MessageToMessageDecoder<String> {
+public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     private byte[] decode6BitBuf(byte[] src)
     {
@@ -59,16 +59,17 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<String> {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, String msg, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
-        System.out.println("Bit6BufDecoder Recv >> " + msg);
+        byte sFlag = in.readByte();
+        byte cmdIndex = in.readByte();
 
-        msg = msg.replace("<<<<<KAQ<<<<<<<<<<<<<<<<<<<", "");
+        byte[] body = new byte[in.readableBytes()-1];
+        in.readBytes(body);
+        byte[] decodeBody = decode6BitBuf(body);
 
-        byte[] src = msg.substring(2).getBytes();
-        byte[] decodMsg = decode6BitBuf(src);
+        byte eFlag = in.readByte();
 
-
-        out.add(new String(decodMsg, CharsetUtil.UTF_8).trim());
+        out.add(Unpooled.wrappedBuffer(new byte[]{sFlag, cmdIndex}, decodeBody,new byte[]{eFlag}));
     }
 }

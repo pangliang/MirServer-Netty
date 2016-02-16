@@ -13,6 +13,8 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.CharsetUtil;
 
+import java.nio.ByteOrder;
+
 /**
  * Created by liangwei on 16/2/16.
  */
@@ -39,8 +41,9 @@ public class LoginGate {
                     ch.pipeline().addLast(
                             new LoggingHandler(LogLevel.INFO),
                             new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[] { '!' })),
-                            new StringDecoder(CharsetUtil.UTF_8),
                             new Bit6BufDecoder(),
+                            new LoggingHandler(LogLevel.INFO),
+                            new RequestDecoder(CharsetUtil.UTF_8),
                             new TestHandler());
                 }
             })

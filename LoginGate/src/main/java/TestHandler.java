@@ -16,8 +16,8 @@ public class TestHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        String cmd = (String)msg;
-        System.out.println(this.getClass().getName() + " Read >> " + cmd);
+        Request req = (Request)msg;
+        System.out.println(this.getClass().getName() + " Read >> " + req);
     }
 
     @Override
