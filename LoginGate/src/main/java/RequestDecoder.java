@@ -23,8 +23,8 @@ public class RequestDecoder extends MessageToMessageDecoder<ByteBuf> {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
         int size = in.readableBytes();
-        if(size < Request.DEFAULT_HEADER_SIZE)
-            throw new Request.WrongFormatException("packet size < " + Request.DEFAULT_HEADER_SIZE);
+        if(size < Request.DEFAULT_HEADER_SIZE + 2)
+            throw new Request.WrongFormatException("packet size < " + Request.DEFAULT_HEADER_SIZE + 2);
 
         if('#' != in.getByte(0) || '!' != in.getByte(size - 1))
             throw new Request.WrongFormatException("start or end flag not found");
