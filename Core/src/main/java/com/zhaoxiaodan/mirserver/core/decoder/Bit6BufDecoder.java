@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.logingate.decoder;
+package com.zhaoxiaodan.mirserver.core.decoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -32,7 +32,8 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 				break;
 			}
 
-			if (destPos >= len) break;
+			if (destPos >= len)
+				break;
 
 			if (madeBit + 6 >= 8) {
 				chCode = (byte) (tmp | ((ch & 0x3f) >> (6 - bitPos)));
@@ -63,10 +64,8 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 		byte[] body = new byte[in.readableBytes() - 1];
 		in.readBytes(body);
-		byte[] decodeBody = decode6BitBuf(body);
-
 		byte eFlag = in.readByte();
 
-		out.add(Unpooled.wrappedBuffer(new byte[]{sFlag, cmdIndex}, decodeBody, new byte[]{eFlag}));
+		out.add(Unpooled.wrappedBuffer(new byte[]{sFlag, cmdIndex}, decode6BitBuf(body), new byte[]{eFlag}));
 	}
 }

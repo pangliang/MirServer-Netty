@@ -1,3 +1,4 @@
 rootProject.name = 'MirServer-Netty'
 include 'LoginGate'
+include 'Core'
 

@@ -1,7 +1,9 @@
 package com.zhaoxiaodan.mirserver.logingate;
 
-import com.zhaoxiaodan.mirserver.logingate.decoder.Bit6BufDecoder;
-import com.zhaoxiaodan.mirserver.logingate.decoder.RequestDecoder;
+import com.zhaoxiaodan.mirserver.core.Config;
+import com.zhaoxiaodan.mirserver.core.decoder.Bit6BufDecoder;
+import com.zhaoxiaodan.mirserver.core.decoder.RequestDecoder;
+import com.zhaoxiaodan.mirserver.logingate.decoder.ProcessRequestDecoder;
 import com.zhaoxiaodan.mirserver.logingate.handler.TestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -21,6 +23,7 @@ import io.netty.util.CharsetUtil;
  * Created by liangwei on 16/2/16.
  */
 public class LoginGate {
+
 	private int port;
 
 	public LoginGate(int port) {
@@ -32,22 +35,12 @@ public class LoginGate {
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
 			ServerBootstrap b = new ServerBootstrap();
-			b.group(bossGroup, workerGroup)
-					.channel(NioServerSocketChannel.class)
-					.handler(new ChannelInitializer<SocketChannel>() {
-						@Override
-						public void initChannel(SocketChannel ch) throws Exception {
-							ch.pipeline().addLast(
-									new LoggingHandler(LogLevel.INFO),
-									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-									new Bit6BufDecoder(),
-									new LoggingHandler(LogLevel.INFO),
-									new RequestDecoder(CharsetUtil.UTF_8),
-									new TestHandler());
-						}
-					})
-					.option(ChannelOption.SO_BACKLOG, 128)
-					.childOption(ChannelOption.SO_KEEPALIVE, true);
+			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
+				@Override
+				public void initChannel(SocketChannel ch) throws Exception {
+					ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO), new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})), new ProcessRequestDecoder(CharsetUtil.UTF_8), new Bit6BufDecoder(), new LoggingHandler(LogLevel.INFO), new RequestDecoder(new LoginGateProtocols()), new TestHandler());
+				}
+			}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 
 			ChannelFuture f = b.bind(port).sync();
 

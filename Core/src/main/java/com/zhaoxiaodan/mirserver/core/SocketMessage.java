@@ -1,4 +1,8 @@
-package com.zhaoxiaodan.mirserver.logingate.request;
+package com.zhaoxiaodan.mirserver.core;
+
+import io.netty.buffer.ByteBuf;
+
+import java.nio.ByteOrder;
 
 /**
  * 请求封包类, 封包数据格式: * #符号开头 + 头部 + body + !符号结尾
@@ -33,16 +37,17 @@ package com.zhaoxiaodan.mirserver.logingate.request;
  * </pre>
  * 装配后得到类:
  * <p/>
- * Request{  header=Header{cmdIndx=2, recog=0, type=2001, p1=0, p2=0, p3=0}, body='1111122/333333333'}
+ * SocketMessage{  header=Header{cmdIndx=2, recog=0, type=2001, p1=0, p2=0, p3=0}, body='1111122/333333333'}
  */
-public class Request {
+public class SocketMessage {
 
 	public static final int DEFAULT_HEADER_SIZE = 13;
 
-	public final Header header;
-	public final String body;
+	public    Header header;
+	protected String body;
 
 	public class Header {
+
 		public final byte  cmdIndx;  // #号后面紧跟的序号, 响应包的序号要跟请求一直
 		public final int   recog;     // 未知
 		public final short type;      // 协议id
@@ -61,16 +66,23 @@ public class Request {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (!(o instanceof Header)) return false;
+			if (this == o)
+				return true;
+			if (!(o instanceof Header))
+				return false;
 
 			Header header = (Header) o;
 
-			if (cmdIndx != header.cmdIndx) return false;
-			if (recog != header.recog) return false;
-			if (type != header.type) return false;
-			if (p1 != header.p1) return false;
-			if (p2 != header.p2) return false;
+			if (cmdIndx != header.cmdIndx)
+				return false;
+			if (recog != header.recog)
+				return false;
+			if (type != header.type)
+				return false;
+			if (p1 != header.p1)
+				return false;
+			if (p2 != header.p2)
+				return false;
 			return p3 == header.p3;
 
 		}
@@ -99,23 +111,61 @@ public class Request {
 		}
 	}
 
-	public Request(byte cmdIndex, int recog, short type, short p1, short p2, short p3, String body) {
+	public SocketMessage() {
+
+	}
+
+	protected SocketMessage(byte cmdIndex, int recog, short type, short p1, short p2, short p3, String body) {
 		this.header = new Header(cmdIndex, recog, type, p1, p2, p3);
 		this.body = body;
 	}
 
-	public Request(short type, byte cmdIndex, String body) {
+	protected SocketMessage(short type, byte cmdIndex, String body) {
 		this(cmdIndex, 0, type, (short) 0, (short) 0, (short) 0, body);
+	}
+
+	protected SocketMessage(short type, byte cmdIndex) {
+		this(cmdIndex, 0, type, (short) 0, (short) 0, (short) 0, "");
+	}
+
+	public void fromByteBuf(ByteBuf in) throws WrongFormatException {
+		int size = in.readableBytes();
+
+		if (size < SocketMessage.DEFAULT_HEADER_SIZE + 2)
+			throw new SocketMessage.WrongFormatException("packet size < " + (SocketMessage.DEFAULT_HEADER_SIZE + 2));
+
+		if ('#' != in.getByte(0) || '!' != in.getByte(size - 1))
+			throw new SocketMessage.WrongFormatException("start or end flag not found");
+
+		in = in.order(ByteOrder.LITTLE_ENDIAN);
+
+		byte sFlag = in.readByte();
+
+		byte   cmdIndex = (byte) (in.readByte() - '0');
+		int    recog    = in.readInt();
+		short  type     = in.readShort();
+		short  p1       = in.readShort();
+		short  p2       = in.readShort();
+		short  p3       = in.readShort();
+		String body     = in.toString(in.readerIndex(), in.readableBytes() - 1, Config.DEFAULT_CHARSET).trim();
+
+		in.readByte();
+
+		this.header = new Header(cmdIndex, recog, type, p1, p2, p3);
+		this.body = body;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Request)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof SocketMessage))
+			return false;
 
-		Request request = (Request) o;
+		SocketMessage request = (SocketMessage) o;
 
-		if (!header.equals(request.header)) return false;
+		if (!header.equals(request.header))
+			return false;
 		return body.equals(request.body);
 
 	}
@@ -129,13 +179,14 @@ public class Request {
 
 	@Override
 	public String toString() {
-		return "Request{" +
+		return "SocketMessage{" +
 				"header=" + header +
 				", body='" + body + '\'' +
 				'}';
 	}
 
 	public static class WrongFormatException extends Exception {
+
 		public WrongFormatException(String msg) {
 			super(msg);
 		}

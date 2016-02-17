@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.logingate.request;
+package com.zhaoxiaodan.mirserver.core;
 
 /**
  * Created by liangwei on 16/2/17.
