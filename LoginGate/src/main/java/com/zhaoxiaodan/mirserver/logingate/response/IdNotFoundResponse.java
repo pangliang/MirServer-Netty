@@ -9,6 +9,6 @@ import com.zhaoxiaodan.mirserver.core.SocketMessage;
 public class IdNotFoundResponse extends SocketMessage {
 	
 	public IdNotFoundResponse(byte cmdIndex) {
-		super(Protocol.SM_ID_NOTFOUND, cmdIndex, "");
+		super(Protocol.SM_PASSWD_FAIL, (byte)0, "");
 	}
 }

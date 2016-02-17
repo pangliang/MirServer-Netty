@@ -12,10 +12,10 @@ import java.util.List;
  */
 public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 
-	private byte[] decode6BitBuf(byte[] src) {
+	public byte[] decode6BitBuf(byte[] src) {
 		final byte[] Decode6BitMask = {(byte) 0xfc, (byte) 0xf8, (byte) 0xf0, (byte) 0xe0, (byte) 0xc0};
 
-		int    len  = src.length;
+		int    len  = src.length ;
 		byte[] dest = new byte[len];
 
 		int destPos = 0;
@@ -24,7 +24,7 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 		byte ch = 0, chCode = 0, tmp = 0;
 
-		for (int i = 0; i < len - 1; i++) {
+		for (int i = 0; i < len; i++) {
 			if ((src[i] - 0x3c) >= 0) {
 				ch = (byte) (src[i] - 0x3c);
 			} else {

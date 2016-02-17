@@ -12,39 +12,35 @@ import java.nio.ByteOrder;
  * +-----------------------------------------------------------------------------------------+
  * |  #  |              header                                        |      body      |  !  |
  * +-----------------------------------------------------------------------------------------+
- * |  #  |index|    recog     |type|    p1  |    p2    |    p3    |      body      |  !  |
+ * |  #  |index|    recog     |  type  |    p1  |    p2    |    p3    |      body      |  !  |
  * +-----------------------------------------------------------------------------------------+
  * </pre>
  * 不同类型的请求, body有各自的格式,比如login封包 body 用/符号分隔, 格式为:帐号/密码, 例如:
  * <pre>
- *          +-------------------------------------------------+
- *          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
+ * +-------------------------------------------------+
+ * |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
  * +--------+-------------------------------------------------+----------------+
- * |00000000| 23 32 3c 3c 3c 3c 3c 49 40 43 3c 3c 3c 3c 3c 3c |#2<<<<<I@C<<<<<<|
- * |00000010| 3c 3c 48 4f 40 6d 48 4f 40 6e 48 5e 78 6f 48 6f |<<HO@mHO@nH^xoHo|
- * |00000020| 48 6f 48 6f 48 6f 48 6f 48 6f 21 0a             |HoHoHoHoHo!.    |
+ * |00000000| 23 31 3c 3c 3c 3c 3c 49 40 43 3c 3c 3c 3c 3c 3c |#1<<<<<I@C<<<<<<|
+ * |00000010| 3c 3c 48 4f 44 6f 47 6f 40 6e 48 6c 21          |<<HODoGo@nHl!   |
  * +--------+-------------------------------------------------+----------------+
- * </pre>
  * 解密后得到:
- * <pre>
- *          +-------------------------------------------------+
- *          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
+ * +-------------------------------------------------+
+ * |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
  * +--------+-------------------------------------------------+----------------+
- * |00000000| 23 32 00 00 00 00 d1 07 00 00 00 00 00 00 31 31 |#2............11|
- * |00000010| 31 31 31 32 32 2f 33 33 33 33 33 33 33 33 33 00 |11122/333333333.|
- * |00000020| 00 00 00 00 00 00 00 00 00 00 21                |..........!     |
+ * |00000000| 23 31 00 00 00 00 d1 07 00 00 00 00 00 00 31 32 |#1............12|
+ * |00000010| 33 2f 31 32 00 00 00 00 00 00 00 00 21          |3/12........!   |
  * +--------+-------------------------------------------------+----------------+
  * </pre>
  * 装配后得到类:
  * <p/>
- * SocketMessage{  header=Header{cmdIndx=2, recog=0, type=2001, p1=0, p2=0, p3=0}, body='1111122/333333333'}
+ * SocketMessage{  header=Header{cmdIndx=2, recog=0, type=2001, p1=0, p2=0, p3=0}, body='123/123'}
  */
 public class SocketMessage {
 
 	public static final int DEFAULT_HEADER_SIZE = 13;
 
-	public    Header header;
-	protected String body;
+	public Header header;
+	public String body;
 
 	public class Header {
 
@@ -115,16 +111,16 @@ public class SocketMessage {
 
 	}
 
-	protected SocketMessage(byte cmdIndex, int recog, short type, short p1, short p2, short p3, String body) {
+	public SocketMessage(byte cmdIndex, int recog, short type, short p1, short p2, short p3, String body) {
 		this.header = new Header(cmdIndex, recog, type, p1, p2, p3);
 		this.body = body;
 	}
 
-	protected SocketMessage(short type, byte cmdIndex, String body) {
+	public SocketMessage(short type, byte cmdIndex, String body) {
 		this(cmdIndex, 0, type, (short) 0, (short) 0, (short) 0, body);
 	}
 
-	protected SocketMessage(short type, byte cmdIndex) {
+	public SocketMessage(short type, byte cmdIndex) {
 		this(cmdIndex, 0, type, (short) 0, (short) 0, (short) 0, "");
 	}
 
@@ -153,6 +149,20 @@ public class SocketMessage {
 
 		this.header = new Header(cmdIndex, recog, type, p1, p2, p3);
 		this.body = body;
+	}
+
+	public void writeToByteBuf(ByteBuf out){
+		if(0 != this.header.cmdIndx)
+			out.writeByte((byte)(this.header.cmdIndx + '0'));
+		out.writeInt(this.header.recog);
+		out.writeShort(this.header.type);
+		out.writeShort(this.header.p1);
+		out.writeShort(this.header.p2);
+		out.writeShort(this.header.p3);
+		if(!body.isEmpty()) {
+			out.writeBytes(this.body.getBytes());
+			out.writeByte('\0');
+		}
 	}
 
 	@Override

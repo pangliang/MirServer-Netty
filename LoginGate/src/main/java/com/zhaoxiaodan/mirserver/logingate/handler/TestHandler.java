@@ -20,7 +20,7 @@ public class TestHandler extends ChannelHandlerAdapter {
 		SocketMessage req = (SocketMessage) msg;
 		System.out.println(this.getClass().getName() + " Read >> " + req);
 
-		ctx.writeAndFlush(new IdNotFoundResponse(req.header.cmdIndx));
+		ctx.writeAndFlush(new IdNotFoundResponse((byte)(req.header.cmdIndx+1)));
 	}
 
 	@Override
