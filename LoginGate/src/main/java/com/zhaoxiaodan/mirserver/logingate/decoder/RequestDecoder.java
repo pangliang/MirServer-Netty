@@ -1,3 +1,6 @@
+package com.zhaoxiaodan.mirserver.logingate.decoder;
+
+import com.zhaoxiaodan.mirserver.logingate.request.Request;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;

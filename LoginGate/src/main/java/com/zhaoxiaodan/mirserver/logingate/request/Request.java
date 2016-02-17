@@ -1,3 +1,5 @@
+package com.zhaoxiaodan.mirserver.logingate.request;
+
 /**
  * 请求封包类, 封包数据格式: * #符号开头 + 头部 + body + !符号结尾
  * <pre>

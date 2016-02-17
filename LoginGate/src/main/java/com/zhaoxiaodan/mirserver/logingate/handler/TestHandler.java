@@ -1,3 +1,6 @@
+package com.zhaoxiaodan.mirserver.logingate.handler;
+
+import com.zhaoxiaodan.mirserver.logingate.request.Request;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 

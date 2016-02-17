@@ -1,3 +1,5 @@
+package com.zhaoxiaodan.mirserver.logingate;
+
 /**
  * Created by liangwei on 16/2/17.
  */
