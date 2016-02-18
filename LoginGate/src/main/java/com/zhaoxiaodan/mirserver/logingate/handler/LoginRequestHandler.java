@@ -18,6 +18,9 @@ public class LoginRequestHandler implements RequestHandler {
 
 		Player player = new Player();
 		player.setUsername(loginRequest.getUsername());
+
+
+
 		ctx.writeAndFlush(new IdNotFoundResponse());
 	}
 

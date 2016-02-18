@@ -1,32 +1,43 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
-import org.hibernate.annotations.NamedQueries;
-import org.hibernate.annotations.NamedQuery;
 
-import javax.persistence.*;
-
-/**
- * Created by liangwei on 16/2/18.
- */
-
-@NamedQueries(
-		@NamedQuery(
-				name = "get_player_by_username",
-				query = "select p from Player p where username = :username"
-		)
-)
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table( name = "Player" )
 public class Player {
+
 	@Id
 	@GeneratedValue
 	private Long id;
 	private String username;
+
+
 	private String password;
 	private String nickName;
 	private String question1;
 	private String answer1;
 
+	public String getQuestion1() {
+		return question1;
+	}
+
+	public void setQuestion1(String question1) {
+		this.question1 = question1;
+	}
+
+	public String getAnswer1() {
+		return answer1;
+	}
+
+	public void setAnswer1(String answer1) {
+		this.answer1 = answer1;
+	}
+
+	public Player(){}
 
 	public Long getId() {
 		return id;

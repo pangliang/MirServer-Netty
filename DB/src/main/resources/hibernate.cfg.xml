@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.driver_class" >org.h2.Driver</property>
+        <property name="hibernate.connection.url" >jdbc:h2:/Volumes/d/MirServer-Netty/DB/mir2</property>
+        <property name="hibernate.dialect" >org.hibernate.dialect.H2Dialect</property>
+        <property name="hibernate.hbm2ddl.auto" >update</property>
+        <property name="hibernate.show_sql" >true</property>
+        <property name="hibernate.format_sql" >true</property>
+        <property name="hibernate.connection.autocommit">true</property>
+
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.Player"/>
+    </session-factory>
+</hibernate-configuration>
