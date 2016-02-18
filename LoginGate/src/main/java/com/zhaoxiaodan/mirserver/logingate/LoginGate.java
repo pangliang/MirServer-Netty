@@ -1,12 +1,13 @@
 package com.zhaoxiaodan.mirserver.logingate;
 
 import com.zhaoxiaodan.mirserver.core.Config;
+import com.zhaoxiaodan.mirserver.core.debug.ReadWriteLoggingHandler;
+import com.zhaoxiaodan.mirserver.core.network.RequestDispatcher;
 import com.zhaoxiaodan.mirserver.core.network.decoder.Bit6BufDecoder;
 import com.zhaoxiaodan.mirserver.core.network.decoder.RequestDecoder;
 import com.zhaoxiaodan.mirserver.core.network.encoder.Bit6BufEncoder;
-import com.zhaoxiaodan.mirserver.core.network.encoder.RequestEncoder;
+import com.zhaoxiaodan.mirserver.core.network.encoder.ResponseEncoder;
 import com.zhaoxiaodan.mirserver.logingate.decoder.ProcessRequestDecoder;
-import com.zhaoxiaodan.mirserver.logingate.handler.TestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -43,19 +44,19 @@ public class LoginGate {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline().addLast(
-									new LoggingHandler(LogLevel.INFO),
+									new ReadWriteLoggingHandler(LogLevel.INFO),
 									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ProcessRequestDecoder(CharsetUtil.UTF_8),
 									new Bit6BufDecoder(true),       //服务器, 解码request, 编码response
-									new LoggingHandler(LogLevel.INFO),
-									new RequestDecoder(new LoginGateProtocols()),
+									new ReadWriteLoggingHandler(LogLevel.INFO),
+									new RequestDecoder(LoginGateProtocols.Rquest_Type_Map),
 
-									new LoggingHandler(LogLevel.INFO),
+									new ReadWriteLoggingHandler(LogLevel.INFO),
 									new Bit6BufEncoder(false),           //服务器, 解码request, 编码response
-									new LoggingHandler(LogLevel.INFO),
-									new RequestEncoder(),
+									new ReadWriteLoggingHandler(LogLevel.INFO),
+									new ResponseEncoder(),
 
-									new TestHandler()
+									new RequestDispatcher(LoginGateProtocols.Rquest_Handler_Map)
 							);
 						}
 					})

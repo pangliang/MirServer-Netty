@@ -31,7 +31,7 @@ package com.zhaoxiaodan.mirserver.core.network;
  * <p/>
  * SocketMessage{  header=Header{cmdIndx=2, recog=0, type=2001, p1=0, p2=0, p3=0}, body='123/123'}
  */
-abstract class SocketMessage {
+public class SocketMessage {
 
 	public static final int DEFAULT_HEADER_SIZE = 12;
 

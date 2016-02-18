@@ -2,6 +2,7 @@ package com.zhaoxiaodan.mirserver.core.network.decoder;
 
 import com.zhaoxiaodan.mirserver.core.Config;
 import com.zhaoxiaodan.mirserver.core.network.Request;
+import com.zhaoxiaodan.mirserver.core.network.Response;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
@@ -14,12 +15,12 @@ import java.util.Map;
 /**
  * Created by liangwei on 16/2/16.
  */
-public class RequestDecoder extends MessageToMessageDecoder<ByteBuf> {
+public class ResponseDecoder extends MessageToMessageDecoder<ByteBuf> {
 
-	private final Map<Short, Class<? extends Request>> requestTypeMap;
+	private final Map<Short, Class<? extends Response>> responseTypeMap;
 
-	public RequestDecoder(Map<Short, Class<? extends Request>> protocols) {
-		this.requestTypeMap = protocols;
+	public ResponseDecoder(Map<Short, Class<? extends Response>> protocols) {
+		this.responseTypeMap = protocols;
 	}
 
 
@@ -48,17 +49,17 @@ public class RequestDecoder extends MessageToMessageDecoder<ByteBuf> {
 		short  p3    = in.readShort();
 		String body  = in.toString(in.readerIndex(), in.readableBytes() - 1, Config.DEFAULT_CHARSET).trim();
 
-		Class<? extends Request> requestClass;
-		if (requestTypeMap.containsKey(type)) {
-			requestClass = (requestTypeMap.get(type));
+		Class<? extends Response> requestClass;
+		if (responseTypeMap.containsKey(type)) {
+			requestClass = (responseTypeMap.get(type));
 		} else {
-			requestClass = Request.class;
+			requestClass = Response.class;
 		}
 
-		// public Request(byte cmdIndex, int recog, short type, short p1, short p2, short p3, String body)
-		Constructor<? extends Request> constructor = requestClass.getConstructor(byte.class, int.class, short.class, short.class, short.class, short.class, String.class);
+		// public Response(int recog, short type, short p1, short p2, short p3, String body)
+		Constructor<? extends Response> constructor = requestClass.getConstructor(int.class, short.class, short.class, short.class, short.class, String.class);
 
-		Request msg = constructor.newInstance(cmdIndex, recog, type, p1, p2, p3, body);
+		Response msg = constructor.newInstance(cmdIndex, recog, type, p1, p2, p3, body);
 		out.add(msg);
 	}
 }

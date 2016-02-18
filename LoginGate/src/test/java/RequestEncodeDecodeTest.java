@@ -47,7 +47,7 @@ public class RequestEncodeDecodeTest {
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestDecoder(new LoginGateProtocols())
+					new RequestDecoder(LoginGateProtocols.Rquest_Type_Map)
 			);
 
 			ByteBuf buf = Unpooled.buffer();
@@ -76,7 +76,7 @@ public class RequestEncodeDecodeTest {
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestDecoder(new LoginGateProtocols()),
+					new RequestDecoder(LoginGateProtocols.Rquest_Type_Map),
 					new ReadWriteLoggingHandler(LogLevel.INFO)
 			);
 
@@ -109,7 +109,7 @@ public class RequestEncodeDecodeTest {
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestDecoder(new LoginGateProtocols())
+					new RequestDecoder(LoginGateProtocols.Rquest_Type_Map)
 			);
 
 			ch.writeInbound(out);
