@@ -1,5 +1,6 @@
 import com.zhaoxiaodan.mirserver.core.Config;
-import com.zhaoxiaodan.mirserver.core.network.SocketMessage;
+import com.zhaoxiaodan.mirserver.core.debug.ReadWriteLoggingHandler;
+import com.zhaoxiaodan.mirserver.core.network.Request;
 import com.zhaoxiaodan.mirserver.core.network.decoder.Bit6BufDecoder;
 import com.zhaoxiaodan.mirserver.core.network.decoder.RequestDecoder;
 import com.zhaoxiaodan.mirserver.core.network.encoder.Bit6BufEncoder;
@@ -12,7 +13,6 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class RequestEncodeDecodeTest {
 
 
-	Map<String, SocketMessage> testList = new HashMap<String, SocketMessage>() {
+	Map<String, Request> testList = new HashMap<String, Request>() {
 		{
 			try {
 				put("#2<<<<<I@C<<<<<<<<HODoGo@nHl!", new LoginRequest((byte) 2, "123", "123"));
@@ -42,11 +42,11 @@ public class RequestEncodeDecodeTest {
 	public void testDecode() {
 		for (String msg : testList.keySet()) {
 			EmbeddedChannel ch = new EmbeddedChannel(
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new RequestDecoder(new LoginGateProtocols())
 			);
 
@@ -56,12 +56,12 @@ public class RequestEncodeDecodeTest {
 			ch.writeInbound(buf);
 			ch.finish();
 
-			SocketMessage req = ch.readInbound();
+			Request req = ch.readInbound();
 
 			ch = new EmbeddedChannel(
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new Bit6BufEncoder(true),
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new RequestEncoder()
 			);
 
@@ -71,18 +71,19 @@ public class RequestEncodeDecodeTest {
 			ByteBuf out = ch.readOutbound();
 
 			ch = new EmbeddedChannel(
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
-					new LoggingHandler(LogLevel.INFO),
-					new RequestDecoder(new LoginGateProtocols())
+					new ReadWriteLoggingHandler(LogLevel.INFO),
+					new RequestDecoder(new LoginGateProtocols()),
+					new ReadWriteLoggingHandler(LogLevel.INFO)
 			);
 
 			ch.writeInbound(out);
 			ch.finish();
 
-			Assert.assertEquals(req, ch.readInbound());
+			Assert.assertEquals(testList.get(msg), ch.readInbound());
 		}
 	}
 
@@ -90,9 +91,9 @@ public class RequestEncodeDecodeTest {
 	public void testEncode() {
 		for (String msg : testList.keySet()) {
 			EmbeddedChannel ch = new EmbeddedChannel(
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new Bit6BufEncoder(true),
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new RequestEncoder()
 			);
 
@@ -103,11 +104,11 @@ public class RequestEncodeDecodeTest {
 
 
 			ch = new EmbeddedChannel(
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
-					new LoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new RequestDecoder(new LoginGateProtocols())
 			);
 

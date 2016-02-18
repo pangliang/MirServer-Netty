@@ -2,7 +2,6 @@ package com.zhaoxiaodan.mirserver.core.network.decoder;
 
 import com.zhaoxiaodan.mirserver.core.Config;
 import com.zhaoxiaodan.mirserver.core.network.Request;
-import com.zhaoxiaodan.mirserver.core.network.SocketMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
@@ -27,15 +26,15 @@ public class RequestDecoder extends MessageToMessageDecoder<ByteBuf> {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
-		in.order(ByteOrder.LITTLE_ENDIAN);
+		in = in.order(ByteOrder.LITTLE_ENDIAN);
 
 		int size = in.readableBytes();
 
-		if (size < SocketMessage.DEFAULT_HEADER_SIZE + 2)
-			throw new SocketMessage.WrongFormatException("packet size < " + (SocketMessage.DEFAULT_HEADER_SIZE + 2));
+		if (size < Request.DEFAULT_HEADER_SIZE + 2)
+			throw new Request.WrongFormatException("packet size < " + (Request.DEFAULT_HEADER_SIZE + 2));
 
 		if ('#' != in.getByte(0) || '!' != in.getByte(size - 1))
-			throw new SocketMessage.WrongFormatException("start or end flag not found");
+			throw new Request.WrongFormatException("start or end flag not found");
 
 
 		byte sFlag    = in.readByte();
