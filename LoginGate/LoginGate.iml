@@ -18,5 +18,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-all:5.0.0.Alpha2" level="project" />
     <orderEntry type="module" module-name="Core" />
+    <orderEntry type="module" module-name="DB" />
   </component>
 </module>
