@@ -1,10 +1,10 @@
 package com.zhaoxiaodan.mirserver.logingate;
 
 import com.zhaoxiaodan.mirserver.core.Config;
-import com.zhaoxiaodan.mirserver.core.decoder.Bit6BufDecoder;
-import com.zhaoxiaodan.mirserver.core.decoder.RequestDecoder;
-import com.zhaoxiaodan.mirserver.core.encoder.Bit6BufEncoder;
-import com.zhaoxiaodan.mirserver.core.encoder.SocketMessageEncoder;
+import com.zhaoxiaodan.mirserver.core.network.decoder.Bit6BufDecoder;
+import com.zhaoxiaodan.mirserver.core.network.decoder.RequestDecoder;
+import com.zhaoxiaodan.mirserver.core.network.encoder.Bit6BufEncoder;
+import com.zhaoxiaodan.mirserver.core.network.encoder.RequestEncoder;
 import com.zhaoxiaodan.mirserver.logingate.decoder.ProcessRequestDecoder;
 import com.zhaoxiaodan.mirserver.logingate.handler.TestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -46,14 +46,14 @@ public class LoginGate {
 									new LoggingHandler(LogLevel.INFO),
 									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ProcessRequestDecoder(CharsetUtil.UTF_8),
-									new Bit6BufDecoder(),
+									new Bit6BufDecoder(true),       //服务器, 解码request, 编码response
 									new LoggingHandler(LogLevel.INFO),
 									new RequestDecoder(new LoginGateProtocols()),
 
 									new LoggingHandler(LogLevel.INFO),
-									new Bit6BufEncoder(),
+									new Bit6BufEncoder(false),           //服务器, 解码request, 编码response
 									new LoggingHandler(LogLevel.INFO),
-									new SocketMessageEncoder(),
+									new RequestEncoder(),
 
 									new TestHandler()
 							);

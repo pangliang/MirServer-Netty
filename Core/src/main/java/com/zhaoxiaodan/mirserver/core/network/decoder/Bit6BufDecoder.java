@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.core.decoder;
+package com.zhaoxiaodan.mirserver.core.network.decoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -8,14 +8,20 @@ import io.netty.handler.codec.MessageToMessageDecoder;
 import java.util.List;
 
 /**
- * Created by liangwei on 16/2/16.
+ * 解密, request有cmdIndex , response没有
  */
 public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
+
+	public final boolean isRequestMessage;
+
+	public Bit6BufDecoder(boolean isRequestMessage) {
+		this.isRequestMessage = isRequestMessage;
+	}
 
 	public byte[] decode6BitBuf(byte[] src) {
 		final byte[] Decode6BitMask = {(byte) 0xfc, (byte) 0xf8, (byte) 0xf0, (byte) 0xe0, (byte) 0xc0};
 
-		int    len  = src.length ;
+		int    len  = src.length;
 		byte[] dest = new byte[len];
 
 		int destPos = 0;
@@ -59,13 +65,20 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
-		byte sFlag    = in.readByte();
-		byte cmdIndex = in.readByte();
+		ByteBuf buf = Unpooled.buffer();
 
-		byte[] body = new byte[in.readableBytes() - 1];
-		in.readBytes(body);
-		byte eFlag = in.readByte();
+		buf.writeByte(in.readByte()); //  #
 
-		out.add(Unpooled.wrappedBuffer(new byte[]{sFlag, cmdIndex}, decode6BitBuf(body), new byte[]{eFlag}));
+		if (isRequestMessage)
+			buf.writeByte(in.readByte());  //cmdIndex
+
+		byte[] content = new byte[in.readableBytes() - 1];
+		in.readBytes(content);
+		byte[] bit6DecodeContent = decode6BitBuf(content);
+		buf.writeBytes(bit6DecodeContent);
+
+		buf.writeByte(in.readByte()); //  !
+
+		out.add(buf);
 	}
 }

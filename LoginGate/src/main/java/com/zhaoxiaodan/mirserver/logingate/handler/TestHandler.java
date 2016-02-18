@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.logingate.handler;
 
-import com.zhaoxiaodan.mirserver.core.SocketMessage;
+import com.zhaoxiaodan.mirserver.core.network.SocketMessage;
 import com.zhaoxiaodan.mirserver.logingate.response.IdNotFoundResponse;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,7 +20,7 @@ public class TestHandler extends ChannelHandlerAdapter {
 		SocketMessage req = (SocketMessage) msg;
 		System.out.println(this.getClass().getName() + " Read >> " + req);
 
-		ctx.writeAndFlush(new IdNotFoundResponse((byte)(req.header.cmdIndx+1)));
+		ctx.writeAndFlush(new IdNotFoundResponse());
 	}
 
 	@Override

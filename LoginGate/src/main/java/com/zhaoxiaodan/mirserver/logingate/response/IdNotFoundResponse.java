@@ -1,14 +1,14 @@
 package com.zhaoxiaodan.mirserver.logingate.response;
 
-import com.zhaoxiaodan.mirserver.core.Protocol;
-import com.zhaoxiaodan.mirserver.core.SocketMessage;
+import com.zhaoxiaodan.mirserver.core.network.Protocol;
+import com.zhaoxiaodan.mirserver.core.network.Response;
 
 /**
  * Created by liangwei on 16/2/17.
  */
-public class IdNotFoundResponse extends SocketMessage {
+public class IdNotFoundResponse extends Response {
 	
-	public IdNotFoundResponse(byte cmdIndex) {
-		super(Protocol.SM_PASSWD_FAIL, (byte)0, "");
+	public IdNotFoundResponse() {
+		super(Protocol.SM_PASSWD_FAIL);
 	}
 }

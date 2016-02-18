@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.core.encoder;
+package com.zhaoxiaodan.mirserver.core.network.encoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -12,6 +12,12 @@ import java.util.List;
  * Created by liangwei on 16/2/17.
  */
 public class Bit6BufEncoder extends MessageToMessageEncoder<ByteBuf> {
+
+	public final boolean isRequestMessage;
+
+	public Bit6BufEncoder(boolean isRequestMessage) {
+		this.isRequestMessage = isRequestMessage;
+	}
 
 	public byte[] encoder6BitBuf(byte[] src) {
 		int    len     = src.length;
@@ -44,8 +50,8 @@ public class Bit6BufEncoder extends MessageToMessageEncoder<ByteBuf> {
 				chRest = 0;
 			}
 		}
-//		if(resetCount > 0 )
-//			dest[destPos++] = (byte)(chRest + 0x3c);
+		if(resetCount > 0 )
+			dest[destPos++] = (byte)(chRest + 0x3c);
 
 		return Arrays.copyOfRange(dest,0,destPos);
 
@@ -57,7 +63,8 @@ public class Bit6BufEncoder extends MessageToMessageEncoder<ByteBuf> {
 		ByteBuf buf = Unpooled.buffer();
 
 		buf.writeByte('#');
-//		buf.writeByte(in.readByte());
+		if(isRequestMessage)
+			buf.writeByte(in.readByte());
 
 		byte[] body = new byte[in.readableBytes()];
 		in.readBytes(body);

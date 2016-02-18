@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.core;
+package com.zhaoxiaodan.mirserver.core.network;
 
 /**
  * Created by liangwei on 16/2/17.
