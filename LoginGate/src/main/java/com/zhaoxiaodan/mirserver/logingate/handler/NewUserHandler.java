@@ -2,7 +2,7 @@ package com.zhaoxiaodan.mirserver.logingate.handler;
 
 import com.zhaoxiaodan.mirserver.core.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.core.network.Packet;
-import com.zhaoxiaodan.mirserver.core.network.PacketHanlder;
+import com.zhaoxiaodan.mirserver.core.network.PacketHandler;
 import com.zhaoxiaodan.mirserver.core.network.Protocol;
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.User;
@@ -80,7 +80,7 @@ import java.util.List;
  part : ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ3￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ￯﾿ﾽ
 
  */
-public class NewUserHanlder implements PacketHanlder {
+public class NewUserHandler implements PacketHandler {
 
 	@Override
 	public void exce(ChannelHandlerContext ctx, Packet indexPacket) {
@@ -90,12 +90,21 @@ public class NewUserHanlder implements PacketHanlder {
 		Criteria criteria = session.createCriteria(User.class);
 
 		List<User> list = criteria.add(Restrictions.eq("userId", newUser.user.userId)).list();
-		if(1 != list.size())
+		if(list.size() > 0)
 		{
 			ctx.writeAndFlush(new Packet(Protocol.SM_NEWID_FAIL));
 			return ;
 		}else{
+			try{
+				session.save(newUser.user);
+				session.flush();
 
+				ctx.writeAndFlush(new Packet(Protocol.SM_NEWID_SUCCESS));
+			}catch (Exception e)
+			{
+				ctx.writeAndFlush(new Packet(Protocol.SM_NEWID_FAIL));
+				return ;
+			}
 		}
 	}
 

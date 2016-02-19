@@ -3,30 +3,30 @@ package com.zhaoxiaodan.mirserver.core.network;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
-import java.util.HashMap;
-
 /**
  * Created by liangwei on 16/2/16.
  */
 public class PacketDispatcher extends ChannelHandlerAdapter {
 
-	private final HashMap<Class<? extends IndexPacket>, Class<? extends PacketHanlder>> requestHandlerMap;
+	//handler处理器所在的包名
+	private final String handlerPackageName;
 
-	public PacketDispatcher(HashMap<Class<? extends IndexPacket>, Class<? extends PacketHanlder>> requestHandlerMap) {
-		this.requestHandlerMap = requestHandlerMap;
+	public PacketDispatcher(String handlerPackageName) {
+		this.handlerPackageName = handlerPackageName;
 	}
 
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+	public void channelRead(ChannelHandlerContext ctx, Object pakcet) throws Exception {
 
-		if (!(msg instanceof IndexPacket)) {
-			throw new Exception("Recv msg is not instance of IndexPacket");
+		if (!(pakcet instanceof Packet)) {
+			throw new Exception("Recv msg is not instance of Packet");
 		}
 
-		IndexPacket   req     = (IndexPacket) msg;
-		PacketHanlder handler = requestHandlerMap.get(req.getClass()).newInstance();
+		String                         protocolName = pakcet.getClass().getSimpleName();   //Packet 就是通过 protocol id 反射出来的 name
+		Class<? extends PacketHandler> handlerClass = (Class<? extends PacketHandler>) Class.forName(handlerPackageName + "." + protocolName + "Handler");
+		PacketHandler                  handler      = handlerClass.newInstance();
 		if (null != handler)
-			handler.exce(ctx, req);
+			handler.exce(ctx, (Packet)pakcet);
 	}
 
 	@Override

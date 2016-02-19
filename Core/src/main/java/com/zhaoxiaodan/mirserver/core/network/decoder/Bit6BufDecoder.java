@@ -12,10 +12,10 @@ import java.util.List;
  */
 public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 
-	public final boolean isRequestMessage;
+	public final boolean isIndexPacket;
 
-	public Bit6BufDecoder(boolean isRequestMessage) {
-		this.isRequestMessage = isRequestMessage;
+	public Bit6BufDecoder(boolean isIndexPacket) {
+		this.isIndexPacket = isIndexPacket;
 	}
 
 	public byte[] decode6BitBuf(byte[] src) {
@@ -69,7 +69,7 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 		in.readByte(); //  # , 在这里就去掉 头尾
 
-		if (isRequestMessage)
+		if (isIndexPacket)
 			buf.writeByte(in.readByte());  //cmdIndex
 
 		byte[] content = new byte[in.readableBytes() - 1];

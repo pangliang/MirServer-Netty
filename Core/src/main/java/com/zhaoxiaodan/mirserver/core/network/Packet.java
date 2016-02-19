@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
  * +-----------------------------------------------------------------------------------------+
  * |  #  |              header                                        |      body      |  !  |
  * +-----------------------------------------------------------------------------------------+
- * |  #  |index|    recog     |  pid  |    p1  |    p2    |    p3    |      body      |  !  |
+ * |  #  |index|    p0     |  pid  |    p1  |    p2    |    p3    |      body      |  !  |
  * +-----------------------------------------------------------------------------------------+
  * </pre>
  * 不同类型的请求, body有各自的格式,比如login封包 body 用/符号分隔, 格式为:帐号/密码, 例如:
@@ -31,13 +31,13 @@ import io.netty.buffer.ByteBuf;
  * </pre>
  * 装配后得到类:
  * <p/>
- * Packet{  cmdIndx=2, recog=0, pid=2001, p1=0, p2=0, p3=0, body='123/123'}
+ * Packet{  cmdIndx=2, p0=0, pid=2001, p1=0, p2=0, p3=0, body='123/123'}
  */
 public class Packet {
 
 	public static final int DEFAULT_HEADER_SIZE = 12;
 
-	public int   recog;     // 未知
+	public int   p0;     // 未知
 	public short pid;      // 协议id
 	public short p1;        //
 	public short p2;
@@ -46,20 +46,20 @@ public class Packet {
 	public Packet() {
 	}
 
-	public Packet(int recog, short pid, short p1, short p2, short p3) {
-		this.recog = recog;
+	public Packet(int p0, short pid, short p1, short p2, short p3) {
+		this.p0 = p0;
 		this.pid = pid;
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
 	}
 
-	public Packet(short pid) {
-		this(0, pid, (short) 0, (short) 0, (short) 0);
+	public Packet(Protocol protocol) {
+		this(0, protocol.id, (short) 0, (short) 0, (short) 0);
 	}
 
 	public void readPacket(ByteBuf in) {
-		recog = in.readInt();
+		p0 = in.readInt();
 		pid = in.readShort();
 		p1 = in.readShort();
 		p2 = in.readShort();
@@ -67,20 +67,18 @@ public class Packet {
 	}
 
 	public void writePacket(ByteBuf out) {
-		out.writeInt(recog);
+		out.writeInt(p0);
 		out.writeShort(pid);
 		out.writeShort(p1);
 		out.writeShort(p2);
 		out.writeShort(p3);
 	}
 
-	public String readString(ByteBuf in)
-	{
+	public String readString(ByteBuf in) {
 		StringBuilder sb = new StringBuilder();
-		while(in.readableBytes() > 0)
-		{
-			char c = in.readChar();
-			if (c < 0x30) {
+		while (in.readableBytes() > 0) {
+			byte c = in.readByte();
+			if (c < 0x08) {
 				if (0 == sb.length()) // 开头就是 空
 					continue;
 				else {

@@ -14,5 +14,6 @@
         <property name="hibernate.id.new_generator_mappings">TABLE</property>
 
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.User"/>
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.ServerInfo"/>
     </session-factory>
 </hibernate-configuration>

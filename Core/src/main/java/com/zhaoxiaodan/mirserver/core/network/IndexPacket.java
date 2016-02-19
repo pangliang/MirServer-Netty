@@ -22,4 +22,10 @@ public class IndexPacket extends Packet {
 		cmdIndex = (byte) (cmdIndex - '0');
 		super.readPacket(in);
 	}
+
+	@Override
+	public void writePacket(ByteBuf out) {
+		out.writeByte((byte)(cmdIndex + '0'));
+		super.writePacket(out);
+	}
 }

@@ -1,20 +1,21 @@
 package com.zhaoxiaodan.mirserver.core.network.decoder;
 
 import com.zhaoxiaodan.mirserver.core.network.Packet;
+import com.zhaoxiaodan.mirserver.core.network.Protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 
 import java.nio.ByteOrder;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liangwei on 16/2/16.
  */
 public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
-	private final String packetPackageName ;
+	//封包所在的包名
+	private final String packetPackageName;
 
 	public PacketDecoder(String packetPackageName) {
 		this.packetPackageName = packetPackageName;
@@ -30,19 +31,21 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 		if (size < Packet.DEFAULT_HEADER_SIZE)
 			throw new Packet.WrongFormatException("packet size < " + Packet.DEFAULT_HEADER_SIZE);
 
-		short  type  = in.getShort(1 + 1 + 4);
+		short protocolId = in.getShort(1 + 4);  // cmdIndex + regoc
 
-		Class<? extends Packet> packetClass;
-
-
-
-		if (requestTypeMap.containsKey(type)) {
-			packetClass = (requestTypeMap.get(type));
-		} else {
-			packetClass = Packet.class;
+		String protocolName = Protocol.getName(protocolId);
+		if (null == protocolName) {
+			throw new Exception("unknow protocol id:" + protocolId);
 		}
 
-		Packet packet = packetClass.newInstance();
+		Class<? extends Packet> packetClass;
+		try{
+			packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocolName);
+		}catch (ClassNotFoundException e)
+		{
+			packetClass = Packet.class;
+		}
+		Packet                  packet      = packetClass.newInstance();
 		packet.readPacket(in);
 
 		out.add(packet);

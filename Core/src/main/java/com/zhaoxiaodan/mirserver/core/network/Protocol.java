@@ -1,257 +1,282 @@
 package com.zhaoxiaodan.mirserver.core.network;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by liangwei on 16/2/17.
  */
-public class Protocol {
+public enum Protocol {
 
 	// For Login Process
-	public static final short CM_PROTOCOL       = 2000;
-	public static final short CM_IDPASSWORD     = 2001;
-	public static final short CM_ADDNEWUSER     = 2002;
-	public static final short CM_CHANGEPASSWORD = 2003;
-	public static final short CM_UPDATEUSER     = 2004;
+	CM_PROTOCOL(2000),
+	Login(2001),
+	NewUser(2002),
+	CM_CHANGEPASSWORD(2003),
+	CM_UPDATEUSER(2004),
 
-	public static final short CM_SELECTSERVER = 104;
+	CM_SELECTSERVER(104),
 
-	public static final short SM_CERTIFICATION_FAIL  = 501;
-	public static final short SM_ID_NOTFOUND         = 502;
-	public static final short SM_PASSWD_FAIL         = 503;
-	public static final short SM_NEWID_SUCCESS       = 504;
-	public static final short SM_NEWID_FAIL          = 505;
-	public static final short SM_PASSOK_SELECTSERVER = 529;
-	public static final short SM_SELECTSERVER_OK     = 530;
+	SM_CERTIFICATION_FAIL(501),
+	SM_ID_NOTFOUND(502),
+	SM_PASSWD_FAIL(503),
+	SM_NEWID_SUCCESS(504),
+	SM_NEWID_FAIL(505),
+	SM_PASSOK_SELECTSERVER(529),
+	SM_SELECTSERVER_OK(530),
 
 	// For Select Character Process
-	public static final short CM_QUERYCHR = 100;
-	public static final short CM_NEWCHR   = 101;
-	public static final short CM_DELCHR   = 102;
-	public static final short CM_SELCHR   = 103;
+	CM_QUERYCHR(100),
+	CM_NEWCHR(101),
+	CM_DELCHR(102),
+	CM_SELCHR(103),
 
-	public static final short SM_QUERYCHR       = 520;
-	public static final short SM_NEWCHR_SUCCESS = 521;
-	public static final short SM_NEWCHR_FAIL    = 522;
-	public static final short SM_DELCHR_SUCCESS = 523;
-	public static final short SM_DELCHR_FAIL    = 524;
-	public static final short SM_STARTPLAY      = 525;
-	public static final short SM_STARTFAIL      = 526;
-	public static final short SM_QUERYCHR_FAIL  = 527;
+	SM_QUERYCHR(520),
+	SM_NEWCHR_SUCCESS(521),
+	SM_NEWCHR_FAIL(522),
+	SM_DELCHR_SUCCESS(523),
+	SM_DELCHR_FAIL(524),
+	SM_STARTPLAY(525),
+	SM_STARTFAIL(526),
+	SM_QUERYCHR_FAIL(527),
 
 	// For Game Gate
-	public static final short GM_OPEN            = 1;
-	public static final short GM_CLOSE           = 2;
-	public static final short GM_CHECKSERVER     = 3;            // Send check signal to Server
-	public static final short GM_CHECKCLIENT     = 4;            // Send check signal to Client
-	public static final short GM_DATA            = 5;
-	public static final short GM_SERVERUSERINDEX = 6;
-	public static final short GM_RECEIVE_OK      = 7;
-	public static final short GM_TEST            = 20;
+	GM_OPEN(1),
+	GM_CLOSE(2),
+	GM_CHECKSERVER(3),            // Send check signal to Server
+	GM_CHECKCLIENT(4),            // Send check signal to Client
+	GM_DATA(5),
+	GM_SERVERUSERINDEX(6),
+	GM_RECEIVE_OK(7),
+	GM_TEST(20),
 
 	// For game process
 	// Client To Server Commands
-	public static final short CM_QUERYUSERNAME = 80;
-	public static final short CM_QUERYBAGITEMS = 81;
+	CM_QUERYUSERNAME(80),
+	CM_QUERYBAGITEMS(81),
 
-	public static final short CM_DROPITEM       = 1000;
-	public static final short CM_PICKUP         = 1001;
-	public static final short CM_TAKEONITEM     = 1003;
-	public static final short CM_TAKEOFFITEM    = 1004;
-	public static final short CM_BUTCH          = 1007;
-	public static final short CM_MAGICKEYCHANGE = 1008;
-	public static final short CM_EAT            = 1006;
-	public static final short CM_TURN           = 3010;
-	public static final short CM_WALK           = 3011;
-	public static final short CM_SITDOWN        = 3012;
-	public static final short CM_RUN            = 3013;
-	public static final short CM_HIT            = 3014;
-	public static final short CM_HEAVYHIT       = 3015;
-	public static final short CM_BIGHIT         = 3016;
-	public static final short CM_SPELL          = 3017;
-	public static final short CM_POWERHIT       = 3018;
-	public static final short CM_LONGHIT        = 3019;
-	public static final short CM_WIDEHIT        = 3024;
-	public static final short CM_FIREHIT        = 3025;
-	public static final short CM_SAY            = 3030;
-	public static final short CM_RIDE           = 3031;
+	CM_DROPITEM(1000),
+	CM_PICKUP(1001),
+	CM_TAKEONITEM(1003),
+	CM_TAKEOFFITEM(1004),
+	CM_BUTCH(1007),
+	CM_MAGICKEYCHANGE(1008),
+	CM_EAT(1006),
+	CM_TURN(3010),
+	CM_WALK(3011),
+	CM_SITDOWN(3012),
+	CM_RUN(3013),
+	CM_HIT(3014),
+	CM_HEAVYHIT(3015),
+	CM_BIGHIT(3016),
+	CM_SPELL(3017),
+	CM_POWERHIT(3018),
+	CM_LONGHIT(3019),
+	CM_WIDEHIT(3024),
+	CM_FIREHIT(3025),
+	CM_SAY(3030),
+	CM_RIDE(3031),
 
 	// Server to Client Commands
-	public static final short SM_RUSH      = 6;
-	public static final short SM_FIREHIT   = 8;
-	public static final short SM_BACKSTEP  = 9;
-	public static final short SM_TURN      = 10;
-	public static final short SM_WALK      = 11;
-	public static final short SM_SITDOWN   = 12;
-	public static final short SM_RUN       = 13;
-	public static final short SM_HIT       = 14;
-	public static final short SM_SPELL     = 17;
-	public static final short SM_POWERHIT  = 18;
-	public static final short SM_LONGHIT   = 19;
-	public static final short SM_DIGUP     = 20;
-	public static final short SM_DIGDOWN   = 21;
-	public static final short SM_FLYAXE    = 22;
-	public static final short SM_LIGHTING  = 23;
-	public static final short SM_WIDEHIT   = 24;
-	public static final short SM_DISAPPEAR = 30;
-	public static final short SM_STRUCK    = 31;
-	public static final short SM_DEATH     = 32;
-	public static final short SM_SKELETON  = 33;
-	public static final short SM_NOWDEATH  = 34;
+	SM_RUSH(6),
+	SM_FIREHIT(8),
+	SM_BACKSTEP(9),
+	SM_TURN(10),
+	SM_WALK(11),
+	SM_SITDOWN(12),
+	SM_RUN(13),
+	SM_HIT(14),
+	SM_SPELL(17),
+	SM_POWERHIT(18),
+	SM_LONGHIT(19),
+	SM_DIGUP(20),
+	SM_DIGDOWN(21),
+	SM_FLYAXE(22),
+	SM_LIGHTING(23),
+	SM_WIDEHIT(24),
+	SM_DISAPPEAR(30),
+	SM_STRUCK(31),
+	SM_DEATH(32),
+	SM_SKELETON(33),
+	SM_NOWDEATH(34),
 
-	public static final short SM_HEAR               = 40;
-	public static final short SM_FEATURECHANGED     = 41;
-	public static final short SM_USERNAME           = 42;
-	public static final short SM_WINEXP             = 44;
-	public static final short SM_LEVELUP            = 45;
-	public static final short SM_DAYCHANGING        = 46;
-	public static final short SM_LOGON              = 50;
-	public static final short SM_NEWMAP             = 51;
-	public static final short SM_ABILITY            = 52;
-	public static final short SM_HEALTHSPELLCHANGED = 53;
-	public static final short SM_MAPDESCRIPTION     = 54;
-	public static final short SM_SPELL2             = 117;
+	SM_HEAR(40),
+	SM_FEATURECHANGED(41),
+	SM_USERNAME(42),
+	SM_WINEXP(44),
+	SM_LEVELUP(45),
+	SM_DAYCHANGING(46),
+	SM_LOGON(50),
+	SM_NEWMAP(51),
+	SM_ABILITY(52),
+	SM_HEALTHSPELLCHANGED(53),
+	SM_MAPDESCRIPTION(54),
+	SM_SPELL2(117),
 
-	public static final short SM_SYSMESSAGE   = 100;
-	public static final short SM_GROUPMESSAGE = 101;
-	public static final short SM_CRY          = 102;
-	public static final short SM_WHISPER      = 103;
-	public static final short SM_GUILDMESSAGE = 104;
+	SM_SYSMESSAGE(100),
+	SM_GROUPMESSAGE(101),
+	SM_CRY(102),
+	SM_WHISPER(103),
+	SM_GUILDMESSAGE(104),
 
-	public static final short SM_ADDITEM     = 200;
-	public static final short SM_BAGITEMS    = 201;
-	public static final short SM_ADDMAGIC    = 210;
-	public static final short SM_SENDMYMAGIC = 211;
+	SM_ADDITEM(200),
+	SM_BAGITEMS(201),
+	SM_ADDMAGIC(210),
+	SM_SENDMYMAGIC(211),
 
-	public static final short SM_DROPITEM_SUCCESS = 600;
-	public static final short SM_DROPITEM_FAIL    = 601;
+	SM_DROPITEM_SUCCESS(600),
+	SM_DROPITEM_FAIL(601),
 
-	public static final short SM_ITEMSHOW          = 610;
-	public static final short SM_ITEMHIDE          = 611;
-	public static final short SM_DOOROPEN          = 612;
-	public static final short SM_TAKEON_OK         = 615;
-	public static final short SM_TAKEON_FAIL       = 616;
-	public static final short SM_TAKEOFF_OK        = 619;
-	public static final short SM_TAKEOFF_FAIL      = 620;
-	public static final short SM_SENDUSEITEMS      = 621;
-	public static final short SM_WEIGHTCHANGED     = 622;
-	public static final short SM_CLEAROBJECTS      = 633;
-	public static final short SM_CHANGEMAP         = 634;
-	public static final short SM_EAT_OK            = 635;
-	public static final short SM_EAT_FAIL          = 636;
-	public static final short SM_BUTCH             = 637;
-	public static final short SM_MAGICFIRE         = 638;
-	public static final short SM_MAGIC_LVEXP       = 640;
-	public static final short SM_DURACHANGE        = 642;
-	public static final short SM_MERCHANTSAY       = 643;
-	public static final short SM_GOLDCHANGED       = 653;
-	public static final short SM_CHANGELIGHT       = 654;
-	public static final short SM_CHANGENAMECOLOR   = 656;
-	public static final short SM_CHARSTATUSCHANGED = 657;
+	SM_ITEMSHOW(610),
+	SM_ITEMHIDE(611),
+	SM_DOOROPEN(612),
+	SM_TAKEON_OK(615),
+	SM_TAKEON_FAIL(616),
+	SM_TAKEOFF_OK(619),
+	SM_TAKEOFF_FAIL(620),
+	SM_SENDUSEITEMS(621),
+	SM_WEIGHTCHANGED(622),
+	SM_CLEAROBJECTS(633),
+	SM_CHANGEMAP(634),
+	SM_EAT_OK(635),
+	SM_EAT_FAIL(636),
+	SM_BUTCH(637),
+	SM_MAGICFIRE(638),
+	SM_MAGIC_LVEXP(640),
+	SM_DURACHANGE(642),
+	SM_MERCHANTSAY(643),
+	SM_GOLDCHANGED(653),
+	SM_CHANGELIGHT(654),
+	SM_CHANGENAMECOLOR(656),
+	SM_CHARSTATUSCHANGED(657),
 
-	public static final short SM_SUBABILITY = 752;
+	SM_SUBABILITY(752),
 
-	public static final short SM_SHOWEVENT = 804;
-	public static final short SM_HIDEEVENT = 805;
+	SM_SHOWEVENT(804),
+	SM_HIDEEVENT(805),
 
-	public static final short SM_OPENHEALTH  = 1100;
-	public static final short SM_CLOSEHEALTH = 1101;
-	public static final short SM_CHANGEFACE  = 1104;
+	SM_OPENHEALTH(1100),
+	SM_CLOSEHEALTH(1101),
+	SM_CHANGEFACE(1104),
 
-	public static final short SM_ITEMUPDATE = 1500;
-	public static final short SM_MONSTERSAY = 1501;
+	SM_ITEMUPDATE(1500),
+	SM_MONSTERSAY(1501),
 
 	// Server to Server Commands
-	public static final short RM_TURN            = 10001;
-	public static final short RM_WALK            = 10002;
-	public static final short RM_RUN             = 10003;
-	public static final short RM_HIT             = 10004;
-	public static final short RM_SPELL           = 10007;
-	public static final short RM_SPELL2          = 10008;
-	public static final short RM_POWERHIT        = 10009;
-	public static final short RM_LONGHIT         = 10011;
-	public static final short RM_WIDEHIT         = 10012;
-	public static final short RM_PUSH            = 10013;
-	public static final short RM_FIREHIT         = 10014;
-	public static final short RM_RUSH            = 10015;
-	public static final short RM_STRUCK          = 10020;
-	public static final short RM_DEATH           = 10021;
-	public static final short RM_DISAPPEAR       = 10022;
-	public static final short RM_MAGSTRUCK       = 10025;
-	public static final short RM_STRUCK_MAG      = 10027;
-	public static final short RM_MAGSTRUCK_MINE  = 10028;
-	public static final short RM_MAGHEALING      = 10026;
-	public static final short RM_HEAR            = 10030;
-	public static final short RM_WHISPER         = 10031;
-	public static final short RM_CRY             = 10032;
-	public static final short RM_RIDE            = 10033;
-	public static final short RM_WINEXP          = 10044;
-	public static final short RM_USERNAME        = 10043;
-	public static final short RM_LEVELUP         = 10045;
-	public static final short RM_CHANGENAMECOLOR = 10046;
+	RM_TURN(10001),
+	RM_WALK(10002),
+	RM_RUN(10003),
+	RM_HIT(10004),
+	RM_SPELL(10007),
+	RM_SPELL2(10008),
+	RM_POWERHIT(10009),
+	RM_LONGHIT(10011),
+	RM_WIDEHIT(10012),
+	RM_PUSH(10013),
+	RM_FIREHIT(10014),
+	RM_RUSH(10015),
+	RM_STRUCK(10020),
+	RM_DEATH(10021),
+	RM_DISAPPEAR(10022),
+	RM_MAGSTRUCK(10025),
+	RM_STRUCK_MAG(10027),
+	RM_MAGSTRUCK_MINE(10028),
+	RM_MAGHEALING(10026),
+	RM_HEAR(10030),
+	RM_WHISPER(10031),
+	RM_CRY(10032),
+	RM_RIDE(10033),
+	RM_WINEXP(10044),
+	RM_USERNAME(10043),
+	RM_LEVELUP(10045),
+	RM_CHANGENAMECOLOR(10046),
 
-	public static final short RM_LOGON              = 10050;
-	public static final short RM_ABILITY            = 10051;
-	public static final short RM_HEALTHSPELLCHANGED = 10052;
-	public static final short RM_DAYCHANGING        = 10053;
+	RM_LOGON(10050),
+	RM_ABILITY(10051),
+	RM_HEALTHSPELLCHANGED(10052),
+	RM_DAYCHANGING(10053),
 
-	public static final short RM_SYSMESSAGE        = 10100;
-	public static final short RM_GROUPMESSAGE      = 10102;
-	public static final short RM_SYSMESSAGE2       = 10103;
-	public static final short RM_GUILDMESSAGE      = 10104;
-	public static final short RM_ITEMSHOW          = 10110;
-	public static final short RM_ITEMHIDE          = 10111;
-	public static final short RM_DOOROPEN          = 10112;
-	public static final short RM_SENDUSEITEMS      = 10114;
-	public static final short RM_WEIGHTCHANGED     = 10115;
-	public static final short RM_FEATURECHANGED    = 10116;
-	public static final short RM_CLEAROBJECTS      = 10117;
-	public static final short RM_CHANGEMAP         = 10118;
-	public static final short RM_BUTCH             = 10119;
-	public static final short RM_MAGICFIRE         = 10120;
-	public static final short RM_SENDMYMAGIC       = 10122;
-	public static final short RM_MAGIC_LVEXP       = 10123;
-	public static final short RM_SKELETON          = 10024;
-	public static final short RM_DURACHANGE        = 10125;
-	public static final short RM_MERCHANTSAY       = 10126;
-	public static final short RM_GOLDCHANGED       = 10136;
-	public static final short RM_CHANGELIGHT       = 10137;
-	public static final short RM_CHARSTATUSCHANGED = 10139;
-	public static final short RM_DELAYMAGIC        = 10154;
+	RM_SYSMESSAGE(10100),
+	RM_GROUPMESSAGE(10102),
+	RM_SYSMESSAGE2(10103),
+	RM_GUILDMESSAGE(10104),
+	RM_ITEMSHOW(10110),
+	RM_ITEMHIDE(10111),
+	RM_DOOROPEN(10112),
+	RM_SENDUSEITEMS(10114),
+	RM_WEIGHTCHANGED(10115),
+	RM_FEATURECHANGED(10116),
+	RM_CLEAROBJECTS(10117),
+	RM_CHANGEMAP(10118),
+	RM_BUTCH(10119),
+	RM_MAGICFIRE(10120),
+	RM_SENDMYMAGIC(10122),
+	RM_MAGIC_LVEXP(10123),
+	RM_SKELETON(10024),
+	RM_DURACHANGE(10125),
+	RM_MERCHANTSAY(10126),
+	RM_GOLDCHANGED(10136),
+	RM_CHANGELIGHT(10137),
+	RM_CHARSTATUSCHANGED(10139),
+	RM_DELAYMAGIC(10154),
 
-	public static final short RM_DIGUP    = 10200;
-	public static final short RM_DIGDOWN  = 10201;
-	public static final short RM_FLYAXE   = 10202;
-	public static final short RM_LIGHTING = 10204;
+	RM_DIGUP(10200),
+	RM_DIGDOWN(10201),
+	RM_FLYAXE(10202),
+	RM_LIGHTING(10204),
 
-	public static final short RM_SUBABILITY  = 10302;
-	public static final short RM_TRANSPARENT = 10308;
+	RM_SUBABILITY(10302),
+	RM_TRANSPARENT(10308),
 
-	public static final short RM_SPACEMOVE_SHOW = 10331;
-	public static final short RM_HIDEEVENT      = 10333;
-	public static final short RM_SHOWEVENT      = 10334;
-	public static final short RM_ZEN_BEE        = 10337;
+	RM_SPACEMOVE_SHOW(10331),
+	RM_HIDEEVENT(10333),
+	RM_SHOWEVENT(10334),
+	RM_ZEN_BEE(10337),
 
-	public static final short RM_OPENHEALTH   = 10410;
-	public static final short RM_CLOSEHEALTH  = 10411;
-	public static final short RM_DOOPENHEALTH = 10412;
-	public static final short RM_CHANGEFACE   = 10415;
+	RM_OPENHEALTH(10410),
+	RM_CLOSEHEALTH(10411),
+	RM_DOOPENHEALTH(10412),
+	RM_CHANGEFACE(10415),
 
-	public static final short RM_ITEMUPDATE = 11000;
-	public static final short RM_MONSTERSAY = 11001;
-	public static final short RM_MAKESLAVE  = 11002;
+	RM_ITEMUPDATE(11000),
+	RM_MONSTERSAY(11001),
+	RM_MAKESLAVE(11002),
 
 	// For DB Server
-	public static final short DB_LOADHUMANRCD = 100;
-	public static final short DB_SAVEHUMANRCD = 101;
-	public static final short DB_MAKEITEMRCD  = 150;
-	public static final short DB_ITEMTHROW    = 151;
-	public static final short DB_MAKEITEMRCD2 = 152;
+	DB_LOADHUMANRCD(100),
+	DB_SAVEHUMANRCD(101),
+	DB_MAKEITEMRCD(150),
+	DB_ITEMTHROW(151),
+	DB_MAKEITEMRCD2(152),
 
-	public static final short DBR_LOADHUMANRCD  = 1100;
-	public static final short DBR_LOADHUMANRCD2 = 1101;
-	public static final short DBR_MAKEITEMRCD   = 1500;
-	public static final short DBR_MAKEITEMRCD2  = 1501;
+	DBR_LOADHUMANRCD(1100),
+	DBR_LOADHUMANRCD2(1101),
+	DBR_MAKEITEMRCD(1500),
+	DBR_MAKEITEMRCD2(1501),
 
-	public static final short DBR_FAIL = 2000;
+	DBR_FAIL(2000);
+
+	private static final Map<Short, Protocol> map;
+
+	static {
+		map = new HashMap<>();
+		for (Protocol p : Protocol.values()) {
+			map.put((short) p.id, p);
+		}
+	}
+
+	public static String getName(short id) {
+		if (map.containsKey(id))
+			return map.get(id).name();
+		else
+			return null;
+	}
+
+	public final short id;
+
+	Protocol(int id) {
+		this.id = (short)id;
+	}
 
 
 }

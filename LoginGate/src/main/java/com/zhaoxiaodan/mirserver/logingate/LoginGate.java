@@ -2,12 +2,13 @@ package com.zhaoxiaodan.mirserver.logingate;
 
 import com.zhaoxiaodan.mirserver.core.Config;
 import com.zhaoxiaodan.mirserver.core.debug.ReadWriteLoggingHandler;
+import com.zhaoxiaodan.mirserver.core.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.core.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.core.network.decoder.Bit6BufDecoder;
 import com.zhaoxiaodan.mirserver.core.network.decoder.PacketDecoder;
 import com.zhaoxiaodan.mirserver.core.network.encoder.Bit6BufEncoder;
-import com.zhaoxiaodan.mirserver.core.network.encoder.ResponseEncoder;
-import com.zhaoxiaodan.mirserver.logingate.decoder.ProcessRequestDecoder;
+import com.zhaoxiaodan.mirserver.core.network.encoder.PacketEncoder;
+import com.zhaoxiaodan.mirserver.logingate.handler.LoginHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -20,7 +21,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.CharsetUtil;
 
 /**
  * Created by liangwei on 16/2/16.
@@ -44,19 +44,21 @@ public class LoginGate {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline().addLast(
+									//编码
 									new ReadWriteLoggingHandler(LogLevel.INFO),
 									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-									new ProcessRequestDecoder(CharsetUtil.UTF_8),
-									new Bit6BufDecoder(true),       //服务器, 解码request, 编码response
+									new Bit6BufDecoder(true),
 									new ReadWriteLoggingHandler(LogLevel.INFO),
-									new PacketDecoder(LoginGateProtocols.Rquest_Type_Map),
+									new PacketDecoder(ClientPackets.class.getCanonicalName()),
 
+									//解码
 									new ReadWriteLoggingHandler(LogLevel.INFO),
-									new Bit6BufEncoder(false),           //服务器, 解码request, 编码response
+									new Bit6BufEncoder(false),
 									new ReadWriteLoggingHandler(LogLevel.INFO),
-									new ResponseEncoder(),
+									new PacketEncoder(),
 
-									new PacketDispatcher(LoginGateProtocols.Rquest_Handler_Map)
+									//分包分发
+									new PacketDispatcher(LoginHandler.class.getPackage().getName())
 							);
 						}
 					})
