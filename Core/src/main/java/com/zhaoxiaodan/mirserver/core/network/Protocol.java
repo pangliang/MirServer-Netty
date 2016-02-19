@@ -252,4 +252,6 @@ public class Protocol {
 	public static final short DBR_MAKEITEMRCD2  = 1501;
 
 	public static final short DBR_FAIL = 2000;
+
+
 }

@@ -1,10 +1,10 @@
 import com.zhaoxiaodan.mirserver.core.Config;
 import com.zhaoxiaodan.mirserver.core.debug.ReadWriteLoggingHandler;
-import com.zhaoxiaodan.mirserver.core.network.Request;
+import com.zhaoxiaodan.mirserver.core.network.IndexPacket;
 import com.zhaoxiaodan.mirserver.core.network.decoder.Bit6BufDecoder;
-import com.zhaoxiaodan.mirserver.core.network.decoder.RequestDecoder;
+import com.zhaoxiaodan.mirserver.core.network.decoder.PacketDecoder;
 import com.zhaoxiaodan.mirserver.core.network.encoder.Bit6BufEncoder;
-import com.zhaoxiaodan.mirserver.core.network.encoder.RequestEncoder;
+import com.zhaoxiaodan.mirserver.core.network.encoder.PacketEncoder;
 import com.zhaoxiaodan.mirserver.logingate.LoginGateProtocols;
 import com.zhaoxiaodan.mirserver.logingate.decoder.ProcessRequestDecoder;
 import com.zhaoxiaodan.mirserver.logingate.request.LoginRequest;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class RequestEncodeDecodeTest {
 
 
-	Map<String, Request> testList = new HashMap<String, Request>() {
+	Map<String, IndexPacket> testList = new HashMap<String, IndexPacket>() {
 		{
 			try {
 				put("#2<<<<<I@C<<<<<<<<HODoGo@nHl!", new LoginRequest((byte) 2, "123", "123"));
@@ -47,7 +47,7 @@ public class RequestEncodeDecodeTest {
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestDecoder(LoginGateProtocols.Rquest_Type_Map)
+					new PacketDecoder(LoginGateProtocols.Rquest_Type_Map)
 			);
 
 			ByteBuf buf = Unpooled.buffer();
@@ -56,13 +56,13 @@ public class RequestEncodeDecodeTest {
 			ch.writeInbound(buf);
 			ch.finish();
 
-			Request req = ch.readInbound();
+			IndexPacket req = ch.readInbound();
 
 			ch = new EmbeddedChannel(
 					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new Bit6BufEncoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestEncoder()
+					new PacketEncoder()
 			);
 
 			ch.writeOutbound(testList.get(msg));
@@ -76,7 +76,7 @@ public class RequestEncodeDecodeTest {
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestDecoder(LoginGateProtocols.Rquest_Type_Map),
+					new PacketDecoder(LoginGateProtocols.Rquest_Type_Map),
 					new ReadWriteLoggingHandler(LogLevel.INFO)
 			);
 
@@ -94,7 +94,7 @@ public class RequestEncodeDecodeTest {
 					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new Bit6BufEncoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestEncoder()
+					new PacketEncoder()
 			);
 
 			ch.writeOutbound(testList.get(msg));
@@ -109,7 +109,7 @@ public class RequestEncodeDecodeTest {
 					new ProcessRequestDecoder(CharsetUtil.UTF_8),
 					new Bit6BufDecoder(true),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new RequestDecoder(LoginGateProtocols.Rquest_Type_Map)
+					new PacketDecoder(LoginGateProtocols.Rquest_Type_Map)
 			);
 
 			ch.writeInbound(out);

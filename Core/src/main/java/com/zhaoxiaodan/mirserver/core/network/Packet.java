@@ -1,0 +1,105 @@
+package com.zhaoxiaodan.mirserver.core.network;
+
+import io.netty.buffer.ByteBuf;
+
+/**
+ * 请求封包类, 封包数据格式: * #符号开头 + 头部 + body + !符号结尾
+ * <pre>
+ * +-----------------------------------------------------------------------------------------+
+ * |  0  |  1  |  2  3  4  5  |  6  7  |  8  9  |  10  11  |  12  13  |  14 ..... n -1 |  n  |
+ * +-----------------------------------------------------------------------------------------+
+ * |  #  |              header                                        |      body      |  !  |
+ * +-----------------------------------------------------------------------------------------+
+ * |  #  |index|    recog     |  pid  |    p1  |    p2    |    p3    |      body      |  !  |
+ * +-----------------------------------------------------------------------------------------+
+ * </pre>
+ * 不同类型的请求, body有各自的格式,比如login封包 body 用/符号分隔, 格式为:帐号/密码, 例如:
+ * <pre>
+ * +-------------------------------------------------+
+ * |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
+ * +--------+-------------------------------------------------+----------------+
+ * |00000000| 23 31 3c 3c 3c 3c 3c 49 40 43 3c 3c 3c 3c 3c 3c |#1<<<<<I@C<<<<<<|
+ * |00000010| 3c 3c 48 4f 44 6f 47 6f 40 6e 48 6c 21          |<<HODoGo@nHl!   |
+ * +--------+-------------------------------------------------+----------------+
+ * 解密后得到:
+ * +-------------------------------------------------+
+ * |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
+ * +--------+-------------------------------------------------+----------------+
+ * |00000000| 23 31 00 00 00 00 d1 07 00 00 00 00 00 00 31 32 |#1............12|
+ * |00000010| 33 2f 31 32 00 00 00 00 00 00 00 00 21          |3/12........!   |
+ * +--------+-------------------------------------------------+----------------+
+ * </pre>
+ * 装配后得到类:
+ * <p/>
+ * Packet{  cmdIndx=2, recog=0, pid=2001, p1=0, p2=0, p3=0, body='123/123'}
+ */
+public class Packet {
+
+	public static final int DEFAULT_HEADER_SIZE = 12;
+
+	public int   recog;     // 未知
+	public short pid;      // 协议id
+	public short p1;        //
+	public short p2;
+	public short p3;
+
+	public Packet() {
+	}
+
+	public Packet(int recog, short pid, short p1, short p2, short p3) {
+		this.recog = recog;
+		this.pid = pid;
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
+	}
+
+	public Packet(short pid) {
+		this(0, pid, (short) 0, (short) 0, (short) 0);
+	}
+
+	public void readPacket(ByteBuf in) {
+		recog = in.readInt();
+		pid = in.readShort();
+		p1 = in.readShort();
+		p2 = in.readShort();
+		p3 = in.readShort();
+	}
+
+	public void writePacket(ByteBuf out) {
+		out.writeInt(recog);
+		out.writeShort(pid);
+		out.writeShort(p1);
+		out.writeShort(p2);
+		out.writeShort(p3);
+	}
+
+	public String readString(ByteBuf in)
+	{
+		StringBuilder sb = new StringBuilder();
+		while(in.readableBytes() > 0)
+		{
+			char c = in.readChar();
+			if (c < 0x30) {
+				if (0 == sb.length()) // 开头就是 空
+					continue;
+				else {
+					break;
+				}
+			} else {
+				sb.append((char) c);
+			}
+		}
+
+		return sb.toString().trim();
+	}
+
+	public static class WrongFormatException extends Exception {
+
+		public WrongFormatException(String msg) {
+			super(msg);
+		}
+	}
+
+
+}

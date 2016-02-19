@@ -2,9 +2,9 @@ package com.zhaoxiaodan.mirserver.logingate;
 
 import com.zhaoxiaodan.mirserver.core.Config;
 import com.zhaoxiaodan.mirserver.core.debug.ReadWriteLoggingHandler;
-import com.zhaoxiaodan.mirserver.core.network.RequestDispatcher;
+import com.zhaoxiaodan.mirserver.core.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.core.network.decoder.Bit6BufDecoder;
-import com.zhaoxiaodan.mirserver.core.network.decoder.RequestDecoder;
+import com.zhaoxiaodan.mirserver.core.network.decoder.PacketDecoder;
 import com.zhaoxiaodan.mirserver.core.network.encoder.Bit6BufEncoder;
 import com.zhaoxiaodan.mirserver.core.network.encoder.ResponseEncoder;
 import com.zhaoxiaodan.mirserver.logingate.decoder.ProcessRequestDecoder;
@@ -49,14 +49,14 @@ public class LoginGate {
 									new ProcessRequestDecoder(CharsetUtil.UTF_8),
 									new Bit6BufDecoder(true),       //服务器, 解码request, 编码response
 									new ReadWriteLoggingHandler(LogLevel.INFO),
-									new RequestDecoder(LoginGateProtocols.Rquest_Type_Map),
+									new PacketDecoder(LoginGateProtocols.Rquest_Type_Map),
 
 									new ReadWriteLoggingHandler(LogLevel.INFO),
 									new Bit6BufEncoder(false),           //服务器, 解码request, 编码response
 									new ReadWriteLoggingHandler(LogLevel.INFO),
 									new ResponseEncoder(),
 
-									new RequestDispatcher(LoginGateProtocols.Rquest_Handler_Map)
+									new PacketDispatcher(LoginGateProtocols.Rquest_Handler_Map)
 							);
 						}
 					})

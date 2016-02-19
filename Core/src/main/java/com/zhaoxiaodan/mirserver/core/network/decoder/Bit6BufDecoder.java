@@ -67,7 +67,7 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 		ByteBuf buf = Unpooled.buffer();
 
-		buf.writeByte(in.readByte()); //  #
+		in.readByte(); //  # , 在这里就去掉 头尾
 
 		if (isRequestMessage)
 			buf.writeByte(in.readByte());  //cmdIndex
@@ -77,7 +77,7 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 		byte[] bit6DecodeContent = decode6BitBuf(content);
 		buf.writeBytes(bit6DecodeContent);
 
-		buf.writeByte(in.readByte()); //  !
+		in.readByte(); //  !
 
 		out.add(buf);
 	}

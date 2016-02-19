@@ -62,7 +62,7 @@ public class Bit6BufEncoder extends MessageToMessageEncoder<ByteBuf> {
 
 		ByteBuf buf = Unpooled.buffer();
 
-		buf.writeByte('#');
+		buf.writeByte('#');     // 加上 头分割符
 		if(isRequestMessage)
 			buf.writeByte(in.readByte());
 
@@ -70,7 +70,7 @@ public class Bit6BufEncoder extends MessageToMessageEncoder<ByteBuf> {
 		in.readBytes(body);
 		buf.writeBytes(encoder6BitBuf(body));
 
-		buf.writeByte('!');
+		buf.writeByte('!');     // 加上 尾分割符
 
 		out.add(buf);
 	}
