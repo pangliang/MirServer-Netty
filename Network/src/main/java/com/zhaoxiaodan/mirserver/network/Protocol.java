@@ -22,7 +22,7 @@ public enum Protocol {
 	SM_PASSWD_FAIL(503),
 	SM_NEWID_SUCCESS(504),
 	SM_NEWID_FAIL(505),
-	SM_PASSOK_SELECTSERVER(529),
+	LoginSuccSelectServer(529),
 	SM_SELECTSERVER_OK(530),
 
 	// For Select Character Process
@@ -261,7 +261,9 @@ public enum Protocol {
 	static {
 		map = new HashMap<>();
 		for (Protocol p : Protocol.values()) {
-			map.put((short) p.id, p);
+			if(map.containsKey(p.id))
+				System.out.println(("Protocol id " + p.id + " exsit by " + map.get(p.id).name()));
+			map.put(p.id, p);
 		}
 	}
 

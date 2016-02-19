@@ -16,9 +16,11 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 	//封包所在的包名
 	private final String packetPackageName;
+	public final boolean isIndexPacket;
 
-	public PacketDecoder(String packetPackageName) {
+	public PacketDecoder(String packetPackageName , boolean isIndexPacket) {
 		this.packetPackageName = packetPackageName;
+		this.isIndexPacket = isIndexPacket;
 	}
 
 	@Override
@@ -31,7 +33,9 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 		if (size < Packet.DEFAULT_HEADER_SIZE)
 			throw new Packet.WrongFormatException("packet size < " + Packet.DEFAULT_HEADER_SIZE);
 
-		short protocolId = in.getShort(1 + 4);  // cmdIndex + regoc
+		int pidPos = isIndexPacket ? 1 + 4 : 4;
+
+		short protocolId = in.getShort(pidPos);  // cmdIndex + regoc
 
 		String protocolName = Protocol.getName(protocolId);
 		if (null == protocolName) {
@@ -43,6 +47,7 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 			packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocolName);
 		}catch (ClassNotFoundException e)
 		{
+			System.err.println(e.getMessage());
 			packetClass = Packet.class;
 		}
 		Packet                  packet      = packetClass.newInstance();

@@ -11,8 +11,8 @@ public class IndexPacket extends Packet {
 
 	public IndexPacket(){}
 
-	public IndexPacket(short type, byte cmdIndex) {
-		super(0, type, (short) 0, (short) 0, (short) 0);
+	public IndexPacket(Protocol pid, byte cmdIndex) {
+		super(0, pid, (short) 0, (short) 0, (short) 0);
 		this.cmdIndex = cmdIndex;
 	}
 

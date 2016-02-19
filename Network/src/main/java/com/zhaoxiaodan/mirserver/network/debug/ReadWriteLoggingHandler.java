@@ -10,19 +10,32 @@ import io.netty.handler.logging.LoggingHandler;
  * Created by liangwei on 16/2/18.
  */
 public class ReadWriteLoggingHandler extends ChannelHandlerAdapter {
-	private LoggingHandler loggingHandler;
 
-	public ReadWriteLoggingHandler(LogLevel logLevel) {
-		loggingHandler = new LoggingHandler(logLevel);
+	public enum Type {
+		Read, Write, Both
+	}
+
+	private LoggingHandler loggingHandler;
+	private Type           type;
+
+	public ReadWriteLoggingHandler(Type type) {
+		loggingHandler = new LoggingHandler(LogLevel.INFO);
+		this.type = type;
 	}
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		loggingHandler.channelRead(ctx, msg);
+		if(type == Type.Read || type == Type.Both)
+			loggingHandler.channelRead(ctx, msg);
+		else
+			ctx.fireChannelRead(msg);
 	}
 
 	@Override
 	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-		loggingHandler.write(ctx, msg, promise);
+		if(type == Type.Write || type == Type.Both)
+			loggingHandler.write(ctx, msg, promise);
+		else
+			ctx.write(msg, promise);
 	}
 }

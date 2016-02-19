@@ -10,7 +10,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.logging.LogLevel;
 import io.netty.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +25,7 @@ public class PacketEncodeDecodeTest {
 		{
 			try {
 //				put("#<<<<<KT=<<<<<<<<!",new Packet(Protocol.SM_ID_NOTFOUND));
-				put("#<<<<<=@><<<<<<@<l[gOhG[cjv_MfYO>Go@k!",new Packet(Protocol.SM_ID_NOTFOUND));
+				put("#<<<<<=@><<<<<<@<l[gOhG[cjv_MfYO>Go@k!",new Packet(Protocol.LoginSuccSelectServer));
 //				put("#2<<<<<I@C<<<<<<<<HODoGo@nHl!", new ClientPackets.Login());
 //				put("#2<<<<<I@C<<<<<<<<HODoI?PrInxmH_HpIOTs!",new ClientPackets.Login());
 			} catch (Exception e) {
@@ -40,11 +39,11 @@ public class PacketEncodeDecodeTest {
 	public void test() {
 		for (String msg : testList.keySet()) {
 			EmbeddedChannel ch = new EmbeddedChannel(
-					new ReadWriteLoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
 					new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 					new Bit6BufDecoder(false),
-					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new PacketDecoder(ClientPackets.class.getCanonicalName())
+					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
+					new PacketDecoder(ClientPackets.class.getCanonicalName(), false)
 			);
 
 			ByteBuf buf = Unpooled.buffer();
@@ -59,9 +58,9 @@ public class PacketEncodeDecodeTest {
 			Assert.assertEquals(t.pid, req.pid );
 
 			ch = new EmbeddedChannel(
-					new ReadWriteLoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
 					new Bit6BufEncoder(false),
-					new ReadWriteLoggingHandler(LogLevel.INFO),
+					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
 					new PacketEncoder()
 			);
 

@@ -46,16 +46,16 @@ public class Packet {
 	public Packet() {
 	}
 
-	public Packet(int p0, short pid, short p1, short p2, short p3) {
+	public Packet(int p0, Protocol protocol, short p1, short p2, short p3) {
 		this.p0 = p0;
-		this.pid = pid;
+		this.pid = protocol.id;
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
 	}
 
 	public Packet(Protocol protocol) {
-		this(0, protocol.id, (short) 0, (short) 0, (short) 0);
+		this(0, protocol, (short) 0, (short) 0, (short) 0);
 	}
 
 	public void readPacket(ByteBuf in) {

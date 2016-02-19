@@ -13,7 +13,7 @@ public class ClientPackets {
 	public static final class Process extends IndexPacket {
 
 		public Process(byte cmdIndex) {
-			super(Protocol.CM_PROTOCOL.id, cmdIndex);
+			super(Protocol.CM_PROTOCOL, cmdIndex);
 		}
 	}
 
@@ -22,6 +22,16 @@ public class ClientPackets {
 		private static final char PARAM_SPLIT_CHAR = '/';
 
 		public User user;
+
+		public Login() {
+		}
+
+		public Login(byte cmdIndex, String userId, String password) {
+			super(Protocol.Login, cmdIndex);
+			user = new User();
+			user.userId = userId;
+			user.password = password;
+		}
 
 		@Override
 		public void readPacket(ByteBuf in) {

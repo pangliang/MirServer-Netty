@@ -44,16 +44,16 @@ public class LoginGate {
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline().addLast(
 									//编码
-									new ReadWriteLoggingHandler(LogLevel.INFO),
+									new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
 									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new Bit6BufDecoder(true),
-									new ReadWriteLoggingHandler(LogLevel.INFO),
-									new PacketDecoder(ClientPackets.class.getCanonicalName()),
+									new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
+									new PacketDecoder(ClientPackets.class.getCanonicalName(), true),
 
 									//解码
-									new ReadWriteLoggingHandler(LogLevel.INFO),
+									new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Write),
 									new Bit6BufEncoder(false),
-									new ReadWriteLoggingHandler(LogLevel.INFO),
+									new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Write),
 									new PacketEncoder(),
 
 									//分包分发
