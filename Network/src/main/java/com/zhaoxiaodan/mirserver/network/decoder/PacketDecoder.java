@@ -1,7 +1,7 @@
-package com.zhaoxiaodan.mirserver.core.network.decoder;
+package com.zhaoxiaodan.mirserver.network.decoder;
 
-import com.zhaoxiaodan.mirserver.core.network.Packet;
-import com.zhaoxiaodan.mirserver.core.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.Packet;
+import com.zhaoxiaodan.mirserver.network.Protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;

@@ -1,12 +1,11 @@
-import com.zhaoxiaodan.mirserver.core.Config;
-import com.zhaoxiaodan.mirserver.core.debug.ReadWriteLoggingHandler;
-import com.zhaoxiaodan.mirserver.core.network.ClientPackets;
-import com.zhaoxiaodan.mirserver.core.network.Packet;
-import com.zhaoxiaodan.mirserver.core.network.Protocol;
-import com.zhaoxiaodan.mirserver.core.network.decoder.Bit6BufDecoder;
-import com.zhaoxiaodan.mirserver.core.network.decoder.PacketDecoder;
-import com.zhaoxiaodan.mirserver.core.network.encoder.Bit6BufEncoder;
-import com.zhaoxiaodan.mirserver.core.network.encoder.PacketEncoder;
+import com.zhaoxiaodan.mirserver.network.ClientPackets;
+import com.zhaoxiaodan.mirserver.network.Packet;
+import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.debug.ReadWriteLoggingHandler;
+import com.zhaoxiaodan.mirserver.network.decoder.Bit6BufDecoder;
+import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
+import com.zhaoxiaodan.mirserver.network.encoder.Bit6BufEncoder;
+import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -42,7 +41,7 @@ public class PacketEncodeDecodeTest {
 		for (String msg : testList.keySet()) {
 			EmbeddedChannel ch = new EmbeddedChannel(
 					new ReadWriteLoggingHandler(LogLevel.INFO),
-					new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
+					new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 					new Bit6BufDecoder(false),
 					new ReadWriteLoggingHandler(LogLevel.INFO),
 					new PacketDecoder(ClientPackets.class.getCanonicalName())

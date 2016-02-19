@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.core.network;
+package com.zhaoxiaodan.mirserver.network;
 
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import io.netty.buffer.ByteBuf;

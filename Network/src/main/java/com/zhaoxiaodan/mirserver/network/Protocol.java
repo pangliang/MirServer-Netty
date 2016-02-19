@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.core.network;
+package com.zhaoxiaodan.mirserver.network;
 
 import java.util.HashMap;
 import java.util.Map;

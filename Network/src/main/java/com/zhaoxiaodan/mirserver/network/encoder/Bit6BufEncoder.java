@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.core.network.encoder;
+package com.zhaoxiaodan.mirserver.network.encoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

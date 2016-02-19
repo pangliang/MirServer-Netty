@@ -1,9 +1,9 @@
 package com.zhaoxiaodan.mirserver.logingate.handler;
 
-import com.zhaoxiaodan.mirserver.core.network.ClientPackets;
-import com.zhaoxiaodan.mirserver.core.network.Packet;
-import com.zhaoxiaodan.mirserver.core.network.PacketHandler;
-import com.zhaoxiaodan.mirserver.core.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.ClientPackets;
+import com.zhaoxiaodan.mirserver.network.Packet;
+import com.zhaoxiaodan.mirserver.network.PacketHandler;
+import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import io.netty.channel.ChannelHandlerContext;

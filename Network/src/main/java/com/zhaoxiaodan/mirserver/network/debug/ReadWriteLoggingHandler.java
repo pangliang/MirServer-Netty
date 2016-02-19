@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.core.debug;
+package com.zhaoxiaodan.mirserver.network.debug;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
