@@ -1,21 +1,20 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table( name = "Player" )
 public class Player {
 
 	@Id
 	@GeneratedValue
 	private Long id;
+
+	@Column(unique = true)
 	private String username;
-
-
 	private String password;
 	private String nickName;
 	private String question1;

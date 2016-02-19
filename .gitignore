@@ -1,3 +1,5 @@
 .gradle
 .idea
 build
+mir2.trace.db
+mir2.mv.db

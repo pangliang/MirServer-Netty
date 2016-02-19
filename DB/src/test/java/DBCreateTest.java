@@ -19,8 +19,10 @@ public class DBCreateTest {
 		Session session       = DB.getSession();
 		String  username = "username_"+new Date().toString()+"_"+new Random().nextInt(1000000);
 		Player  player   = new Player();
-		player.setUsername(new Date().toString());
+		player.setUsername(username);
+
 		session.save(player);
+		session.flush();
 
 		Criteria criteria = session.createCriteria(Player.class);
 

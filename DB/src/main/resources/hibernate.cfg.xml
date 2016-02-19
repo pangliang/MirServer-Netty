@@ -11,7 +11,6 @@
         <property name="hibernate.show_sql" >true</property>
         <property name="hibernate.format_sql" >true</property>
         <property name="hibernate.connection.autocommit">true</property>
-
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.Player"/>
     </session-factory>
 </hibernate-configuration>
