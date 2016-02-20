@@ -23,7 +23,13 @@ public class PacketDispatcher extends ChannelHandlerAdapter {
 		}
 
 		String                         protocolName = pakcet.getClass().getSimpleName();   //Packet 就是通过 protocol id 反射出来的 name
-		Class<? extends PacketHandler> handlerClass = (Class<? extends PacketHandler>) Class.forName(handlerPackageName + "." + protocolName + "Handler");
+		Class<? extends PacketHandler> handlerClass;
+		try {
+			handlerClass = (Class<? extends PacketHandler>) Class.forName(handlerPackageName + "." + protocolName + "Handler");
+		}catch(ClassNotFoundException e)
+		{
+			handlerClass = (Class<? extends PacketHandler>) Class.forName(handlerPackageName + ".DefaultPacketHandler");
+		}
 		PacketHandler                  handler      = handlerClass.newInstance();
 		if (null != handler)
 			handler.exce(ctx, (Packet)pakcet);

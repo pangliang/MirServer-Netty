@@ -16,8 +16,8 @@ import java.util.List;
 public class LoginHandler implements PacketHandler {
 
 	@Override
-	public void exce(ChannelHandlerContext ctx, Packet indexPacket) {
-		ClientPackets.Login loginRequest = (ClientPackets.Login) indexPacket;
+	public void exce(ChannelHandlerContext ctx, Packet packet) {
+		ClientPackets.Login loginRequest = (ClientPackets.Login) packet;
 
 		Session  session  = DB.getSession();
 

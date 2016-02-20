@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
-public class User {
+public class User extends DAO{
 
 	@Id
 	@GeneratedValue

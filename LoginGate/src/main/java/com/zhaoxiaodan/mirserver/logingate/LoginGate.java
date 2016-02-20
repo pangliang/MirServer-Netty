@@ -49,6 +49,7 @@ public class LoginGate {
 									new Bit6BufDecoder(true),
 									new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
 									new PacketDecoder(ClientPackets.class.getCanonicalName(), true),
+									new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
 
 									//解码
 									new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Write),

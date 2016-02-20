@@ -26,11 +26,12 @@ import java.io.InputStreamReader;
  */
 public class MockClient {
 
-	static final String HOST = "101.200.191.174";//"121.42.150.110";
+	static final String HOST = "121.42.150.110";
 	static final int    PORT = 7000;
 
 	Packet[] tests = {
-		new ClientPackets.Login((byte)1,"liang1","liang1"),
+			new ClientPackets.Login((byte) 1, "liang1", "liang1"),
+			new ClientPackets.SelectServer((byte) 2, "横行霸道二区")
 	};
 
 	public void run() throws Exception {
@@ -70,7 +71,7 @@ public class MockClient {
 			// run test
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-			for (int i=0;i<tests.length;i++) {
+			for (int i = 0; i < tests.length; i++) {
 
 				Packet packet = tests[i];
 				ch.writeAndFlush(packet);
@@ -80,12 +81,12 @@ public class MockClient {
 				if ("bye".equals(line.toLowerCase())) {
 					ch.closeFuture().sync();
 					break;
-				}else if(tests.length -1 == i){
-					i=0;
+				} else if (tests.length - 1 == i) {
+					i = 0;
 				}
 			}
 
-			ch.closeFuture().sync();
+//			ch.closeFuture().sync();
 
 		} finally {
 			group.shutdownGracefully();

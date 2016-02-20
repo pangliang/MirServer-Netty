@@ -31,7 +31,7 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 		int size = in.readableBytes();
 
 		if (size < Packet.DEFAULT_HEADER_SIZE)
-			throw new Packet.WrongFormatException("packet size < " + Packet.DEFAULT_HEADER_SIZE);
+			throw new Exception("packet size < " + Packet.DEFAULT_HEADER_SIZE);
 
 		int pidPos = isIndexPacket ? 1 + 4 : 4;
 

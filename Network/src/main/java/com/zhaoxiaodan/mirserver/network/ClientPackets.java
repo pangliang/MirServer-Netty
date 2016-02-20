@@ -3,6 +3,8 @@ package com.zhaoxiaodan.mirserver.network;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import io.netty.buffer.ByteBuf;
 
+import java.nio.charset.Charset;
+
 /**
  * Created by liangwei on 16/2/19.
  */
@@ -69,6 +71,30 @@ public class ClientPackets {
 			user.password = readString(in);
 			user.username = readString(in);
 
+		}
+	}
+
+	public static final class SelectServer extends IndexPacket {
+
+		public String serverName;
+
+		public SelectServer() {}
+
+		public SelectServer(byte cmdIndex, String serverName) {
+			super(Protocol.SelectServer, cmdIndex);
+			this.serverName = serverName;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) {
+			super.readPacket(in);
+			serverName = in.toString(Charset.defaultCharset()).trim();
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(serverName.getBytes());
 		}
 	}
 }

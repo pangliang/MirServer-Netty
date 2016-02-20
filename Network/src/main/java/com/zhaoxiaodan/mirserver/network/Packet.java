@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.network;
 
+import com.zhaoxiaodan.utils.StringUtils;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -30,7 +31,7 @@ import io.netty.buffer.ByteBuf;
  * +--------+-------------------------------------------------+----------------+
  * </pre>
  * 装配后得到类:
- * <p/>
+ * <p>
  * Packet{  cmdIndx=2, p0=0, pid=2001, p1=0, p2=0, p3=0, body='123/123'}
  */
 public class Packet {
@@ -92,12 +93,8 @@ public class Packet {
 		return sb.toString().trim();
 	}
 
-	public static class WrongFormatException extends Exception {
-
-		public WrongFormatException(String msg) {
-			super(msg);
-		}
+	@Override
+	public String toString() {
+		return StringUtils.toString(this);
 	}
-
-
 }

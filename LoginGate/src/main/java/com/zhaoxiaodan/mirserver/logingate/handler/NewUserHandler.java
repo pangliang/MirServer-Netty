@@ -83,8 +83,8 @@ import java.util.List;
 public class NewUserHandler implements PacketHandler {
 
 	@Override
-	public void exce(ChannelHandlerContext ctx, Packet indexPacket) {
-		ClientPackets.NewUser newUser = (ClientPackets.NewUser) indexPacket;
+	public void exce(ChannelHandlerContext ctx, Packet packet) {
+		ClientPackets.NewUser newUser = (ClientPackets.NewUser) packet;
 
 		Session  session  = DB.getSession();
 		Criteria criteria = session.createCriteria(User.class);

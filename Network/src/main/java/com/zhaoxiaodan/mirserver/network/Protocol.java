@@ -14,8 +14,7 @@ public enum Protocol {
 	NewUser(2002),
 	CM_CHANGEPASSWORD(2003),
 	CM_UPDATEUSER(2004),
-
-	CM_SELECTSERVER(104),
+	SelectServer(104),
 
 	SM_CERTIFICATION_FAIL(501),
 	SM_ID_NOTFOUND(502),
@@ -23,7 +22,7 @@ public enum Protocol {
 	SM_NEWID_SUCCESS(504),
 	SM_NEWID_FAIL(505),
 	LoginSuccSelectServer(529),
-	SM_SELECTSERVER_OK(530),
+	SelectServerOk(530),
 
 	// For Select Character Process
 	CM_QUERYCHR(100),
@@ -261,9 +260,11 @@ public enum Protocol {
 	static {
 		map = new HashMap<>();
 		for (Protocol p : Protocol.values()) {
-			if(map.containsKey(p.id))
+			if(map.containsKey(p.id)) {
 				System.out.println(("Protocol id " + p.id + " exsit by " + map.get(p.id).name()));
-			map.put(p.id, p);
+			}else{
+				map.put(p.id, p);
+			}
 		}
 	}
 
