@@ -19,14 +19,14 @@ public class DBCreateTest {
 		Session session  = DB.getSession();
 		String  userId = "userId_"+new Date().toString()+"_"+new Random().nextInt(1000000);
 		User    player   = new User();
-		player.userId = userId;
+		player.loginId = userId;
 
 		session.save(player);
 		session.flush();
 
 		Criteria criteria = session.createCriteria(User.class);
 
-		List<User> list = criteria.add(Restrictions.eq("userId",userId)).list();
+		List<User> list = criteria.add(Restrictions.eq("loginId",userId)).list();
 		for(User p: list)
 		{
 			System.out.println(p);

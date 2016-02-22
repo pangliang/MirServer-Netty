@@ -1,13 +1,13 @@
 package com.zhaoxiaodan.mirserver.network;
 
+import com.zhaoxiaodan.mirserver.db.entities.Character;
+import com.zhaoxiaodan.mirserver.db.entities.Gender;
+import com.zhaoxiaodan.mirserver.db.entities.Job;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
 
-/**
- * Created by liangwei on 16/2/19.
- */
 //TODO client 包现在写服务器部分,只实现读, 不管写
 //TODO 按道理这里是网络封包模块不应该关联 DB 的 DAO, 当时包含的属性其实基本一致; 偷懒就这么用了
 public class ClientPackets {
@@ -21,30 +21,28 @@ public class ClientPackets {
 
 	public static final class Login extends IndexPacket {
 
-		private static final char PARAM_SPLIT_CHAR = '/';
-
 		public User user;
 
 		public Login() {
 		}
 
-		public Login(byte cmdIndex, String userId, String password) {
+		public Login(byte cmdIndex, User user) {
 			super(Protocol.Login, cmdIndex);
-			user = new User();
-			user.userId = userId;
-			user.password = password;
+			this.user = user;
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) {
+		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 
 			user = new User();
 			String remain = readString(in);
 			int    pos    = 0;
-			if (remain != null && (pos = remain.indexOf(PARAM_SPLIT_CHAR)) > 0) {
-				user.userId = remain.substring(0, pos);
+			if (remain != null && (pos = remain.indexOf("/")) > 0) {
+				user.loginId = remain.substring(0, pos);
 				user.password = remain.substring(pos + 1);
+			} else {
+				throw new WrongFormatException();
 			}
 		}
 
@@ -52,7 +50,7 @@ public class ClientPackets {
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 
-			out.writeBytes(user.userId.getBytes());
+			out.writeBytes(user.loginId.getBytes());
 			out.writeByte('/');
 			out.writeBytes(user.password.getBytes());
 		}
@@ -62,14 +60,33 @@ public class ClientPackets {
 
 		public User user;
 
+		public NewUser() {
+		}
+
+		public NewUser(byte cmdIndex, User user) {
+			super(Protocol.NewUser, cmdIndex);
+			this.user = user;
+		}
+
 		@Override
-		public void readPacket(ByteBuf in) {
+		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 
 			user = new User();
-			user.userId = readString(in);
+			user.loginId = readString(in);
 			user.password = readString(in);
 			user.username = readString(in);
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(user.loginId.getBytes());
+			out.writeBytes(new byte[]{0,0,0,0});
+			out.writeBytes(user.password.getBytes());
+			out.writeBytes(new byte[]{0,0,0,0});
+			out.writeBytes(user.username.getBytes());
+			out.writeBytes(new byte[]{0,0,0,0});
 
 		}
 	}
@@ -86,7 +103,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) {
+		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 			serverName = in.toString(Charset.defaultCharset()).trim();
 		}
@@ -95,6 +112,86 @@ public class ClientPackets {
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 			out.writeBytes(serverName.getBytes());
+		}
+	}
+
+	public static final class NewCharacter extends IndexPacket {
+
+		public Character character;
+
+		public NewCharacter() {}
+
+		public NewCharacter(byte cmdIndex, Character character) {
+			super(Protocol.NewCharacter, cmdIndex);
+			this.character = character;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			String   content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts   = content.split("/");
+			if (parts.length < 5)
+				throw new WrongFormatException();
+			User user = new User();
+			user.loginId = parts[0];
+			character = new Character();
+			character.user = user;
+			character.name = parts[1];
+			character.hair = Byte.parseByte(parts[2]);
+			character.job = Job.values()[Byte.parseByte(parts[3])];
+			character.gender = Gender.values()[Byte.parseByte(parts[4])];
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(character.user.loginId.getBytes());
+			out.writeByte('/');
+			out.writeBytes(character.name.getBytes());
+			out.writeByte('/');
+			out.writeByte(character.hair + '0');
+			out.writeByte('/');
+			out.writeByte(character.job.ordinal() + '0');
+			out.writeByte('/');
+			out.writeByte(character.gender.ordinal() + '0');
+			out.writeBytes(new byte[10]);
+		}
+	}
+
+	public static final class QueryCharacter extends IndexPacket {
+
+		public User user;
+		public short certification;
+
+		public QueryCharacter() {}
+
+		public QueryCharacter(byte cmdIndex, User user, short certification) {
+			super(Protocol.QueryCharacter, cmdIndex);
+			this.user = user;
+			this.certification = certification;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			user = new User();
+			String content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts = content.split("/");
+			if(parts.length >= 2)
+			{
+				user.loginId = parts[0];
+				certification = Short.parseShort(parts[1]);
+			}
+		}
+
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(user.loginId.getBytes());
+			out.writeByte('/');
+			out.writeBytes(Short.toString(certification).getBytes());
 		}
 	}
 }

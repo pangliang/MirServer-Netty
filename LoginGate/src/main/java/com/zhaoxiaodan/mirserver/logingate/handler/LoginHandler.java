@@ -10,9 +10,6 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
-/**
- * Created by liangwei on 16/2/18.
- */
 public class LoginHandler implements PacketHandler {
 
 	@Override
@@ -21,7 +18,7 @@ public class LoginHandler implements PacketHandler {
 
 		Session  session  = DB.getSession();
 
-		List<User> list = session.createCriteria(User.class).add(Restrictions.eq("userId",loginRequest.user.userId)).list();
+		List<User> list = session.createCriteria(User.class).add(Restrictions.eq("loginId",loginRequest.user.loginId)).list();
 		if(1 != list.size())
 		{
 			ctx.writeAndFlush(new Packet(Protocol.SM_ID_NOTFOUND));

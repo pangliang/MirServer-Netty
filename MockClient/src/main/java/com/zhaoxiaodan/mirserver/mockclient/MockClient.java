@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.mockclient;
 
+import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
 import com.zhaoxiaodan.mirserver.network.ServerPackets;
@@ -10,9 +11,7 @@ import com.zhaoxiaodan.mirserver.network.encoder.Bit6BufEncoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -29,12 +28,10 @@ public class MockClient {
 	static final String HOST = "121.42.150.110";
 	static final int    PORT = 7000;
 
-	Packet[] tests = {
-			new ClientPackets.Login((byte) 1, "liang1", "liang1"),
-			new ClientPackets.SelectServer((byte) 2, "横行霸道二区")
-	};
+	static short certification = 0;
 
 	public void run() throws Exception {
+
 
 		EventLoopGroup group = new NioEventLoopGroup();
 		try {
@@ -59,34 +56,72 @@ public class MockClient {
 											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Write),
 											new PacketEncoder(),
 
-											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read)
+											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
+											new ChannelHandlerAdapter() {
+												@Override
+												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+													if (msg instanceof ServerPackets.SelectServerOk) {
+														certification = ((ServerPackets.SelectServerOk) msg).certification;
+													}
+												}
+											}
 									);
 								}
 							}
 					);
-
-			// Start the connection attempt.
 			Channel ch = b.connect(HOST, PORT).sync().channel();
 
-			// run test
-
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-			for (int i = 0; i < tests.length; i++) {
 
-				Packet packet = tests[i];
-				ch.writeAndFlush(packet);
+			byte   cmdIndex = 0;
+			Packet packet;
+			User   user     = new User();
+			user.loginId = "liang1";
+			user.password = "liang1";
+			user.username = "pangliang";
 
-				String line = in.readLine();
+			// new user
+//			packet = new ClientPackets.NewUser(cmdIndex,user);
+//			ch.writeAndFlush(packet);
+//			in.readLine();
+//			cmdIndex = cmdIndex == 9?0:++cmdIndex;
 
-				if ("bye".equals(line.toLowerCase())) {
-					ch.closeFuture().sync();
-					break;
-				} else if (tests.length - 1 == i) {
-					i = 0;
-				}
-			}
+			// login
+			packet = new ClientPackets.Login(cmdIndex, user);
+			ch.writeAndFlush(packet);
+			in.readLine();
+			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
-//			ch.closeFuture().sync();
+			//select server
+			packet = new ClientPackets.SelectServer(cmdIndex, "横行霸道二区");
+			ch.writeAndFlush(packet);
+			in.readLine();
+			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
+
+
+			//****************   select server
+			ch = b.connect(HOST, 7100).sync().channel();
+
+			// new character
+//			Character character = new Character();
+//			character.user = user;
+//			character.name = "pangliang";
+//			character.hair = 1;
+//			character.job = Job.Warrior;
+//			character.gender = Gender.MALE;
+//			packet = new ClientPackets.NewCharacter(cmdIndex,character);
+//			ch.writeAndFlush(packet);
+//			in.readLine();
+//			cmdIndex = cmdIndex == 9?0:++cmdIndex;
+
+			// query character
+			packet = new ClientPackets.QueryCharacter(cmdIndex, user, certification);
+			ch.writeAndFlush(packet);
+			in.readLine();
+			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
+
+
+			ch.closeFuture().sync();
 
 		} finally {
 			group.shutdownGracefully();

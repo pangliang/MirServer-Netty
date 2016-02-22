@@ -15,5 +15,6 @@
 
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.User"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.ServerInfo"/>
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.Character"/>
     </session-factory>
 </hibernate-configuration>

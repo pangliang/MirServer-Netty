@@ -3,9 +3,6 @@ package com.zhaoxiaodan.mirserver.network;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by liangwei on 16/2/17.
- */
 public enum Protocol {
 
 	// For Login Process
@@ -25,12 +22,12 @@ public enum Protocol {
 	SelectServerOk(530),
 
 	// For Select Character Process
-	CM_QUERYCHR(100),
-	CM_NEWCHR(101),
+	QueryCharacter(100),
+	NewCharacter(101),
 	CM_DELCHR(102),
 	CM_SELCHR(103),
 
-	SM_QUERYCHR(520),
+	CharacterList(520),
 	SM_NEWCHR_SUCCESS(521),
 	SM_NEWCHR_FAIL(522),
 	SM_DELCHR_SUCCESS(523),

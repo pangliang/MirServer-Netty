@@ -8,10 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.Random;
 
-/**
- * Created by liangwei on 16/2/18.
- */
 public class SelectServerHandler implements PacketHandler {
 
 	@Override
@@ -27,7 +25,7 @@ public class SelectServerHandler implements PacketHandler {
 			return ;
 		}else{
 			ServerInfo info = list.get(0);
-			ctx.writeAndFlush(new ServerPackets.SelectServerOk(info.ip,info.port));
+			ctx.writeAndFlush(new ServerPackets.SelectServerOk(info.ip,info.port,(byte)new Random().nextInt(200)));
 		}
 	}
 

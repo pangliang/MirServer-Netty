@@ -37,6 +37,7 @@ import io.netty.buffer.ByteBuf;
 public class Packet {
 
 	public static final int DEFAULT_HEADER_SIZE = 12;
+	public static final String CONTENT_SPLIT_CHAR = "/";
 
 	public int   p0;     // 未知
 	public short pid;      // 协议id
@@ -59,7 +60,7 @@ public class Packet {
 		this(0, protocol, (short) 0, (short) 0, (short) 0);
 	}
 
-	public void readPacket(ByteBuf in) {
+	public void readPacket(ByteBuf in) throws WrongFormatException{
 		p0 = in.readInt();
 		pid = in.readShort();
 		p1 = in.readShort();
@@ -96,5 +97,8 @@ public class Packet {
 	@Override
 	public String toString() {
 		return StringUtils.toString(this);
+	}
+
+	public class WrongFormatException extends Exception{
 	}
 }

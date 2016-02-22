@@ -35,7 +35,7 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 		int pidPos = isIndexPacket ? 1 + 4 : 4;
 
-		short protocolId = in.getShort(pidPos);  // cmdIndex + regoc
+		short protocolId = in.getShort(pidPos);
 
 		String protocolName = Protocol.getName(protocolId);
 		if (null == protocolName) {
