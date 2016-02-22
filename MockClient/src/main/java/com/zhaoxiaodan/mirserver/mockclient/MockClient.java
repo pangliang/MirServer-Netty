@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
  */
 public class MockClient {
 
-	static final String HOST = "121.42.150.110";
+	static final String HOST = "192.168.1.106";// "121.42.150.110";
 	static final int    PORT = 7000;
 
 	static short certification = 0;
@@ -93,14 +93,14 @@ public class MockClient {
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			//select server
-			packet = new ClientPackets.SelectServer(cmdIndex, "横行霸道二区");
+			packet = new ClientPackets.SelectServer(cmdIndex, "家里测试");
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 
 			//****************   select server
-			ch = b.connect(HOST, 7100).sync().channel();
+			ch = b.connect(HOST, 7000).sync().channel();
 
 			// new character
 //			Character character = new Character();

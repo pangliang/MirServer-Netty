@@ -6,10 +6,10 @@ import javax.persistence.*;
 public class ServerInfo extends DAO{
 	@Id
 	@GeneratedValue
-	public Long id;
+	public long id;
 	@OrderColumn
 	@Column(unique = true)
 	public String name;
 	public String ip;
-	public Integer port;
+	public int port;
 }

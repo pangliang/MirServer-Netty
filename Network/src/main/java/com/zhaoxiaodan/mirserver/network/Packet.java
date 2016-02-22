@@ -37,7 +37,8 @@ import io.netty.buffer.ByteBuf;
 public class Packet {
 
 	public static final int DEFAULT_HEADER_SIZE = 12;
-	public static final String CONTENT_SPLIT_CHAR = "/";
+	public static final char CONTENT_SEPARATOR_CHAR = '/';
+	public static final String CONTENT_SEPARATOR_STR = new String(Character.toString(CONTENT_SEPARATOR_CHAR));
 
 	public int   p0;     // 未知
 	public short pid;      // 协议id

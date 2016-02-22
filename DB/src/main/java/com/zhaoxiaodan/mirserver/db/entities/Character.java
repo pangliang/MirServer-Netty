@@ -6,9 +6,9 @@ import javax.persistence.*;
 public class Character extends DAO{
 	@Id
 	@GeneratedValue
-	public Long id;
+	public long id;
 	@ManyToOne
-	@JoinColumn(name = "loginId")
+	@JoinColumn(name = "userId")
 	public User user;
 	@Column(unique = true)
 	public String name;

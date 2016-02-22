@@ -1,6 +1,8 @@
 package com.zhaoxiaodan.mirserver.network;
 
 import com.zhaoxiaodan.mirserver.db.entities.Character;
+import com.zhaoxiaodan.mirserver.db.entities.Gender;
+import com.zhaoxiaodan.mirserver.db.entities.Job;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import io.netty.buffer.ByteBuf;
 
@@ -10,84 +12,84 @@ import java.util.List;
 
 public class ServerPackets {
 
-	public static final class LoginSuccSelectServer extends Packet{
+	public static final class LoginSuccSelectServer extends Packet {
+
 		public List<ServerInfo> serverInfoList;
 
-		public LoginSuccSelectServer(){}
+		public LoginSuccSelectServer() {}
 
-		public LoginSuccSelectServer(List<ServerInfo> serverInfoList)
-		{
+		public LoginSuccSelectServer(List<ServerInfo> serverInfoList) {
 			super(Protocol.LoginSuccSelectServer);
 			this.serverInfoList = serverInfoList;
-			this.p3 = (short)serverInfoList.size();
+			this.p3 = (short) serverInfoList.size();
 		}
+
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-			for(ServerInfo info : serverInfoList)
-			{
-				String infoStr = info.name + "/"+info.id+"/";
-				try{
+			for (ServerInfo info : serverInfoList) {
+				String infoStr = info.name + CONTENT_SEPARATOR_STR + info.id + CONTENT_SEPARATOR_STR;
+				try {
 					out.writeBytes(infoStr.getBytes());
-				}catch (Exception e){
+				} catch (Exception e) {
 
 				}
 			}
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException{
+		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 
 			serverInfoList = new ArrayList<>();
 			String content = in.toString(Charset.defaultCharset());
 
-			String[] parts = content.split("/");
-			if(parts.length <2)
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length < 2)
 				throw new WrongFormatException();
-			for(int i=0;i+1<parts.length;i+=2)
-			{
+			for (int i = 0; i + 1 < parts.length; i += 2) {
 				ServerInfo info = new ServerInfo();
 				info.name = parts[i];
-				info.id = Long.parseLong(parts[i+1]);
+				info.id = Long.parseLong(parts[i + 1]);
 				serverInfoList.add(info);
 			}
 		}
 	}
 
-	public static final class SelectServerOk extends Packet{
+	public static final class SelectServerOk extends Packet {
+
 		public String selectServerIp;
-		public int selectserverPort;
-		public short certification;
+		public int    selectserverPort;
+		public short  certification;
 
-		public SelectServerOk(){}
+		public SelectServerOk() {}
 
-		public SelectServerOk(String selectServerIp,int selectserverPort,byte certification)
-		{
+		public SelectServerOk(String selectServerIp, int selectserverPort, byte certification) {
 			super(Protocol.SelectServerOk);
 			this.selectServerIp = selectServerIp;
 			this.selectserverPort = selectserverPort;
 			this.certification = certification;
 		}
+
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 
 			out.writeBytes(selectServerIp.getBytes());
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(Integer.toString(selectserverPort).getBytes());
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(Short.toString(certification).getBytes());
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException{
+		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 
 			String content = in.toString(Charset.defaultCharset()).trim();
 
-			String[] parts = content.split("/");
-			if(parts.length <3)
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length < 3)
 				throw new WrongFormatException();
 			this.selectServerIp = parts[0];
 			this.selectserverPort = Integer.parseInt(parts[1]);
@@ -95,41 +97,56 @@ public class ServerPackets {
 		}
 	}
 
-	public static final class CharacterList extends Packet{
+	public static final class QueryCharactorOk extends Packet {
+
 		public List<Character> characterList;
 
-		public CharacterList(){}
+		public QueryCharactorOk() {}
 
-		public CharacterList(List<Character> characterList)
-		{
+		public QueryCharactorOk(List<Character> characterList) {
 			super(Protocol.CharacterList);
 			this.characterList = characterList;
 		}
+
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 
-			for(Character cha : this.characterList){
+			for (Character cha : this.characterList) {
+				cha.name = null;
 				out.writeBytes(cha.name.getBytes());
-				out.writeByte('/');
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.job.ordinal()).getBytes());
-				out.writeByte('/');
-				out.writeBytes(Byte.toString(cha.hair).getBytes());
-				out.writeByte('/');
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
+				out.writeBytes(Integer.toString(cha.hair).getBytes());
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
+				out.writeBytes(Integer.toString(cha.level).getBytes());
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.gender.ordinal()).getBytes());
-				out.writeByte('/');
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
 			}
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException{
+		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 
 			String content = in.toString(Charset.defaultCharset()).trim();
 
-			String[] parts = content.split("/");
-			if(parts.length <3)
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length < 5)
 				throw new WrongFormatException();
+			this.characterList = new ArrayList<>();
+			for (int i = 0; i + 4 < parts.length; i += 5) {
+				Character cha = new Character();
+				cha.name=parts[i+0];
+				cha.job= Job.values()[Byte.parseByte(parts[i+1])];
+				cha.hair=Byte.parseByte(parts[i+2]);
+				cha.level=Integer.parseInt(parts[i+3]);
+				cha.gender= Gender.values()[Byte.parseByte(parts[i+4])];
+
+				characterList.add(cha);
+			}
 		}
 	}
 }

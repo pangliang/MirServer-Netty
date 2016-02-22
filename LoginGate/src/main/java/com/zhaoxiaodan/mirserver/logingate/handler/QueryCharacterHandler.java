@@ -1,5 +1,14 @@
 package com.zhaoxiaodan.mirserver.logingate.handler;
 
+import com.zhaoxiaodan.mirserver.db.DB;
+import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.network.*;
+import io.netty.channel.ChannelHandlerContext;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.List;
+
 /**
  * +-------------------------------------------------+
  * |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
@@ -17,5 +26,22 @@ package com.zhaoxiaodan.mirserver.logingate.handler;
  * |00000030| 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
  * +--------+-------------------------------------------------+----------------+
  */
-public class QueryCharacterHandler {
+public class QueryCharacterHandler implements PacketHandler {
+
+	@Override
+	public void exce(ChannelHandlerContext ctx, Packet packet) {
+		ClientPackets.QueryCharacter request = (ClientPackets.QueryCharacter) packet;
+
+		Session session = DB.getSession();
+
+		List<User> list = session.createCriteria(User.class).add(Restrictions.eq("loginId",request.user.loginId)).list();
+		if(1 == list.size() && list.get(0).characters.size() > 0)
+		{
+			ctx.writeAndFlush(new ServerPackets.QueryCharactorOk(list.get(0).characters));
+		}else{
+//			ctx.writeAndFlush(new Packet(Protocol.SM_QUERYCHR_FAIL));
+//			return ;
+		}
+	}
+
 }

@@ -38,7 +38,7 @@ public class ClientPackets {
 			user = new User();
 			String remain = readString(in);
 			int    pos    = 0;
-			if (remain != null && (pos = remain.indexOf("/")) > 0) {
+			if (remain != null && (pos = remain.indexOf(CONTENT_SEPARATOR_STR)) > 0) {
 				user.loginId = remain.substring(0, pos);
 				user.password = remain.substring(pos + 1);
 			} else {
@@ -51,7 +51,7 @@ public class ClientPackets {
 			super.writePacket(out);
 
 			out.writeBytes(user.loginId.getBytes());
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(user.password.getBytes());
 		}
 	}
@@ -130,7 +130,7 @@ public class ClientPackets {
 		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 			String   content = in.toString(Charset.defaultCharset()).trim();
-			String[] parts   = content.split("/");
+			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
 			if (parts.length < 5)
 				throw new WrongFormatException();
 			User user = new User();
@@ -147,13 +147,13 @@ public class ClientPackets {
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 			out.writeBytes(character.user.loginId.getBytes());
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(character.name.getBytes());
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeByte(character.hair + '0');
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeByte(character.job.ordinal() + '0');
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeByte(character.gender.ordinal() + '0');
 			out.writeBytes(new byte[10]);
 		}
@@ -177,7 +177,7 @@ public class ClientPackets {
 			super.readPacket(in);
 			user = new User();
 			String content = in.toString(Charset.defaultCharset()).trim();
-			String[] parts = content.split("/");
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
 			if(parts.length >= 2)
 			{
 				user.loginId = parts[0];
@@ -190,7 +190,7 @@ public class ClientPackets {
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 			out.writeBytes(user.loginId.getBytes());
-			out.writeByte('/');
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(Short.toString(certification).getBytes());
 		}
 	}

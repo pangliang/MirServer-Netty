@@ -1,7 +1,6 @@
 package com.zhaoxiaodan.mirserver.logingate.handler;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
@@ -29,15 +28,14 @@ public class NewCharacterHandler implements PacketHandler {
 		}
 
 		User user = list.get(0);
-		List<Character> characterList = session.createCriteria(Character.class)
-				.add(Restrictions.eq("User", user)).list();
-		if(characterList.size() > 2)
+		if(user.characters.size() >= 2)
 		{
 			ctx.writeAndFlush(new Packet(Protocol.SM_NEWCHR_FAIL));
 			return ;
 		}
 		else{
 			try{
+				newCharacter.character.user = user;
 				session.save(newCharacter.character);
 				session.flush();
 

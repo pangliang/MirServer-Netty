@@ -10,7 +10,7 @@ public class User extends DAO{
 
 	@Id
 	@GeneratedValue
-	public Long id;
+	public long id;
 
 	@Column(unique = true)
 	public String loginId;
@@ -25,8 +25,7 @@ public class User extends DAO{
 	public String phone;
 	public String mobilePhone;
 
-	@OneToMany
-	@JoinColumn(name = "loginId")
+	@OneToMany(mappedBy = "user")
 	public List<Character> characters;
 
 }
