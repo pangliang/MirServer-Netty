@@ -9,9 +9,6 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 import java.nio.ByteOrder;
 import java.util.List;
 
-/**
- * Created by liangwei on 16/2/17.
- */
 public class PacketEncoder extends MessageToMessageEncoder<Packet> {
 
 	@Override

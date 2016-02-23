@@ -8,16 +8,7 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by liangwei on 16/2/17.
- */
-public class Bit6BufEncoder extends MessageToMessageEncoder<ByteBuf> {
-
-	public final boolean isRequestMessage;
-
-	public Bit6BufEncoder(boolean isRequestMessage) {
-		this.isRequestMessage = isRequestMessage;
-	}
+public class PacketBit6Encoder extends MessageToMessageEncoder<ByteBuf> {
 
 	public byte[] encoder6BitBuf(byte[] src) {
 		int    len     = src.length;
@@ -63,8 +54,6 @@ public class Bit6BufEncoder extends MessageToMessageEncoder<ByteBuf> {
 		ByteBuf buf = Unpooled.buffer();
 
 		buf.writeByte('#');     // 加上 头分割符
-		if(isRequestMessage)
-			buf.writeByte(in.readByte());
 
 		byte[] body = new byte[in.readableBytes()];
 		in.readBytes(body);

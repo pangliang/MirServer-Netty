@@ -10,13 +10,7 @@ import java.util.List;
 /**
  * 解密, request有cmdIndex , response没有
  */
-public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
-
-	public final boolean isIndexPacket;
-
-	public Bit6BufDecoder(boolean isIndexPacket) {
-		this.isIndexPacket = isIndexPacket;
-	}
+public class PacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 
 	public byte[] decode6BitBuf(byte[] src) {
 		final byte[] Decode6BitMask = {(byte) 0xfc, (byte) 0xf8, (byte) 0xf0, (byte) 0xe0, (byte) 0xc0};
@@ -68,9 +62,6 @@ public class Bit6BufDecoder extends MessageToMessageDecoder<ByteBuf> {
 		ByteBuf buf = Unpooled.buffer();
 
 		in.readByte(); //  # , 在这里就去掉 头尾
-
-		if (isIndexPacket)
-			buf.writeByte(in.readByte());  //cmdIndex
 
 		byte[] content = new byte[in.readableBytes() - 1];
 		in.readBytes(content);
