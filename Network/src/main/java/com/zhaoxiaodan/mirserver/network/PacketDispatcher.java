@@ -3,9 +3,6 @@ package com.zhaoxiaodan.mirserver.network;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
-/**
- * Created by liangwei on 16/2/16.
- */
 public class PacketDispatcher extends ChannelHandlerAdapter {
 
 	//handler处理器所在的包名
@@ -33,10 +30,5 @@ public class PacketDispatcher extends ChannelHandlerAdapter {
 		PacketHandler                  handler      = handlerClass.newInstance();
 		if (null != handler)
 			handler.exce(ctx, (Packet)pakcet);
-	}
-
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-		cause.printStackTrace();
 	}
 }

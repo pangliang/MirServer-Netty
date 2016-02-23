@@ -5,9 +5,9 @@ import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
 import com.zhaoxiaodan.mirserver.network.ServerPackets;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
-import com.zhaoxiaodan.mirserver.network.decoder.Bit6BufDecoder;
+import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
-import com.zhaoxiaodan.mirserver.network.encoder.Bit6BufEncoder;
+import com.zhaoxiaodan.mirserver.network.encoder.PacketBit6Encoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
@@ -46,13 +46,13 @@ public class MockClient {
 											//编码
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-											new Bit6BufDecoder(false),
+											new ClientPacketBit6Decoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
-											new PacketDecoder(ServerPackets.class.getCanonicalName(), false),
+											new PacketDecoder(ServerPackets.class.getCanonicalName()),
 
 											//解码
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
-											new Bit6BufEncoder(true),
+											new PacketBit6Encoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new PacketEncoder(),
 
@@ -115,7 +115,7 @@ public class MockClient {
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
 
 			// query character
-			packet = new ClientPackets.QueryCharacter(cmdIndex, user, certification);
+			packet = new ClientPackets.QueryCharacter(cmdIndex, user.loginId, certification);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;

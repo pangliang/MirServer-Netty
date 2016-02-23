@@ -1,11 +1,12 @@
 package com.zhaoxiaodan.mirserver.logingate.handler;
 
-import com.zhaoxiaodan.mirserver.network.*;
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.log.Log;
+import com.zhaoxiaodan.mirserver.logingate.Session;
+import com.zhaoxiaodan.mirserver.network.*;
 import io.netty.channel.ChannelHandlerContext;
-import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
@@ -16,19 +17,21 @@ public class LoginHandler implements PacketHandler {
 	public void exce(ChannelHandlerContext ctx, Packet packet) {
 		ClientPackets.Login loginRequest = (ClientPackets.Login) packet;
 
-		Session  session  = DB.getSession();
+		List<User> list = DB.query(User.class,Restrictions.eq("loginId", loginRequest.user.loginId));
+		if (1 != list.size()) {
+			ctx.writeAndFlush(new Packet(Protocol.SM_PASSWD_FAIL));
+			return;
+		} else {
+			User user = list.get(0);
+			if (user.password.equals(loginRequest.user.password)) {
+				Session s = new Session();
+				s.user = user;
+				Session.put(ctx, s);
+				Log.info("user {} login, loginUser count:{}", user.loginId, Session.size());
 
-		List<User> list = session.createCriteria(User.class).add(Restrictions.eq("loginId",loginRequest.user.loginId)).list();
-		if(1 != list.size())
-		{
-			ctx.writeAndFlush(new Packet(Protocol.SM_ID_NOTFOUND));
-			return ;
-		}else{
-			if(list.get(0).password.equals(loginRequest.user.password))
-			{
-				List<ServerInfo> serverInfoList = session.createCriteria(ServerInfo.class).list();
+				List<ServerInfo> serverInfoList = DB.query(ServerInfo.class);
 				ctx.writeAndFlush(new ServerPackets.LoginSuccSelectServer(serverInfoList));
-			}else{
+			} else {
 				ctx.writeAndFlush(new Packet(Protocol.SM_PASSWD_FAIL));
 			}
 		}

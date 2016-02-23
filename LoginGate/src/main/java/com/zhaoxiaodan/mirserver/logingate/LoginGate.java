@@ -6,9 +6,9 @@ import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
-import com.zhaoxiaodan.mirserver.network.decoder.Bit6BufDecoder;
-import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
-import com.zhaoxiaodan.mirserver.network.encoder.Bit6BufEncoder;
+import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
+import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
+import com.zhaoxiaodan.mirserver.network.encoder.PacketBit6Encoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -46,24 +46,31 @@ public class LoginGate {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline().addLast(
-									//编码
+
 									new ExceptionHandler(),
-									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+
+									//编码
+//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-									new Bit6BufDecoder(true),
-									new MyLoggingHandler(MyLoggingHandler.Type.Read),
-									new PacketDecoder(ClientPackets.class.getCanonicalName(), true),
-									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+									new ClientPacketBit6Decoder(),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+									new ClientPacketDecoder(ClientPackets.class.getCanonicalName()),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//解码
-									new MyLoggingHandler(MyLoggingHandler.Type.Write),
-									new Bit6BufEncoder(false),
-									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+									new PacketBit6Encoder(),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new PacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
-									new ExceptionHandler(),
+
 									//分包分发
-									new PacketDispatcher(LoginHandler.class.getPackage().getName())
+									new PacketDispatcher(LoginHandler.class.getPackage().getName()),
+
+									//处理连接
+									new ConnectHandler(),
+
+									new ExceptionHandler()
 							);
 						}
 					})

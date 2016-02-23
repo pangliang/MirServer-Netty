@@ -1,7 +1,5 @@
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 
@@ -16,17 +14,13 @@ public class DBCreateTest {
 
 	@Test
 	public void createTest(){
-		Session session  = DB.getSession();
 		String  userId = "userId_"+new Date().toString()+"_"+new Random().nextInt(1000000);
 		User    player   = new User();
 		player.loginId = userId;
 
-		session.save(player);
-		session.flush();
+		DB.saveOrUpdate(player);
 
-		Criteria criteria = session.createCriteria(User.class);
-
-		List<User> list = criteria.add(Restrictions.eq("loginId",userId)).list();
+		List<User> list = DB.query(User.class,Restrictions.eq("loginId",userId));
 		for(User p: list)
 		{
 			System.out.println(p);

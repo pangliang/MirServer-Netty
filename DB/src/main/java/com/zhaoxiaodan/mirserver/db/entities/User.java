@@ -24,8 +24,11 @@ public class User extends DAO{
 	public String email;
 	public String phone;
 	public String mobilePhone;
+	public byte certification;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@MapKey(name = "id")
 	public List<Character> characters;
+
 
 }

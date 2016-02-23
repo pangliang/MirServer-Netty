@@ -161,26 +161,25 @@ public class ClientPackets {
 
 	public static final class QueryCharacter extends IndexPacket {
 
-		public User user;
+		public String loginId;
 		public short certification;
 
 		public QueryCharacter() {}
 
-		public QueryCharacter(byte cmdIndex, User user, short certification) {
+		public QueryCharacter(byte cmdIndex, String loginId, short certification) {
 			super(Protocol.QueryCharacter, cmdIndex);
-			this.user = user;
+			this.loginId = loginId;
 			this.certification = certification;
 		}
 
 		@Override
 		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
-			user = new User();
 			String content = in.toString(Charset.defaultCharset()).trim();
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
 			if(parts.length >= 2)
 			{
-				user.loginId = parts[0];
+				loginId = parts[0];
 				certification = Short.parseShort(parts[1]);
 			}
 		}
@@ -189,9 +188,33 @@ public class ClientPackets {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-			out.writeBytes(user.loginId.getBytes());
+			out.writeBytes(loginId.getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(Short.toString(certification).getBytes());
+		}
+	}
+
+	public static final class DeleteCharacter extends IndexPacket {
+
+		public String characterName;
+
+		public DeleteCharacter() {}
+
+		public DeleteCharacter(byte cmdIndex, String characterName) {
+			super(Protocol.QueryCharacter, cmdIndex);
+			this.characterName = characterName;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			this.characterName = in.toString(Charset.defaultCharset()).trim();
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(this.characterName.getBytes());
 		}
 	}
 }

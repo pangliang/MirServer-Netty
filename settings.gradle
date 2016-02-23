@@ -1,3 +1,7 @@
 rootProject.name = 'MirServer-Netty'
-include ':LoginGate',':Network',':DB',':MockClient'
+include ':LoginGate'
+include ':Network'
+include ':DB'
+include ':MockClient'
+include ':Log'
 

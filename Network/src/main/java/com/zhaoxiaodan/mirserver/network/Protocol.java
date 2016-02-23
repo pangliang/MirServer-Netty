@@ -24,7 +24,7 @@ public enum Protocol {
 	// For Select Character Process
 	QueryCharacter(100),
 	NewCharacter(101),
-	CM_DELCHR(102),
+	DeleteCharacter(102),
 	CM_SELCHR(103),
 
 	CharacterList(520),

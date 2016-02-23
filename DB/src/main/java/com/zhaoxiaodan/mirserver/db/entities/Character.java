@@ -7,7 +7,7 @@ public class Character extends DAO{
 	@Id
 	@GeneratedValue
 	public long id;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId")
 	public User user;
 	@Column(unique = true)

@@ -2,9 +2,9 @@ import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
-import com.zhaoxiaodan.mirserver.network.decoder.Bit6BufDecoder;
-import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
-import com.zhaoxiaodan.mirserver.network.encoder.Bit6BufEncoder;
+import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
+import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
+import com.zhaoxiaodan.mirserver.network.encoder.PacketBit6Encoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -17,9 +17,6 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by liangwei on 16/2/19.
- */
 public class PacketEncodeDecodeTest {
 	Map<String, Packet> testList = new HashMap<String, Packet>() {
 		{
@@ -41,9 +38,9 @@ public class PacketEncodeDecodeTest {
 			EmbeddedChannel ch = new EmbeddedChannel(
 					new MyLoggingHandler(MyLoggingHandler.Type.Both),
 					new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-					new Bit6BufDecoder(false),
+					new ClientPacketBit6Decoder(),
 					new MyLoggingHandler(MyLoggingHandler.Type.Both),
-					new PacketDecoder(ClientPackets.class.getCanonicalName(), false)
+					new ClientPacketDecoder(ClientPackets.class.getCanonicalName())
 			);
 
 			ByteBuf buf = Unpooled.buffer();
@@ -59,7 +56,7 @@ public class PacketEncodeDecodeTest {
 
 			ch = new EmbeddedChannel(
 					new MyLoggingHandler(MyLoggingHandler.Type.Both),
-					new Bit6BufEncoder(false),
+					new PacketBit6Encoder(),
 					new MyLoggingHandler(MyLoggingHandler.Type.Both),
 					new PacketEncoder()
 			);
