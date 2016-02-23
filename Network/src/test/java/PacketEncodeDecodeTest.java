@@ -1,7 +1,7 @@
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
 import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.network.debug.ReadWriteLoggingHandler;
+import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.Bit6BufDecoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
 import com.zhaoxiaodan.mirserver.network.encoder.Bit6BufEncoder;
@@ -39,10 +39,10 @@ public class PacketEncodeDecodeTest {
 	public void test() {
 		for (String msg : testList.keySet()) {
 			EmbeddedChannel ch = new EmbeddedChannel(
-					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
+					new MyLoggingHandler(MyLoggingHandler.Type.Both),
 					new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 					new Bit6BufDecoder(false),
-					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
+					new MyLoggingHandler(MyLoggingHandler.Type.Both),
 					new PacketDecoder(ClientPackets.class.getCanonicalName(), false)
 			);
 
@@ -58,9 +58,9 @@ public class PacketEncodeDecodeTest {
 			Assert.assertEquals(t.pid, req.pid );
 
 			ch = new EmbeddedChannel(
-					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
+					new MyLoggingHandler(MyLoggingHandler.Type.Both),
 					new Bit6BufEncoder(false),
-					new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Both),
+					new MyLoggingHandler(MyLoggingHandler.Type.Both),
 					new PacketEncoder()
 			);
 

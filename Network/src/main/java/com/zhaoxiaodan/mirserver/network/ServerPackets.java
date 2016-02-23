@@ -113,7 +113,6 @@ public class ServerPackets {
 			super.writePacket(out);
 
 			for (Character cha : this.characterList) {
-				cha.name = null;
 				out.writeBytes(cha.name.getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.job.ordinal()).getBytes());

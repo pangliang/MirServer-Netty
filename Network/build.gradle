@@ -12,5 +12,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'io.netty:netty-all:5.0.0.Alpha2'
     compile project(":DB")
-    compile project(":Utils")
+    compile 'com.alibaba:fastjson:1.2.4'
 }

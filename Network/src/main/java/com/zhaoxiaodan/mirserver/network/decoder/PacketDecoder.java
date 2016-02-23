@@ -55,9 +55,4 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 		out.add(packet);
 	}
-
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		cause.printStackTrace();
-	}
 }

@@ -31,6 +31,6 @@
     <orderEntry type="module" module-name="Network" />
     <orderEntry type="module" module-name="DB" />
     <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.191" level="project" />
-    <orderEntry type="module" module-name="Utils" />
+    <orderEntry type="library" name="Gradle: com.alibaba:fastjson:1.2.4" level="project" />
   </component>
 </module>

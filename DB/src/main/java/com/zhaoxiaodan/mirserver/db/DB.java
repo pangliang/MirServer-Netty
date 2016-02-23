@@ -7,24 +7,17 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-/**
- * Created by liangwei on 16/2/18.
- */
 public class DB {
 
-    private static final SessionFactory  ourSessionFactory;
-    private static final ServiceRegistry serviceRegistry;
+    private static SessionFactory  ourSessionFactory;
+    private static ServiceRegistry serviceRegistry;
 
-    static {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
+    public static void init() throws Exception{
+        Configuration configuration = new Configuration();
+        configuration.configure();
 
-            serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-            ourSessionFactory = configuration.buildSessionFactory();
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
+        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+        ourSessionFactory = configuration.buildSessionFactory();
     }
 
     public static Session getSession() throws HibernateException {

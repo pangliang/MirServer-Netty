@@ -1,13 +1,9 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
-import com.zhaoxiaodan.utils.StringUtils;
-
-/**
- * Created by liangwei on 16/2/20.
- */
+import com.alibaba.fastjson.JSON;
 public class DAO {
 	@Override
 	public String toString() {
-		return StringUtils.toString(this);
+		return this.getClass().getSimpleName()+":"+JSON.toJSONString(this);
 	}
 }

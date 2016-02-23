@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.network;
 
-import com.zhaoxiaodan.utils.StringUtils;
+import com.alibaba.fastjson.JSON;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -36,9 +36,9 @@ import io.netty.buffer.ByteBuf;
  */
 public class Packet {
 
-	public static final int DEFAULT_HEADER_SIZE = 12;
-	public static final char CONTENT_SEPARATOR_CHAR = '/';
-	public static final String CONTENT_SEPARATOR_STR = new String(Character.toString(CONTENT_SEPARATOR_CHAR));
+	public static final int    DEFAULT_HEADER_SIZE    = 12;
+	public static final char   CONTENT_SEPARATOR_CHAR = '/';
+	public static final String CONTENT_SEPARATOR_STR  = new String(Character.toString(CONTENT_SEPARATOR_CHAR));
 
 	public int   p0;     // 未知
 	public short pid;      // 协议id
@@ -61,7 +61,7 @@ public class Packet {
 		this(0, protocol, (short) 0, (short) 0, (short) 0);
 	}
 
-	public void readPacket(ByteBuf in) throws WrongFormatException{
+	public void readPacket(ByteBuf in) throws WrongFormatException {
 		p0 = in.readInt();
 		pid = in.readShort();
 		p1 = in.readShort();
@@ -97,9 +97,9 @@ public class Packet {
 
 	@Override
 	public String toString() {
-		return StringUtils.toString(this);
+		return this.getClass().getSimpleName() + ":" + JSON.toJSONString(this);
 	}
 
-	public class WrongFormatException extends Exception{
+	public class WrongFormatException extends Exception {
 	}
 }

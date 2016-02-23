@@ -4,7 +4,7 @@ import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
 import com.zhaoxiaodan.mirserver.network.ServerPackets;
-import com.zhaoxiaodan.mirserver.network.debug.ReadWriteLoggingHandler;
+import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.Bit6BufDecoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
 import com.zhaoxiaodan.mirserver.network.encoder.Bit6BufEncoder;
@@ -44,19 +44,19 @@ public class MockClient {
 								public void initChannel(SocketChannel ch) throws Exception {
 									ch.pipeline().addLast(
 											//编码
-											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
+											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 											new Bit6BufDecoder(false),
-											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
+											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new PacketDecoder(ServerPackets.class.getCanonicalName(), false),
 
 											//解码
-											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Write),
+											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new Bit6BufEncoder(true),
-											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Write),
+											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new PacketEncoder(),
 
-											new ReadWriteLoggingHandler(ReadWriteLoggingHandler.Type.Read),
+											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new ChannelHandlerAdapter() {
 												@Override
 												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
