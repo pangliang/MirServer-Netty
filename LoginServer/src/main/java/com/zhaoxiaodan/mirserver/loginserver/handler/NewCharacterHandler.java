@@ -1,7 +1,7 @@
-package com.zhaoxiaodan.mirserver.logingate.handler;
+package com.zhaoxiaodan.mirserver.loginserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.logingate.Session;
+import com.zhaoxiaodan.mirserver.loginserver.Session;
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
 import com.zhaoxiaodan.mirserver.network.PacketHandler;

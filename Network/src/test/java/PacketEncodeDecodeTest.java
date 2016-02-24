@@ -54,7 +54,7 @@ public class PacketEncodeDecodeTest {
 			Packet req = ch.readInbound();
 
 			Packet t = testList.get(msg);
-			Assert.assertEquals(t.pid, req.pid );
+			Assert.assertEquals(t.protocol, req.protocol);
 
 			ch = new EmbeddedChannel(
 					new MyLoggingHandler(MyLoggingHandler.Type.Both),

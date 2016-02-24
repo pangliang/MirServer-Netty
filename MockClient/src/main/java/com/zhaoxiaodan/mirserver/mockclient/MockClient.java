@@ -2,8 +2,8 @@ package com.zhaoxiaodan.mirserver.mockclient;
 
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
+import com.zhaoxiaodan.mirserver.loginserver.LoginServerPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
-import com.zhaoxiaodan.mirserver.network.LoginServerPackets;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
@@ -20,9 +20,6 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-/**
- * Created by liangwei on 16/2/19.
- */
 public class MockClient {
 
 	static final String HOST = "121.42.150.110";

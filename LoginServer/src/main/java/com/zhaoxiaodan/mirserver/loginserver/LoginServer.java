@@ -1,7 +1,7 @@
-package com.zhaoxiaodan.mirserver.logingate;
+package com.zhaoxiaodan.mirserver.loginserver;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.logingate.handler.LoginHandler;
+import com.zhaoxiaodan.mirserver.loginserver.handler.LoginHandler;
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
@@ -23,11 +23,14 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public class LoginGate {
+public class LoginServer {
+
+	public static final int     REQUEST_MAX_FRAME_LENGTH = 1024;                    // 封包每一帧的最大大小
+	public static final int     DEFAULT_LOGIN_GATE_PORT  = 7000;                    // 登录网关默认端口号
 
 	private int port;
 
-	public LoginGate(int port) {
+	public LoginServer(int port) {
 		this.port = port;
 	}
 
@@ -51,7 +54,7 @@ public class LoginGate {
 
 									//编码
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
-									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
+									new DelimiterBasedFrameDecoder(REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ClientPacketBit6Decoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new ClientPacketDecoder(ClientPackets.class.getCanonicalName()),
@@ -91,8 +94,8 @@ public class LoginGate {
 		if (args.length > 0) {
 			port = Integer.parseInt(args[0]);
 		} else {
-			port = Config.DEFAULT_LOGIN_GATE_PORT;
+			port = DEFAULT_LOGIN_GATE_PORT;
 		}
-		new LoginGate(port).run();
+		new LoginServer(port).run();
 	}
 }

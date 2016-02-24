@@ -3,3 +3,4 @@
 build
 mir2.trace.db
 mir2.mv.db
+mir2.lock.db

@@ -1,9 +1,10 @@
-package com.zhaoxiaodan.mirserver.logingate.handler;
+package com.zhaoxiaodan.mirserver.loginserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.logingate.Session;
+import com.zhaoxiaodan.mirserver.loginserver.LoginServerPackets;
+import com.zhaoxiaodan.mirserver.loginserver.Session;
 import com.zhaoxiaodan.mirserver.network.*;
 import io.netty.channel.ChannelHandlerContext;
 import org.hibernate.criterion.Restrictions;

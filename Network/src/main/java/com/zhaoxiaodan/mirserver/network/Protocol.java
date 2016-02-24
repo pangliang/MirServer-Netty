@@ -265,9 +265,9 @@ public enum Protocol {
 		}
 	}
 
-	public static String getName(short id) {
+	public static Protocol get(short id) {
 		if (map.containsKey(id))
-			return map.get(id).name();
+			return map.get(id);
 		else
 			return null;
 	}

@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.logingate.handler;
+package com.zhaoxiaodan.mirserver.loginserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.User;

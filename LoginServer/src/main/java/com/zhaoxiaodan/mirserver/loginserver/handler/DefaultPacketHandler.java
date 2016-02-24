@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.logingate.handler;
+package com.zhaoxiaodan.mirserver.loginserver.handler;
 
 import com.zhaoxiaodan.mirserver.network.Packet;
 import com.zhaoxiaodan.mirserver.network.PacketHandler;

@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.logingate;
+package com.zhaoxiaodan.mirserver.loginserver;
 
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import io.netty.channel.ChannelHandlerContext;

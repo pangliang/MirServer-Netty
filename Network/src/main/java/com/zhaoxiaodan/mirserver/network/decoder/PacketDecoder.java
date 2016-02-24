@@ -29,7 +29,7 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 	}
 
 	protected Packet decodePacket(short protocolId, ByteBuf in) throws Exception {
-		String protocolName = Protocol.getName(protocolId);
+		String protocolName = Protocol.get(protocolId).name();
 		if (null == protocolName) {
 			throw new Exception("unknow protocol id:" + protocolId);
 		}
