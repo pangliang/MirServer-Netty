@@ -29,20 +29,20 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 	}
 
 	protected Packet decodePacket(short protocolId, ByteBuf in) throws Exception {
-		String protocolName = Protocol.get(protocolId).name();
-		if (null == protocolName) {
+		Protocol protocol = Protocol.get(protocolId);
+		if (null == protocol) {
 			throw new Exception("unknow protocol id:" + protocolId);
 		}
 
 		Class<? extends Packet> packetClass;
 		try {
-			packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocolName);
+			packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocol.name());
 		} catch (ClassNotFoundException e) {
-			System.err.println(e.getMessage());
 			packetClass = Packet.class;
 		}
 		Packet packet = packetClass.newInstance();
 		packet.readPacket(in);
+		packet.protocol = Protocol.get(protocolId);
 		return packet;
 	}
 }
