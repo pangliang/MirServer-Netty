@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 
 public class MockClient {
 
-	static final String HOST = "121.42.150.110";
+	static final String HOST = "222.187.225.55";
 	static final int    PORT = 7000;
 
 	static short certification = 0;
@@ -42,7 +42,7 @@ public class MockClient {
 									ch.pipeline().addLast(
 											//编码
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
-											new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
+											new DelimiterBasedFrameDecoder(2048, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 											new PacketBit6Decoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new PacketDecoder(ServerPackets.class.getName()),
@@ -90,19 +90,22 @@ public class MockClient {
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			//select server
-			packet = new ClientPackets.SelectServer(cmdIndex, "家里测试");
+			packet = new ClientPackets.SelectServer(cmdIndex, "功夫明星一区");
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 
 			//****************   select server
+			ch.closeFuture();
 			ch = b.connect(HOST, 7100).sync().channel();
+
+			String charName = "pangliang";
 
 			// new character
 //			Character character = new Character();
 //			character.user = user;
-//			character.name = "pangliang";
+//			character.name = charName;
 //			character.hair = 1;
 //			character.job = Job.Warrior;
 //			character.gender = Gender.MALE;
@@ -118,12 +121,18 @@ public class MockClient {
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			//select character
-			packet = new ClientPackets.SelectCharacter(cmdIndex, user.loginId, "pangliang");
+			packet = new ClientPackets.SelectCharacter(cmdIndex, user.loginId, charName);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
-			ch.closeFuture().sync();
+			// ************ game server
+			ch.closeFuture();
+			ch = b.connect(HOST, 7200).sync().channel();
+			packet = new com.zhaoxiaodan.mirserver.gameserver.ClientPackets.StartGame(cmdIndex,user.loginId,charName,certification,"2020522");
+			ch.writeAndFlush(packet);
+			in.readLine();
+			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 		} finally {
 			group.shutdownGracefully();

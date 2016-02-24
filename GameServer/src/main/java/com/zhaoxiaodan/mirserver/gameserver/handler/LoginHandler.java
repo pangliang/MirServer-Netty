@@ -18,15 +18,15 @@ public class LoginHandler extends Handler {
 
 	@Override
 	public void onPacket(Packet packet) throws Exception {
-		ClientPackets.Login loginRequest = (ClientPackets.Login) packet;
+		ClientPackets.StartGame request = (ClientPackets.StartGame) packet;
 
-		List<User> list = DB.query(User.class, Restrictions.eq("loginId", loginRequest.user.loginId));
+		List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
 		if (1 != list.size()) {
 			session.writeAndFlush(new Packet(Protocol.SM_PASSWD_FAIL));
 			return;
 		} else {
 			User user = list.get(0);
-			if (user.password.equals(loginRequest.user.password)) {
+			if (user.password.equals(request.loginId)) {
 
 				user.lastLoginTime = new Date();
 				DB.update(user);
