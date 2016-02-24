@@ -50,12 +50,12 @@ public class LoginGate {
 									new ExceptionHandler(),
 
 									//编码
-//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new DelimiterBasedFrameDecoder(Config.REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ClientPacketBit6Decoder(),
-//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new ClientPacketDecoder(ClientPackets.class.getCanonicalName()),
-//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//解码
 //									new MyLoggingHandler(MyLoggingHandler.Type.Write),

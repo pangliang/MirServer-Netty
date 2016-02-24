@@ -30,7 +30,7 @@ public class LoginHandler implements PacketHandler {
 				Log.info("user {} login, loginUser count:{}", user.loginId, Session.size());
 
 				List<ServerInfo> serverInfoList = DB.query(ServerInfo.class);
-				ctx.writeAndFlush(new ServerPackets.LoginSuccSelectServer(serverInfoList));
+				ctx.writeAndFlush(new LoginServerPackets.LoginSuccSelectServer(serverInfoList));
 			} else {
 				ctx.writeAndFlush(new Packet(Protocol.SM_PASSWD_FAIL));
 			}

@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerPackets {
+public class LoginServerPackets {
 
 	public static final class LoginSuccSelectServer extends Packet {
 
@@ -146,6 +146,42 @@ public class ServerPackets {
 
 				characterList.add(cha);
 			}
+		}
+	}
+
+	public static final class SelectCharacterOk extends Packet {
+
+		public String serverIp;
+		public int    serverPort;
+
+		public SelectCharacterOk() {}
+
+		public SelectCharacterOk(String serverIp, int serverPort) {
+			super(Protocol.SelectCharacterOk);
+			this.serverIp = serverIp;
+			this.serverPort = serverPort;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+
+			out.writeBytes(serverIp.getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(Integer.toString(serverPort).getBytes());
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+
+			String content = in.toString(Charset.defaultCharset()).trim();
+
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length < 2)
+				throw new WrongFormatException();
+			this.serverIp = parts[0];
+			this.serverPort = Integer.parseInt(parts[1]);
 		}
 	}
 }

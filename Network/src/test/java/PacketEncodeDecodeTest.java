@@ -4,6 +4,7 @@ import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
+import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketBit6Encoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
 import io.netty.buffer.ByteBuf;
@@ -22,7 +23,8 @@ public class PacketEncodeDecodeTest {
 		{
 			try {
 //				put("#<<<<<KT=<<<<<<<<!",new Packet(Protocol.SM_ID_NOTFOUND));
-				put("#<<<<<=@><<<<<<@<l[gOhG[cjv_MfYO>Go@k!",new Packet(Protocol.LoginSuccSelectServer));
+
+				put("#2<<<<<KAQ<<<<<<<<<<<<<<<<<<<WBa]WbXmGrmeTRucHNxrTo@mIbTnUO<qIoa^IOY^URPmHOQ]HbHsUO<uJ?`pJ<!",new Packet(Protocol.LoginSuccSelectServer));
 //				put("#2<<<<<I@C<<<<<<<<HODoGo@nHl!", new ClientPackets.Login());
 //				put("#2<<<<<I@C<<<<<<<<HODoI?PrInxmH_HpIOTs!",new ClientPackets.Login());
 			} catch (Exception e) {
@@ -70,5 +72,13 @@ public class PacketEncodeDecodeTest {
 
 			Assert.assertEquals(msg,decodeStr);
 		}
+	}
+
+	@Test
+	public void mytest(){
+		String            data    = "#2<<<<<KAQ<<<<<<<<<<<<<<<<<<<WBa]WbXmGrmeTRucHNxrTo@mIbTnUO<qIoa^IOY^URPmHOQ]HbHsUO<uJ?`pJ<!";
+		PacketBit6Decoder decoder = new PacketBit6Decoder();
+
+		System.out.println(new String(decoder.decode6BitBuf("WBa]WbXmGrmeTRucHNxrTo@mIbTnUO<qIoa^IOY^URPmHOQ]HbHsUO<uJ?`pJ<".getBytes())));
 	}
 }

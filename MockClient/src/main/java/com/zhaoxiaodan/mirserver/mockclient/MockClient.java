@@ -3,11 +3,11 @@ package com.zhaoxiaodan.mirserver.mockclient;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Packet;
-import com.zhaoxiaodan.mirserver.network.ServerPackets;
+import com.zhaoxiaodan.mirserver.network.LoginServerPackets;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
-import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
+import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
-import com.zhaoxiaodan.mirserver.network.encoder.PacketBit6Encoder;
+import com.zhaoxiaodan.mirserver.network.encoder.ClientPacketBit6Encoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
  */
 public class MockClient {
 
-	static final String HOST = "192.168.1.106";// "121.42.150.110";
+	static final String HOST = "121.42.150.110";
 	static final int    PORT = 7000;
 
 	static short certification = 0;
@@ -46,13 +46,13 @@ public class MockClient {
 											//编码
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-											new ClientPacketBit6Decoder(),
+											new PacketBit6Decoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
-											new PacketDecoder(ServerPackets.class.getCanonicalName()),
+											new PacketDecoder(LoginServerPackets.class.getName()),
 
 											//解码
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
-											new PacketBit6Encoder(),
+											new ClientPacketBit6Encoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new PacketEncoder(),
 
@@ -60,8 +60,8 @@ public class MockClient {
 											new ChannelHandlerAdapter() {
 												@Override
 												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-													if (msg instanceof ServerPackets.SelectServerOk) {
-														certification = ((ServerPackets.SelectServerOk) msg).certification;
+													if (msg instanceof LoginServerPackets.SelectServerOk) {
+														certification = ((LoginServerPackets.SelectServerOk) msg).certification;
 													}
 												}
 											}
@@ -100,7 +100,7 @@ public class MockClient {
 
 
 			//****************   select server
-			ch = b.connect(HOST, 7000).sync().channel();
+			ch = b.connect(HOST, 7100).sync().channel();
 
 			// new character
 //			Character character = new Character();
@@ -120,6 +120,11 @@ public class MockClient {
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
+			//select character
+			packet = new ClientPackets.SelectCharacter(cmdIndex, user.loginId, "pangliang");
+			ch.writeAndFlush(packet);
+			in.readLine();
+			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			ch.closeFuture().sync();
 

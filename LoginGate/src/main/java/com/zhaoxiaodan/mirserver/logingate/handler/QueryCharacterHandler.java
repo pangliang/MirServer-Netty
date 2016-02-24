@@ -51,7 +51,7 @@ public class QueryCharacterHandler implements PacketHandler {
 			return;
 		}
 
-		ctx.writeAndFlush(new ServerPackets.QueryCharactorOk(new ArrayList<Character>(session.user.characters)));
+		ctx.writeAndFlush(new LoginServerPackets.QueryCharactorOk(new ArrayList<Character>(session.user.characters)));
 	}
 
 }

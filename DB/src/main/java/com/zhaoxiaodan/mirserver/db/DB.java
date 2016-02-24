@@ -64,6 +64,7 @@ public class DB {
                 criteria.add(simpleExpression);
             }
             List result = criteria.list();
+//            session.getTransaction().commit();
             return result;
         }catch (Exception e){
             session.getTransaction().rollback();

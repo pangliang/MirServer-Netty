@@ -181,6 +181,8 @@ public class ClientPackets {
 			{
 				loginId = parts[0];
 				certification = Short.parseShort(parts[1]);
+			}else{
+				throw new WrongFormatException();
 			}
 		}
 
@@ -214,6 +216,42 @@ public class ClientPackets {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
+			out.writeBytes(this.characterName.getBytes());
+		}
+	}
+
+	public static final class SelectCharacter extends IndexPacket {
+
+		public String loginId;
+		public String characterName;
+
+		public SelectCharacter() {}
+
+		public SelectCharacter(byte cmdIndex, String loginId,String characterName) {
+			super(Protocol.SelectCharacter, cmdIndex);
+			this.loginId = loginId;
+			this.characterName = characterName;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			String content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			if(parts.length >= 2)
+			{
+				loginId = parts[0];
+				characterName = parts[1];
+			}else{
+				throw new WrongFormatException();
+			}
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(this.loginId.getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(this.characterName.getBytes());
 		}
 	}

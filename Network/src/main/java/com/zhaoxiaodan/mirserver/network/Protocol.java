@@ -25,15 +25,15 @@ public enum Protocol {
 	QueryCharacter(100),
 	NewCharacter(101),
 	DeleteCharacter(102),
-	CM_SELCHR(103),
+	SelectCharacter(103),
 
 	CharacterList(520),
 	SM_NEWCHR_SUCCESS(521),
 	SM_NEWCHR_FAIL(522),
 	SM_DELCHR_SUCCESS(523),
 	SM_DELCHR_FAIL(524),
-	SM_STARTPLAY(525),
-	SM_STARTFAIL(526),
+	SelectCharacterOk(525),
+	SM_SELCHR_FAIL(526),
 	SM_QUERYCHR_FAIL(527),
 
 	// For Game Gate

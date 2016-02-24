@@ -32,7 +32,7 @@ public class SelectServerHandler implements PacketHandler {
 			DB.saveOrUpdate(session.user);
 
 			ServerInfo info = list.get(0);
-			ctx.writeAndFlush(new ServerPackets.SelectServerOk(info.ip,info.port, session.user.certification));
+			ctx.writeAndFlush(new LoginServerPackets.SelectServerOk(info.ip,info.port, session.user.certification));
 		}
 	}
 
