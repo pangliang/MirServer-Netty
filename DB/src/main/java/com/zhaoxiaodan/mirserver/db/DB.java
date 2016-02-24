@@ -13,64 +13,49 @@ import java.util.List;
 
 public class DB {
 
-    private static SessionFactory  ourSessionFactory;
-    private static ServiceRegistry serviceRegistry;
+	private static SessionFactory  ourSessionFactory;
+	private static ServiceRegistry serviceRegistry;
 
-    public static void init() throws Exception{
-        Configuration configuration = new Configuration();
-        configuration.configure();
+	public static void init() throws Exception {
+		Configuration configuration = new Configuration();
+		configuration.configure();
 
-        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-        ourSessionFactory = configuration.buildSessionFactory();
-    }
+		serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+		ourSessionFactory = configuration.buildSessionFactory();
+	}
 
-    private static Session getSession() throws HibernateException {
-        return ourSessionFactory.getCurrentSession();
-    }
+	public static Session getSession() throws HibernateException {
+		Session session = ourSessionFactory.getCurrentSession();
+		return session;
+	}
 
-    public static void saveOrUpdate(Object object){
-        Session session = getSession();
-        try{
-            session.getTransaction().begin();
-            session.saveOrUpdate(object);
-            session.flush();
-            session.getTransaction().commit();
-        }catch (Exception e){
-            session.getTransaction().rollback();
-            throw e;
-        }
+	public static void save(Object object) {
+		Session session = getSession();
+		session.save(object);
+	}
 
-    }
+	public static void update(Object object) {
+		Session session = getSession();
+		session.update(object);
+	}
 
-    public static void delete(Object object){
-        Session session = getSession();
-        try{
-            session.getTransaction().begin();
-            session.delete(object);
-            session.flush();
-            session.getTransaction().commit();
-        }catch (Exception e){
-            session.getTransaction().rollback();
-            throw e;
-        }
-    }
+	public static void delete(Object object) {
+		Session session = getSession();
+		session.delete(object);
+	}
 
-    public static List query(Class clazz, SimpleExpression... simpleExpressions){
-        Session session = getSession();
-        try{
-            session.getTransaction().begin();
-            Criteria criteria = session.createCriteria(clazz);
-            for(SimpleExpression simpleExpression : simpleExpressions){
-                criteria.add(simpleExpression);
-            }
-            List result = criteria.list();
-//            session.getTransaction().commit();
-            return result;
-        }catch (Exception e){
-            session.getTransaction().rollback();
-            throw e;
-        }
+	public static List query(Class clazz, SimpleExpression... simpleExpressions) {
+		Session  session  = getSession();
+		Criteria criteria = session.createCriteria(clazz);
+		for (SimpleExpression simpleExpression : simpleExpressions) {
+			criteria.add(simpleExpression);
+		}
+		List result = criteria.list();
+		return result;
+	}
 
-    }
+	public static Object merge(Object object) {
+		return getSession().merge(object);
+	}
 
 }

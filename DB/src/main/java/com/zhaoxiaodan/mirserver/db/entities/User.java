@@ -16,14 +16,7 @@ public class User extends DAO{
 	public String loginId;
 	public String password;
 	public String username;
-	public String question1;
-	public String answer1;
-	public String question2;
-	public String answer2;
-	public Date   birthday;
-	public String email;
-	public String phone;
-	public String mobilePhone;
+	public Date lastLoginTime;
 	public byte certification;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

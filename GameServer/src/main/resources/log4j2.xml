@@ -5,7 +5,7 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
         <Console name="HighlightConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%highlight{%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=blue, DEBUG=blue, TRACE=black}"/>
+            <PatternLayout pattern="%highlight{%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=blue, DEBUG=black, TRACE=black}"/>
         </Console>
     </appenders>
     <loggers>
@@ -15,7 +15,7 @@
         <Logger name="org.hibernate" level="warn" />
         <logger name="io.netty" level="warn"/>
         <logger name="io.netty.handler.logging.LoggingHandler" level="info"/>
-        <logger name="com.zhaoxiaodan.mirserver" level="debug" additivity="false">
+        <logger name="MirServer" level="info" additivity="false">
             <appender-ref ref="HighlightConsole"/>
         </logger>
         <root level="debug">

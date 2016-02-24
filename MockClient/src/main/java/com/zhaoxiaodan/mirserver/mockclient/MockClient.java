@@ -1,9 +1,9 @@
 package com.zhaoxiaodan.mirserver.mockclient;
 
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.network.ClientPackets;
-import com.zhaoxiaodan.mirserver.loginserver.LoginServerPackets;
-import com.zhaoxiaodan.mirserver.network.Packet;
+import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
+import com.zhaoxiaodan.mirserver.loginserver.ServerPackets;
+import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
@@ -45,7 +45,7 @@ public class MockClient {
 											new DelimiterBasedFrameDecoder(1024, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 											new PacketBit6Decoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
-											new PacketDecoder(LoginServerPackets.class.getName()),
+											new PacketDecoder(ServerPackets.class.getName()),
 
 											//解码
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
@@ -57,8 +57,8 @@ public class MockClient {
 											new ChannelHandlerAdapter() {
 												@Override
 												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-													if (msg instanceof LoginServerPackets.SelectServerOk) {
-														certification = ((LoginServerPackets.SelectServerOk) msg).certification;
+													if (msg instanceof ServerPackets.SelectServerOk) {
+														certification = ((ServerPackets.SelectServerOk) msg).certification;
 													}
 												}
 											}

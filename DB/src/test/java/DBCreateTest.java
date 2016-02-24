@@ -18,7 +18,7 @@ public class DBCreateTest {
 		User    player   = new User();
 		player.loginId = userId;
 
-		DB.saveOrUpdate(player);
+		DB.save(player);
 
 		List<User> list = DB.query(User.class,Restrictions.eq("loginId",userId));
 		for(User p: list)
