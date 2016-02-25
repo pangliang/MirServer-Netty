@@ -10,11 +10,19 @@ public class NewCharacterHandler extends UserHandler {
 
 	@Override
 	public void onPacket(Packet packet, User user) throws Exception {
-		ClientPackets.NewCharacter newCharacter = (ClientPackets.NewCharacter) packet;
-		newCharacter.character.user = user;
-		DB.merge(newCharacter.character);
-		user.characters.add(newCharacter.character);
-		session.writeAndFlush(new Packet(Protocol.SM_NEWCHR_SUCCESS));
+		ClientPackets.NewCharacter request = (ClientPackets.NewCharacter) packet;
+		if(user.characters.size() >= 2){
+			session.writeAndFlush(new Packet(Protocol.SM_NEWCHR_FAIL));
+			return;
+		}
+		try {
+			request.character.user = user;
+			DB.save(request.character);
+			user.characters.add(request.character);
+			session.writeAndFlush(new Packet(Protocol.SM_NEWCHR_SUCCESS));
+		}catch (Exception e){
+			session.writeAndFlush(new Packet(Protocol.SM_NEWCHR_FAIL));
+			throw e;
+		}
 	}
-
 }

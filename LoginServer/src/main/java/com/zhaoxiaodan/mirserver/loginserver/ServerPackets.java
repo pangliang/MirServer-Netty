@@ -58,6 +58,21 @@ public class ServerPackets {
 		}
 	}
 
+	public static final class LoginFail extends Packet {
+
+		public class Reason {
+			public static final int UserNotFound   = -1;     //帐号不存在
+			public static final int WrongPwd       = -1;     //密码错
+			public static final int WrongPwd3Times = -2;    //密码错误3次
+			public static final int AlreadyLogin   = -3;   //已经登录, 需要踢掉原来的
+		}
+
+		public LoginFail(int reason) {
+			super(Protocol.SM_PASSWD_FAIL);
+			p0 = reason;
+		}
+	}
+
 	public static final class SelectServerOk extends Packet {
 
 		public String selectServerIp;
@@ -71,6 +86,7 @@ public class ServerPackets {
 			this.selectServerIp = selectServerIp;
 			this.selectserverPort = selectserverPort;
 			this.certification = certification;
+			p0 = certification;
 		}
 
 		@Override
@@ -140,11 +156,11 @@ public class ServerPackets {
 			this.characterList = new ArrayList<>();
 			for (int i = 0; i + 4 < parts.length; i += 5) {
 				Character cha = new Character();
-				cha.name=parts[i+0];
-				cha.job= Job.values()[Byte.parseByte(parts[i+1])];
-				cha.hair=Byte.parseByte(parts[i+2]);
-				cha.level=Integer.parseInt(parts[i+3]);
-				cha.gender= Gender.values()[Byte.parseByte(parts[i+4])];
+				cha.name = parts[i + 0];
+				cha.job = Job.values()[Byte.parseByte(parts[i + 1])];
+				cha.hair = Byte.parseByte(parts[i + 2]);
+				cha.level = Integer.parseInt(parts[i + 3]);
+				cha.gender = Gender.values()[Byte.parseByte(parts[i + 4])];
 
 				characterList.add(cha);
 			}

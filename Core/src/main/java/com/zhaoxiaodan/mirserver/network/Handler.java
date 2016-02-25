@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 public class Handler {
 	protected Logger logger = LogManager.getLogger(this.getClass().getName());
 	protected Session session;
-	protected org.hibernate.Session db;
 
 	protected void exce(ChannelHandlerContext ctx, Packet packet) throws Exception {
 		session = Session.getSession(ctx);
@@ -17,15 +16,14 @@ public class Handler {
 			logger.debug("new session for {}",ctx);
 			session = Session.create(ctx);
 		}
-		db = DB.getSession();
-		db.getTransaction().begin();
+		DB.getSession().getTransaction().begin();
 		try{
 			onPacket(packet);
-			db.getTransaction().commit();
+			DB.getSession().getTransaction().commit();
 		}catch (Exception e){
 			try{
-				if(db.isOpen())
-					db.getTransaction().rollback();
+				if(DB.getSession().isOpen())
+					DB.getSession().getTransaction().rollback();
 			}catch (Exception e1){
 				logger.error(e1);
 			}

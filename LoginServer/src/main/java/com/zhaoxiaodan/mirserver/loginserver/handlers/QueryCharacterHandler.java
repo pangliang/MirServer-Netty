@@ -35,17 +35,19 @@ public class QueryCharacterHandler extends Handler {
 	@Override
 	public void onPacket(Packet packet) throws Exception {
 		ClientPackets.QueryCharacter request = (ClientPackets.QueryCharacter) packet;
-
-		List<User> list    = DB.query(User.class,Restrictions.eq("loginId", request.loginId));
-		if(list.size() == 0){
-			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
-			return;
+		User                         user;
+		if ((user = (User)session.get("user")) == null) {
+			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
+			if (list.size() == 0) {
+				session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
+				return;
+			}
+			user = list.get(0);
 		}
-		User user = list.get(0);
 		if (user.certification == request.certification) {
-			session.put("user",user);
+			session.put("user", user);
 			session.writeAndFlush(new ServerPackets.QueryCharactorOk(new ArrayList<Character>(user.characters)));
-		}else{
+		} else {
 			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
 			return;
 		}

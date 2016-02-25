@@ -54,8 +54,4 @@ public class DB {
 		return result;
 	}
 
-	public static Object merge(Object object) {
-		return getSession().merge(object);
-	}
-
 }

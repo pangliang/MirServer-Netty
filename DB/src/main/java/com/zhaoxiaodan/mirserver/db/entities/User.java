@@ -19,7 +19,7 @@ public class User extends DAO{
 	public Date lastLoginTime;
 	public byte certification;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(mappedBy = "user")
 	@MapKey(name = "id")
 	public List<Character> characters;
 

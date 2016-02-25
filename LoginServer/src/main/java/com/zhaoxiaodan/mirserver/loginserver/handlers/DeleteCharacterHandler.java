@@ -16,10 +16,11 @@ public class DeleteCharacterHandler extends UserHandler {
 
 		for (Character character : user.characters) {
 			if (character.name.equals(request.characterName)) {
-				character = (Character) DB.merge(character);
+				DB.delete(character);
+
 				character.user.characters.remove(character);
 				character.user = null;
-				DB.delete(character);
+
 				session.writeAndFlush(new Packet(Protocol.SM_DELCHR_SUCCESS));
 				return;
 			}

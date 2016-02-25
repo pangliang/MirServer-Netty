@@ -38,8 +38,8 @@ public class LoginServer {
 		// db init
 		DB.init();
 
-		EventLoopGroup bossGroup   = new NioEventLoopGroup();
-		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		EventLoopGroup bossGroup   = new NioEventLoopGroup(4);
+		EventLoopGroup workerGroup = new NioEventLoopGroup(10);
 		try {
 			ServerBootstrap b = new ServerBootstrap();
 			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)

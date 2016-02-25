@@ -25,7 +25,7 @@ public class SelectServerHandler extends UserHandler {
 			return ;
 		}else{
 			user.certification = (byte)new Random().nextInt(200);
-			DB.merge(user);
+			DB.update(user);
 
 			ServerInfo info = list.get(0);
 			session.writeAndFlush(new ServerPackets.SelectServerOk(info.ip,info.port, user.certification));
