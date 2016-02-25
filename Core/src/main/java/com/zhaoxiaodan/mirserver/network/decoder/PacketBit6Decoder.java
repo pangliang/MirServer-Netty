@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.network.decoder;
 
+import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -56,18 +57,23 @@ public class PacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 		return dest;
 	}
 
+	protected void decode(ByteBuf in, ByteBuf out) {
+		// 看了源码, 头部和内容部分 是分别 encode的, 而且一起解的话, 试过HeroM2这种端, 是改过头大小的解不出来
+		byte[] headerBytes = new byte[Packet.DEFAULT_HEADER_SIZE];
+		in.readBytes(headerBytes);
+		out.writeBytes(headerBytes);
+
+		byte[] bodyBytes = new byte[in.readableBytes() - 1];
+		in.readBytes(bodyBytes);
+		out.writeBytes(decode6BitBuf(bodyBytes));
+	}
+
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
 		ByteBuf buf = Unpooled.buffer();
-
 		in.readByte(); //  # , 在这里就去掉 头尾
-
-		byte[] content = new byte[in.readableBytes() - 1];
-		in.readBytes(content);
-		byte[] bit6DecodeContent = decode6BitBuf(content);
-		buf.writeBytes(bit6DecodeContent);
-
+		decode(in, buf);
 		in.readByte(); //  !
 
 		out.add(buf);

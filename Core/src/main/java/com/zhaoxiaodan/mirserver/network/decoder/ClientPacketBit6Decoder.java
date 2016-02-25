@@ -15,16 +15,9 @@ public class ClientPacketBit6Decoder extends PacketBit6Decoder {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
 		ByteBuf buf = Unpooled.buffer();
-
 		in.readByte(); //  # , 在这里就去掉 头尾
-
 		buf.writeByte(in.readByte());  //cmdIndex
-
-		byte[] content = new byte[in.readableBytes() - 1];
-		in.readBytes(content);
-		byte[] bit6DecodeContent = decode6BitBuf(content);
-		buf.writeBytes(bit6DecodeContent);
-
+		decode(in,buf);
 		in.readByte(); //  !
 
 		out.add(buf);
