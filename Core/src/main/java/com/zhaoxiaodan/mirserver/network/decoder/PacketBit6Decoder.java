@@ -61,7 +61,7 @@ public class PacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 		// 看了源码, 头部和内容部分 是分别 encode的, 而且一起解的话, 试过HeroM2这种端, 是改过头大小的解不出来
 		byte[] headerBytes = new byte[Packet.DEFAULT_HEADER_SIZE];
 		in.readBytes(headerBytes);
-		out.writeBytes(headerBytes);
+		out.writeBytes(decode6BitBuf(headerBytes));
 
 		byte[] bodyBytes = new byte[in.readableBytes() - 1];
 		in.readBytes(bodyBytes);
