@@ -21,7 +21,7 @@ public class ServerPackets {
 		public LoginSuccSelectServer() {}
 
 		public LoginSuccSelectServer(List<ServerInfo> serverInfoList) {
-			super(Protocol.LoginSuccSelectServer);
+			super(Protocol.SM_PASSOK_SELECTSERVER);
 			this.serverInfoList = serverInfoList;
 			this.p3 = (short) serverInfoList.size();
 		}
@@ -61,7 +61,7 @@ public class ServerPackets {
 	public static final class LoginFail extends Packet {
 
 		public class Reason {
-			public static final int UserNotFound   = -1;     //帐号不存在
+			public static final int UserNotFound   = 0;     //帐号不存在
 			public static final int WrongPwd       = -1;     //密码错
 			public static final int WrongPwd3Times = -2;    //密码错误3次
 			public static final int AlreadyLogin   = -3;   //已经登录, 需要踢掉原来的
@@ -82,7 +82,7 @@ public class ServerPackets {
 		public SelectServerOk() {}
 
 		public SelectServerOk(String selectServerIp, int selectserverPort, byte certification) {
-			super(Protocol.SelectServerOk);
+			super(Protocol.SM_SELECTSERVER_OK);
 			this.selectServerIp = selectServerIp;
 			this.selectserverPort = selectserverPort;
 			this.certification = certification;
@@ -122,7 +122,7 @@ public class ServerPackets {
 		public QueryCharactorOk() {}
 
 		public QueryCharactorOk(List<Character> characterList) {
-			super(Protocol.CharacterList);
+			super(Protocol.SM_QUERYCHR);
 			this.characterList = characterList;
 		}
 
@@ -175,7 +175,7 @@ public class ServerPackets {
 		public SelectCharacterOk() {}
 
 		public SelectCharacterOk(String serverIp, int serverPort) {
-			super(Protocol.SelectCharacterOk);
+			super(Protocol.SM_STARTPLAY);
 			this.serverIp = serverIp;
 			this.serverPort = serverPort;
 		}

@@ -78,7 +78,7 @@ public class MockClient {
 			user.username = "pangliang";
 
 			// new user
-//			packet = new ClientPackets.NewUser(cmdIndex,user);
+//			packet = new ClientPackets.CM_ADDNEWUSER(cmdIndex,user);
 //			ch.writeAndFlush(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
@@ -109,7 +109,7 @@ public class MockClient {
 //			character.hair = 1;
 //			character.job = Job.Warrior;
 //			character.gender = Gender.MALE;
-//			packet = new ClientPackets.NewCharacter(cmdIndex,character);
+//			packet = new ClientPackets.CM_NEWCHR(cmdIndex,character);
 //			ch.writeAndFlush(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;

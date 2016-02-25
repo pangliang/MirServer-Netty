@@ -27,7 +27,7 @@ public class ClientPackets {
 		}
 
 		public Login(byte cmdIndex, User user) {
-			super(Protocol.Login, cmdIndex);
+			super(Protocol.CM_IDPASSWORD, cmdIndex);
 			this.user = user;
 		}
 
@@ -64,7 +64,7 @@ public class ClientPackets {
 		}
 
 		public NewUser(byte cmdIndex, User user) {
-			super(Protocol.NewUser, cmdIndex);
+			super(Protocol.CM_ADDNEWUSER, cmdIndex);
 			this.user = user;
 		}
 
@@ -98,7 +98,7 @@ public class ClientPackets {
 		public SelectServer() {}
 
 		public SelectServer(byte cmdIndex, String serverName) {
-			super(Protocol.SelectServer, cmdIndex);
+			super(Protocol.CM_SELECTSERVER, cmdIndex);
 			this.serverName = serverName;
 		}
 
@@ -122,7 +122,7 @@ public class ClientPackets {
 		public NewCharacter() {}
 
 		public NewCharacter(byte cmdIndex, Character character) {
-			super(Protocol.NewCharacter, cmdIndex);
+			super(Protocol.CM_NEWCHR, cmdIndex);
 			this.character = character;
 		}
 
@@ -167,7 +167,7 @@ public class ClientPackets {
 		public QueryCharacter() {}
 
 		public QueryCharacter(byte cmdIndex, String loginId, short certification) {
-			super(Protocol.QueryCharacter, cmdIndex);
+			super(Protocol.CM_QUERYCHR, cmdIndex);
 			this.loginId = loginId;
 			this.certification = certification;
 		}
@@ -203,7 +203,7 @@ public class ClientPackets {
 		public DeleteCharacter() {}
 
 		public DeleteCharacter(byte cmdIndex, String characterName) {
-			super(Protocol.QueryCharacter, cmdIndex);
+			super(Protocol.CM_QUERYCHR, cmdIndex);
 			this.characterName = characterName;
 		}
 
@@ -228,7 +228,7 @@ public class ClientPackets {
 		public SelectCharacter() {}
 
 		public SelectCharacter(byte cmdIndex, String loginId,String characterName) {
-			super(Protocol.SelectCharacter, cmdIndex);
+			super(Protocol.CM_SELCHR, cmdIndex);
 			this.loginId = loginId;
 			this.characterName = characterName;
 		}

@@ -24,9 +24,9 @@ public class PacketEncodeDecodeTest {
 			try {
 //				create("#<<<<<KT=<<<<<<<<!",new Packet(Protocol.SM_ID_NOTFOUND));
 
-				put("#2<<<<<KAQ<<<<<<<<<<<<<<<<<<<WBa]WbXmGrmeTRucHNxrTo@mIbTnUO<qIoa^IOY^URPmHOQ]HbHsUO<uJ?`pJ<!",new Packet(Protocol.LoginSuccSelectServer));
-//				create("#2<<<<<I@C<<<<<<<<HODoGo@nHl!", new ClientPackets.Login());
-//				create("#2<<<<<I@C<<<<<<<<HODoI?PrInxmH_HpIOTs!",new ClientPackets.Login());
+				put("#2<<<<<KAQ<<<<<<<<<<<<<<<<<<<WBa]WbXmGrmeTRucHNxrTo@mIbTnUO<qIoa^IOY^URPmHOQ]HbHsUO<uJ?`pJ<!",new Packet(Protocol.SM_PASSOK_SELECTSERVER));
+//				create("#2<<<<<I@C<<<<<<<<HODoGo@nHl!", new ClientPackets.CM_IDPASSWORD());
+//				create("#2<<<<<I@C<<<<<<<<HODoI?PrInxmH_HpIOTs!",new ClientPackets.CM_IDPASSWORD());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

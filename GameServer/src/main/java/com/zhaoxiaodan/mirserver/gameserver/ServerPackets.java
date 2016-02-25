@@ -21,7 +21,7 @@ public class ServerPackets {
 		public LoginSuccSelectServer() {}
 
 		public LoginSuccSelectServer(List<ServerInfo> serverInfoList) {
-			super(Protocol.LoginSuccSelectServer);
+			super(Protocol.SM_PASSOK_SELECTSERVER);
 			this.serverInfoList = serverInfoList;
 			this.p3 = (short) serverInfoList.size();
 		}
@@ -67,7 +67,7 @@ public class ServerPackets {
 		public SelectServerOk() {}
 
 		public SelectServerOk(String selectServerIp, int selectserverPort, byte certification) {
-			super(Protocol.SelectServerOk);
+			super(Protocol.SM_SELECTSERVER_OK);
 			this.selectServerIp = selectServerIp;
 			this.selectserverPort = selectserverPort;
 			this.certification = certification;
@@ -106,7 +106,7 @@ public class ServerPackets {
 		public QueryCharactorOk() {}
 
 		public QueryCharactorOk(List<Character> characterList) {
-			super(Protocol.CharacterList);
+			super(Protocol.SM_QUERYCHR);
 			this.characterList = characterList;
 		}
 
@@ -159,7 +159,7 @@ public class ServerPackets {
 		public SelectCharacterOk() {}
 
 		public SelectCharacterOk(String serverIp, int serverPort) {
-			super(Protocol.SelectCharacterOk);
+			super(Protocol.SM_STARTPLAY);
 			this.serverIp = serverIp;
 			this.serverPort = serverPort;
 		}

@@ -36,7 +36,7 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 		Class<? extends Packet> packetClass;
 		try {
-			packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocol.name());
+			packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocol.name);
 		} catch (ClassNotFoundException e) {
 			packetClass = Packet.class;
 		}

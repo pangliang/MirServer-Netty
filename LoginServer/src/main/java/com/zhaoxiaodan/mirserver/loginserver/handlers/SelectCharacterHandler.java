@@ -21,7 +21,7 @@ public class SelectCharacterHandler extends UserHandler {
 			}
 		}
 
-		session.writeAndFlush(new Packet(Protocol.SM_SELCHR_FAIL));
+		session.writeAndFlush(new Packet(Protocol.SM_STARTFAIL));
 		return ;
 	}
 

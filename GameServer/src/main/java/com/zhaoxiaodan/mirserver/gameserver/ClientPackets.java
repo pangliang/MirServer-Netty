@@ -20,7 +20,7 @@ public class ClientPackets {
 		}
 
 		public StartGame(byte cmdIndex, String loginId, String characterName, short cert, String clientVersion) {
-			super(Protocol.StartGame, cmdIndex);
+			super(Protocol.CM_QUERYUSERSTATE, cmdIndex);
 			this.loginId = loginId;
 			this.characterName = characterName;
 			this.cert = cert;

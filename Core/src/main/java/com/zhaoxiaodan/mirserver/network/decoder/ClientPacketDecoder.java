@@ -24,7 +24,7 @@ public class ClientPacketDecoder extends PacketDecoder {
 
 		if('*' == in.getByte(1) && '*' == in.getByte(2)){
 			//connect to gameserver packet, format : cmdIndex**loginId/characterName/clientVersion/cert
-			protocolId = Protocol.StartGame.id;
+			protocolId = Protocol.CM_QUERYUSERSTATE.id;
 		}else{
 			//normal index packet
 			int pidPos = 1 + 4;
