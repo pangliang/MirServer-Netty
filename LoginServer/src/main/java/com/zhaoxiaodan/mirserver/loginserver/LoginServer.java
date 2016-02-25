@@ -30,7 +30,7 @@ public class LoginServer {
 	private int port;
 
 	public LoginServer(int port) {
-		this.port = port;
+		this.port = port == 0? DEFAULT_LOGIN_GATE_PORT : port;
 	}
 
 	public void run() throws Exception {
@@ -60,9 +60,9 @@ public class LoginServer {
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//解码
-//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new PacketBit6Encoder(),
-//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new PacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 

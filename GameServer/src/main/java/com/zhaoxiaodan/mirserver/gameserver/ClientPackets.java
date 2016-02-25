@@ -9,17 +9,17 @@ import java.nio.charset.Charset;
 //TODO 按道理这里是网络封包模块不应该关联 DB 的 DAO, 当时包含的属性其实基本一致; 偷懒就这么用了
 public class ClientPackets {
 
-	public static final class StartGame extends IndexPacket {
+	public static final class GameLogin extends IndexPacket {
 
 		public String loginId;
 		public String characterName;
 		public short    cert;
 		public String clientVersion;
 
-		public StartGame() {
+		public GameLogin() {
 		}
 
-		public StartGame(byte cmdIndex, String loginId, String characterName, short cert, String clientVersion) {
+		public GameLogin(byte cmdIndex, String loginId, String characterName, short cert, String clientVersion) {
 			super(Protocol.CM_QUERYUSERSTATE, cmdIndex);
 			this.loginId = loginId;
 			this.characterName = characterName;
@@ -29,16 +29,17 @@ public class ClientPackets {
 
 		@Override
 		public void readPacket(ByteBuf in) throws WrongFormatException {
-			in.readByte();
-			in.readByte();
+			in.readByte();  //cmdIndex
+			in.readByte();  //*
+			in.readByte();  //*
 
 			String content = in.toString(Charset.defaultCharset()).trim();
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
-			if(parts.length >= 6)
+			if(parts.length >= 5)
 			{
 				loginId = parts[0];
 				characterName = parts[1];
-				cert = Short.parseShort(parts[2]);
+				cert = Short.parseShort(parts[2].trim());
 				clientVersion=parts[3];
 			}else{
 				throw new WrongFormatException();
@@ -62,4 +63,18 @@ public class ClientPackets {
 			out.writeByte('1');
 		}
 	}
+
+	public static final class LoginNoticeOk extends IndexPacket {
+
+		public short clientType;
+		public LoginNoticeOk() {
+		}
+
+		public LoginNoticeOk(byte cmdIndex) {
+			super(Protocol.CM_LOGINNOTICEOK, cmdIndex);
+			this.p3 = 0;
+		}
+	}
+
+
 }

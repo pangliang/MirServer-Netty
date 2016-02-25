@@ -162,14 +162,14 @@ public class ClientPackets {
 	public static final class QueryCharacter extends IndexPacket {
 
 		public String loginId;
-		public short certification;
+		public short  cert;
 
 		public QueryCharacter() {}
 
-		public QueryCharacter(byte cmdIndex, String loginId, short certification) {
+		public QueryCharacter(byte cmdIndex, String loginId, short cert) {
 			super(Protocol.CM_QUERYCHR, cmdIndex);
 			this.loginId = loginId;
-			this.certification = certification;
+			this.cert = cert;
 		}
 
 		@Override
@@ -180,7 +180,7 @@ public class ClientPackets {
 			if(parts.length >= 2)
 			{
 				loginId = parts[0];
-				certification = Short.parseShort(parts[1]);
+				cert = Short.parseShort(parts[1]);
 			}else{
 				throw new WrongFormatException();
 			}
@@ -192,7 +192,7 @@ public class ClientPackets {
 			super.writePacket(out);
 			out.writeBytes(loginId.getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
-			out.writeBytes(Short.toString(certification).getBytes());
+			out.writeBytes(Short.toString(cert).getBytes());
 		}
 	}
 

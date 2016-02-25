@@ -1,7 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.gameserver.handler.LoginHandler;
+import com.zhaoxiaodan.mirserver.gameserver.handler.GameLoginHandler;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
@@ -24,13 +24,13 @@ import io.netty.handler.logging.LoggingHandler;
 
 public class GameServer {
 
-	public static final int REQUEST_MAX_FRAME_LENGTH = 1024;                    // 封包每一帧的最大大小
+	public static final int REQUEST_MAX_FRAME_LENGTH = 2048;                    // 封包每一帧的最大大小
 	public static final int DEFAULT_GAME_SERVER_PORT = 7200;                    // 登录网关默认端口号
 
 	private int port;
 
 	public GameServer(int port) {
-		this.port = port;
+		this.port = port == 0? DEFAULT_GAME_SERVER_PORT : port;
 	}
 
 	public void run() throws Exception {
@@ -60,14 +60,14 @@ public class GameServer {
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//解码
-//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new PacketBit6Encoder(),
-//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new PacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 
 									//分包分发
-									new PacketDispatcher(LoginHandler.class.getPackage().getName()),
+									new PacketDispatcher(GameLoginHandler.class.getPackage().getName()),
 
 									new ExceptionHandler()
 							);

@@ -3,6 +3,7 @@ package com.zhaoxiaodan.mirserver.mockclient;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
 import com.zhaoxiaodan.mirserver.loginserver.ServerPackets;
+import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
@@ -52,13 +53,14 @@ public class MockClient {
 											new ClientPacketBit6Encoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new PacketEncoder(),
-
+											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new ChannelHandlerAdapter() {
 												@Override
 												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-													if (msg instanceof ServerPackets.SelectServerOk) {
-														certification = ((ServerPackets.SelectServerOk) msg).certification;
+													Packet packet = (Packet)msg;
+													if (packet.protocol == Protocol.SM_SELECTSERVER_OK) {
+														certification = (short)packet.p0;
 													}
 												}
 											}
@@ -129,7 +131,12 @@ public class MockClient {
 			// ************ game server
 			ch.closeFuture();
 			ch = b.connect(HOST, 7200).sync().channel();
-			packet = new com.zhaoxiaodan.mirserver.gameserver.ClientPackets.StartGame(cmdIndex,user.loginId,charName,certification,"2020522");
+			packet = new com.zhaoxiaodan.mirserver.gameserver.ClientPackets.GameLogin(cmdIndex,user.loginId,charName,certification,"2020522");
+			ch.writeAndFlush(packet);
+			in.readLine();
+			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
+
+			packet = new com.zhaoxiaodan.mirserver.gameserver.ClientPackets.LoginNoticeOk(cmdIndex);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;

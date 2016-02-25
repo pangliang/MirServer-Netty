@@ -77,16 +77,16 @@ public class ServerPackets {
 
 		public String selectServerIp;
 		public int    selectserverPort;
-		public short  certification;
+		public short  cert;
 
 		public SelectServerOk() {}
 
-		public SelectServerOk(String selectServerIp, int selectserverPort, byte certification) {
+		public SelectServerOk(String selectServerIp, int selectserverPort, byte cert) {
 			super(Protocol.SM_SELECTSERVER_OK);
 			this.selectServerIp = selectServerIp;
 			this.selectserverPort = selectserverPort;
-			this.certification = certification;
-			p0 = certification;
+			this.cert = cert;
+			p0 = cert;
 		}
 
 		@Override
@@ -97,7 +97,7 @@ public class ServerPackets {
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(Integer.toString(selectserverPort).getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
-			out.writeBytes(Short.toString(certification).getBytes());
+			out.writeBytes(Short.toString(cert).getBytes());
 		}
 
 		@Override
@@ -111,7 +111,7 @@ public class ServerPackets {
 				throw new WrongFormatException();
 			this.selectServerIp = parts[0];
 			this.selectserverPort = Integer.parseInt(parts[1]);
-			this.certification = Short.parseShort(parts[2]);
+			this.cert = Short.parseShort(parts[2]);
 		}
 	}
 

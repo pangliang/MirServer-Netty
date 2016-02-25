@@ -20,7 +20,7 @@ public class PacketDispatcher extends ChannelHandlerAdapter {
 			throw new Exception("Recv msg is not instance of Packet");
 		}
 
-		String                   protocolName = pakcet.getClass().getSimpleName();   //Packet 就是通过 protocol id 反射出来的 name
+		String                   protocolName = ((Packet) pakcet).protocol.name;   //Packet 就是通过 protocol id 反射出来的 name
 		Class<? extends Handler> handlerClass;
 		try {
 			handlerClass = (Class<? extends Handler>) Class.forName(handlerPackageName + "." + protocolName + "Handler");

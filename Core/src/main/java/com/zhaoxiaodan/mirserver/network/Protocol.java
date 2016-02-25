@@ -48,9 +48,10 @@ public enum Protocol {
 
 	// For game process
 	// Client To Server Commands
+	CM_GAMELOGIN(65001,"GameLogin"),
 	CM_QUERYUSERNAME(80,null),
-	CM_QUERYBAGITEMS(81,null),
-	CM_QUERYUSERSTATE(82,null),
+	CM_QUERYBAGITEMS(81,"QueryBagItems"),
+	CM_QUERYUSERSTATE(82,"QueryUserState"),
 
 	CM_DROPITEM(1000,null),
 	CM_PICKUP(1001,null),
@@ -58,6 +59,9 @@ public enum Protocol {
 	CM_TAKEOFFITEM(1004,null),
 	CM_BUTCH(1007,null),
 	CM_MAGICKEYCHANGE(1008,null),
+	CM_LOGINNOTICEOK(1018,"LoginNoticeOk"),
+
+
 	CM_EAT(1006,null),
 	CM_TURN(3010,null),
 	CM_WALK(3011,null),
@@ -99,15 +103,15 @@ public enum Protocol {
 
 	SM_HEAR(40,null),
 	SM_FEATURECHANGED(41,null),
-	SM_USERNAME(42,null),
+	SM_USERNAME(42,"UserName"),
 	SM_WINEXP(44,null),
 	SM_LEVELUP(45,null),
 	SM_DAYCHANGING(46,null),
 	SM_LOGON(50,null),
-	SM_NEWMAP(51,null),
+	SM_NEWMAP(51,"NewMap"),
 	SM_ABILITY(52,null),
 	SM_HEALTHSPELLCHANGED(53,null),
-	SM_MAPDESCRIPTION(54,null),
+	SM_MAPDESCRIPTION(54,"MapDescription"),
 	SM_SPELL2(117,null),
 
 	SM_SYSMESSAGE(100,null),
@@ -117,7 +121,7 @@ public enum Protocol {
 	SM_GUILDMESSAGE(104,null),
 
 	SM_ADDITEM(200,null),
-	SM_BAGITEMS(201,null),
+	SM_BAGITEMS(201,"BagItems"),
 	SM_ADDMAGIC(210,null),
 	SM_SENDMYMAGIC(211,null),
 
@@ -146,7 +150,7 @@ public enum Protocol {
 	SM_CHANGELIGHT(654,null),
 	SM_CHANGENAMECOLOR(656,null),
 	SM_CHARSTATUSCHANGED(657,null),
-
+	SM_SENDNOTICE(658,"SendNotice"),
 	SM_SUBABILITY(752,null),
 
 	SM_SHOWEVENT(804,null),

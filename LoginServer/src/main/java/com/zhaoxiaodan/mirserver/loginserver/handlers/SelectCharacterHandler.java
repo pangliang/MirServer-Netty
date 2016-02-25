@@ -16,7 +16,7 @@ public class SelectCharacterHandler extends UserHandler {
 
 		for(Character character:user.characters){
 			if(character.name.equals(request.characterName)){
-				session.writeAndFlush(new ServerPackets.SelectCharacterOk("192.168.0.166",7000));
+				session.writeAndFlush(new ServerPackets.SelectCharacterOk("192.168.0.166",7400));
 				return;
 			}
 		}
