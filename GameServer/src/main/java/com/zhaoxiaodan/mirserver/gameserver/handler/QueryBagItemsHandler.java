@@ -11,7 +11,7 @@ public class QueryBagItemsHandler extends Handler {
 	@Override
 	public void onPacket(Packet packet) throws Exception {
 
-		session.writeAndFlush(new ServerPackets.BagItems(137418480,new ArrayList<String>()));
+		session.writeAndFlush(new ServerPackets.BagItems(143983136,new ArrayList<String>()));
 	}
 
 }

@@ -61,15 +61,26 @@ public class ServerPackets {
 	public static final class LoginFail extends Packet {
 
 		public class Reason {
-			public static final int UserNotFound   = 0;     //帐号不存在
-			public static final int WrongPwd       = -1;     //密码错
-			public static final int WrongPwd3Times = -2;    //密码错误3次
-			public static final int AlreadyLogin   = -3;   //已经登录, 需要踢掉原来的
+
+			/**
+			 * -1: FrmDlg.DMessageDlg('密码错误！！', [mbOk]);
+			 * -2: FrmDlg.DMessageDlg('密码输入错误超过3次，此帐号被暂时锁定，请稍候再登录！', [mbOk]);
+			 * -3: FrmDlg.DMessageDlg('此帐号已经登录或被异常锁定，请稍候再登录！', [mbOk]);
+			 * -4: FrmDlg.DMessageDlg('这个帐号访问失败！\请使用其他帐号登录，\或者申请付费注册。', [mbOk]);
+			 * -5: FrmDlg.DMessageDlg('这个帐号被锁定！', [mbOk]);
+			 * else FrmDlg.DMessageDlg('此帐号不存在或出现未知错误！！', [mbOk]);
+			 */
+			public static final int UserNotFound   = 0;
+			public static final int WrongPwd       = -1;
+			public static final int WrongPwd3Times = -2;
+			public static final int AlreadyLogin   = -3;
+			public static final int NoPay          = -4;
+			public static final int BeLock         = -5;
 		}
 
 		public LoginFail(int reason) {
 			super(Protocol.SM_PASSWD_FAIL);
-			p0 = reason;
+			recog = reason;
 		}
 	}
 
@@ -86,7 +97,7 @@ public class ServerPackets {
 			this.selectServerIp = selectServerIp;
 			this.selectserverPort = selectserverPort;
 			this.cert = cert;
-			p0 = cert;
+			recog = cert;
 		}
 
 		@Override

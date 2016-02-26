@@ -102,16 +102,17 @@ public enum Protocol {
 	SM_NOWDEATH(34,null),
 
 	SM_HEAR(40,null),
-	SM_FEATURECHANGED(41,null),
+	SM_FEATURECHANGED(41,"FeatureChanged"),
 	SM_USERNAME(42,"UserName"),
 	SM_WINEXP(44,null),
 	SM_LEVELUP(45,null),
 	SM_DAYCHANGING(46,null),
-	SM_LOGON(50,null),
+	SM_LOGON(50,""),
 	SM_NEWMAP(51,"NewMap"),
 	SM_ABILITY(52,null),
 	SM_HEALTHSPELLCHANGED(53,null),
 	SM_MAPDESCRIPTION(54,"MapDescription"),
+	SM_GAMEGOLDNAME(55,"GameGoldName"),
 	SM_SPELL2(117,null),
 
 	SM_SYSMESSAGE(100,null),
@@ -151,6 +152,7 @@ public enum Protocol {
 	SM_CHANGENAMECOLOR(656,null),
 	SM_CHARSTATUSCHANGED(657,null),
 	SM_SENDNOTICE(658,"SendNotice"),
+	SM_AREASTATE(708,"AreaState"),
 	SM_SUBABILITY(752,null),
 
 	SM_SHOWEVENT(804,null),
@@ -159,6 +161,7 @@ public enum Protocol {
 	SM_OPENHEALTH(1100,null),
 	SM_CLOSEHEALTH(1101,null),
 	SM_CHANGEFACE(1104,null),
+	SM_VERSION_FAIL(1106,"VersionFail"),
 
 	SM_ITEMUPDATE(1500,null),
 	SM_MONSTERSAY(1501,null),

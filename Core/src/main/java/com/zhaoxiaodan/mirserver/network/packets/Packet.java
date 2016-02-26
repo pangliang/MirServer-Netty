@@ -12,7 +12,7 @@ import io.netty.buffer.ByteBuf;
  * +-----------------------------------------------------------------------------------------+
  * |  #  |              header                                        |      body      |  !  |
  * +-----------------------------------------------------------------------------------------+
- * |  #  |index|    p0        |protocol|    p1  |    p2    |    p3    |      body      |  !  |
+ * |  #  |index|    recog        |protocol|    p1  |    p2    |    p3    |      body      |  !  |
  * +-----------------------------------------------------------------------------------------+
  * </pre>
  * 不同类型的请求, body有各自的格式,比如login封包 body 用/符号分隔, 格式为:帐号/密码, 例如:
@@ -33,7 +33,7 @@ import io.netty.buffer.ByteBuf;
  * </pre>
  * 装配后得到类:
  * <p>
- * Packet{  cmdIndx=2, p0=0, protocol=2001, p1=0, p2=0, p3=0, body='123/123'}
+ * Packet{  cmdIndx=2, recog=0, protocol=2001, p1=0, p2=0, p3=0, body='123/123'}
  */
 public class Packet {
 
@@ -41,7 +41,7 @@ public class Packet {
 	public static final char   CONTENT_SEPARATOR_CHAR = '/';
 	public static final String CONTENT_SEPARATOR_STR  = new String(Character.toString(CONTENT_SEPARATOR_CHAR));
 
-	public int      p0;     // 未知
+	public int      recog;     // 未知
 	public Protocol protocol;      // 协议id
 	public short    p1;        //
 	public short    p2;
@@ -50,8 +50,8 @@ public class Packet {
 	public Packet() {
 	}
 
-	public Packet(int p0, Protocol protocol, short p1, short p2, short p3) {
-		this.p0 = p0;
+	public Packet(int recog, Protocol protocol, short p1, short p2, short p3) {
+		this.recog = recog;
 		this.protocol = protocol;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -63,7 +63,7 @@ public class Packet {
 	}
 
 	public void readPacket(ByteBuf in) throws WrongFormatException {
-		p0 = in.readInt();
+		recog = in.readInt();
 		protocol = Protocol.get(in.readShort());
 		p1 = in.readShort();
 		p2 = in.readShort();
@@ -71,7 +71,7 @@ public class Packet {
 	}
 
 	public void writePacket(ByteBuf out) {
-		out.writeInt(p0);
+		out.writeInt(recog);
 		out.writeShort(protocol.id);
 		out.writeShort(p1);
 		out.writeShort(p2);
@@ -94,6 +94,30 @@ public class Packet {
 		}
 
 		return sb.toString().trim();
+	}
+
+	public static short makeWord(byte low, byte high){
+		return (short)((high << 8)|low);
+	}
+
+	public static int makeLong(short low,short high){
+		return ((high << 16)|low);
+	}
+
+	public static short getLowWord(int number){
+		return (short)(number);
+	}
+
+	public static short getHighWord(int number){
+		return (short)(number >> 16);
+	}
+
+	public static byte getLowByte(short number){
+		return (byte)(number);
+	}
+
+	public static byte getHighByte(short number){
+		return (byte)(number >> 8);
 	}
 
 	@Override

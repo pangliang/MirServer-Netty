@@ -12,7 +12,7 @@ public class SelectCharacterHandler extends UserHandler {
 	@Override
 	public void onPacket(Packet packet, User user) throws Exception {
 
-		ClientPackets.SelectCharacter request = (ClientPackets.SelectCharacter)packet;
+		ClientPackets.SelectCharacter request = (ClientPackets.SelectCharacter) packet;
 
 		for(Character character:user.characters){
 			if(character.name.equals(request.characterName)){

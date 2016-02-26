@@ -18,7 +18,7 @@ public class ServerPackets {
 		public SendNotice(String notice) {
 			super(Protocol.SM_SENDNOTICE);
 			this.notice = notice;
-			this.p0 = 2000;
+			this.recog = 2000;
 		}
 
 		@Override
@@ -40,10 +40,10 @@ public class ServerPackets {
 
 		public NewMap() {}
 
-		public NewMap(int id,short x, short y, short objectCount, String mapId) {
+		public NewMap(int id, short x, short y, short objectCount, String mapId) {
 			super(Protocol.SM_NEWMAP);
 			this.mapId = mapId;
-			this.p0 = id;
+			this.recog = id;
 			this.p1 = x;
 			this.p2 = y;
 			this.p3 = objectCount;
@@ -62,31 +62,121 @@ public class ServerPackets {
 		}
 	}
 
-	public static final class Logon extends Packet {
+	public static final class VersionFail extends Packet {
 
-		public String mapId;
+		public int file1CRC;
+		public int file2CRC;
+		public int file3CRC;
 
-		public Logon() {}
+		public VersionFail() {}
 
-		public Logon(int id,short x, short y, short objectCount, String mapId) {
-			super(Protocol.SM_LOGON);
-			this.mapId = mapId;
-			this.p0 = id;
-			this.p1 = x;
-			this.p2 = y;
-			this.p3 = objectCount;
+		public VersionFail(int file1CRC, int file2CRC, int file3CRC) {
+			super(Protocol.SM_VERSION_FAIL);
+			this.recog = file1CRC;
+			this.p1 = getLowWord(file2CRC);
+			this.p2 = getHighWord(file2CRC);
+
+			this.file1CRC=file1CRC;
+			this.file2CRC=file2CRC;
+			this.file3CRC=file3CRC;
 		}
 
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-			out.writeBytes(mapId.getBytes());
+			out.writeInt(file3CRC);
 		}
 
 		@Override
 		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
-			this.mapId = in.toString(Charset.defaultCharset()).trim();
+			this.file3CRC = in.readInt();
+			this.file1CRC = this.recog;
+			this.file2CRC = makeLong(this.p1,this.p2);
+		}
+	}
+
+	public static final class Logon extends Packet {
+
+		public int   charId;
+		public short currX;
+		public short currY;
+		public byte  direction;
+		public byte  light;
+		public int   feature;
+		public int   charStatus;
+		public short featureEx;
+
+		public Logon() {}
+
+		public Logon(int charId, short currX, short currY, byte direction, byte light, int feature, int charStatus, short featureEx) {
+			super(Protocol.SM_LOGON);
+			this.feature = feature;
+			this.charStatus = charStatus;
+			this.featureEx = featureEx;
+
+			this.recog = charId;
+			this.p1 = currX;
+			this.p2 = currY;
+			this.p3 = makeWord(direction, light);
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeInt(feature);
+			out.writeInt(charStatus);
+			out.writeInt(0);
+			out.writeInt(0);
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+
+			this.feature = in.readInt();
+			this.charStatus = in.readInt();
+			this.featureEx = in.readShort();
+
+			this.charId = this.recog;
+			this.currX = p1;
+			this.currY = p2;
+			this.direction = getLowByte(p3);
+			this.light = getHighByte(p3);
+		}
+	}
+
+	public static final class FeatureChanged extends Packet {
+
+		public int charId;
+		public int feature;
+		public int featureEx;
+
+		public FeatureChanged() {}
+
+		public FeatureChanged(int charId, int feature, short featureEx) {
+			super(Protocol.SM_FEATURECHANGED);
+			this.charId = charId;
+			this.recog = charId;
+			this.p1 = 0;//getLowWord(feature);
+			this.p2 = 4;//getHighWord(feature);
+			this.p3 = 0;//featureEx;
+
+			this.feature = feature;
+			this.featureEx = featureEx;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			this.charId = recog;
+			this.feature = makeLong(p1,p2);
+			this.featureEx = p3;
 		}
 	}
 
@@ -99,7 +189,7 @@ public class ServerPackets {
 		public UserName(int id, short color, String userName) {
 			super(Protocol.SM_USERNAME);
 			this.userName = userName;
-			this.p0 = id;
+			this.recog = id;
 			this.p1 = color;
 		}
 
@@ -122,9 +212,10 @@ public class ServerPackets {
 
 		public MapDescription() {}
 
-		public MapDescription(String description) {
+		public MapDescription(int musicId, String description) {
 			super(Protocol.SM_MAPDESCRIPTION);
 			this.description = description;
+			this.recog = musicId;
 		}
 
 		@Override
@@ -140,14 +231,55 @@ public class ServerPackets {
 		}
 	}
 
+	public static final class GameGoldName extends Packet {
+
+		public int    gameGold;
+		public int    gamePoint;
+		public String gameGoldName;
+		public String gamePointName;
+
+		public GameGoldName() {}
+
+		public GameGoldName(int gameGold, int gamePoint, String gameGoldName, String gamePointName) {
+			super(Protocol.SM_GAMEGOLDNAME);
+			this.gameGold = gameGold;
+			this.gamePoint = gamePoint;
+			this.gameGoldName = gameGoldName;
+			this.gamePointName = gamePointName;
+
+			this.recog = gameGold;
+			this.p1 = getLowWord(gamePoint);
+			this.p2 = getHighWord(gamePoint);
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(gameGoldName.getBytes());
+			out.writeByte(13);
+			out.writeBytes(gamePointName.getBytes());
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			String content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts = content.split(""+(char)(13));
+			if(parts.length >1){
+				this.gameGoldName = parts[0];
+				this.gamePointName = parts[1];
+			}
+		}
+	}
+
 	public static final class BagItems extends Packet {
 
 		public BagItems() {}
 
 		public BagItems(int id, List<String> items) {
 			super(Protocol.SM_BAGITEMS);
-			this.p0 = id;
-			this.p3 = (short)items.size();
+			this.recog = id;
+			this.p3 = (short) items.size();
 		}
 
 		@Override

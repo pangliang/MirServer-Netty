@@ -16,7 +16,7 @@ public class SelectServerHandler extends UserHandler {
 
 	@Override
 	public void onPacket(Packet packet, User user) throws Exception {
-		ClientPackets.SelectServer selectServer = (ClientPackets.SelectServer)packet;
+		ClientPackets.SelectServer selectServer = (ClientPackets.SelectServer) packet;
 
 		List<ServerInfo> list = DB.query(ServerInfo.class,Restrictions.eq("name",selectServer.serverName));
 		if(1 != list.size())

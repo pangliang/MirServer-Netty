@@ -15,7 +15,7 @@ public class IndexPacket extends Packet {
 	}
 
 	@Override
-	public void readPacket(ByteBuf in) throws WrongFormatException{
+	public void readPacket(ByteBuf in) throws WrongFormatException {
 		cmdIndex = in.readByte();
 		cmdIndex = (byte) (cmdIndex - '0');
 		super.readPacket(in);

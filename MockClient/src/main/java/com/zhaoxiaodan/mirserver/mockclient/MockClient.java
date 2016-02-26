@@ -2,14 +2,14 @@ package com.zhaoxiaodan.mirserver.mockclient;
 
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
-import com.zhaoxiaodan.mirserver.loginserver.ServerPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
 import com.zhaoxiaodan.mirserver.network.encoder.ClientPacketBit6Encoder;
 import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
+import com.zhaoxiaodan.mirserver.network.packets.IndexPacket;
+import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -27,6 +27,7 @@ public class MockClient {
 	static final int    PORT = 7000;
 
 	static short certification = 0;
+	static int charId;
 
 	public void run() throws Exception {
 
@@ -46,12 +47,12 @@ public class MockClient {
 											new DelimiterBasedFrameDecoder(2048, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 											new PacketBit6Decoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
-											new PacketDecoder(ServerPackets.class.getName()),
+											new PacketDecoder(com.zhaoxiaodan.mirserver.gameserver.ServerPackets.class.getName()),
 
 											//解码
-											new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new ClientPacketBit6Encoder(),
-											new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new PacketEncoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
@@ -60,7 +61,9 @@ public class MockClient {
 												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 													Packet packet = (Packet)msg;
 													if (packet.protocol == Protocol.SM_SELECTSERVER_OK) {
-														certification = (short)packet.p0;
+														certification = (short) packet.recog;
+													}else if(packet.protocol == Protocol.SM_LOGON){
+														charId = packet.recog;
 													}
 												}
 											}
@@ -137,6 +140,12 @@ public class MockClient {
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			packet = new com.zhaoxiaodan.mirserver.gameserver.ClientPackets.LoginNoticeOk(cmdIndex);
+			ch.writeAndFlush(packet);
+			in.readLine();
+			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
+
+			packet = new IndexPacket(Protocol.CM_QUERYBAGITEMS, cmdIndex);
+			packet.recog = charId;
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;

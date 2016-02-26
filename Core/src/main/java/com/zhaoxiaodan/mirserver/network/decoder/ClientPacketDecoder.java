@@ -30,7 +30,7 @@ public class ClientPacketDecoder extends PacketDecoder {
 			int pidPos = 1 + 4;
 			protocolId = in.getShort(pidPos);
 		}
-		Packet packet     = decodePacket(protocolId, in);
+		Packet packet = decodePacket(protocolId, in);
 		out.add(packet);
 	}
 }

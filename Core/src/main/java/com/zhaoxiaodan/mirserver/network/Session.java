@@ -13,7 +13,7 @@ public class Session {
 	private static final Map<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 
 	private final Map<String, Object> values = new ConcurrentHashMap<String, Object>();
-	private final ChannelHandlerContext context;
+	public final ChannelHandlerContext context;
 
 	private Session(ChannelHandlerContext ctx){
 		this.context = ctx;
