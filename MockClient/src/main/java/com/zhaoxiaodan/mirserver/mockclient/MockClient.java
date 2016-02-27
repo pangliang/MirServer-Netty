@@ -3,6 +3,7 @@ package com.zhaoxiaodan.mirserver.mockclient;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
@@ -42,6 +43,7 @@ public class MockClient {
 								@Override
 								public void initChannel(SocketChannel ch) throws Exception {
 									ch.pipeline().addLast(
+											new ExceptionHandler(),
 											//编码
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new DelimiterBasedFrameDecoder(2048, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
@@ -66,7 +68,8 @@ public class MockClient {
 														charId = packet.recog;
 													}
 												}
-											}
+											},
+											new ExceptionHandler()
 									);
 								}
 							}

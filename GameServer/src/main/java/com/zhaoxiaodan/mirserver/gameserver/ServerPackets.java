@@ -18,7 +18,7 @@ public class ServerPackets {
 		public SendNotice(String notice) {
 			super(Protocol.SM_SENDNOTICE);
 			this.notice = notice;
-			this.recog = 2000;
+			this.recog = notice.length();
 		}
 
 		@Override
@@ -285,6 +285,51 @@ public class ServerPackets {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+		}
+	}
+
+	public static final class Ability extends Packet {
+
+		TBaseObject.TAbility tAbility;
+
+		public Ability() {}
+
+		public Ability(int gold, short gameGold, TBaseObject.TAbility tAbility) {
+			super(Protocol.SM_ABILITY);
+			this.tAbility = tAbility;
+			this.recog = gold;
+			this.p1 = makeWord((byte)0,(byte)99);
+			this.p2 = getLowByte(gameGold);
+			this.p3 = getHighByte(gameGold);
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+
+			out.writeShort(tAbility.Level);
+			out.writeInt(tAbility.AC);
+			out.writeInt(tAbility.MAC);
+			out.writeInt(tAbility.DC);
+			out.writeInt(tAbility.MC);
+			out.writeInt(tAbility.SC);
+			out.writeShort(tAbility.HP);
+			out.writeShort(tAbility.MP);
+			out.writeShort(tAbility.MaxHP);
+			out.writeShort(tAbility.MaxMP);
+			out.writeInt(tAbility.Exp);
+			out.writeInt(tAbility.MaxExp);
+			out.writeShort(tAbility.Weight);
+			out.writeShort(tAbility.MaxWeight);
+			out.writeShort(tAbility.WearWeight);
+			out.writeShort(tAbility.MaxWearWeight);
+			out.writeShort(tAbility.HandWeight);
+			out.writeShort(tAbility.MaxHandWeight);
 		}
 
 		@Override

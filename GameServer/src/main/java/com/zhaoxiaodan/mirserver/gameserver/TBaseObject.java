@@ -336,7 +336,7 @@ public class TBaseObject {
 		public short X2;
 	}
 
-	public class TAbility {
+	public static class TAbility {
 
 		public short Level; //0x198  //0x34  0x00
 		public int   AC; //0x19A  //0x36  0x02

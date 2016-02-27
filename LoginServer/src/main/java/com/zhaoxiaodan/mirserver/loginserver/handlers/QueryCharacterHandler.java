@@ -44,13 +44,17 @@ public class QueryCharacterHandler extends Handler {
 			}
 			user = list.get(0);
 		}
-		if (user.certification == request.cert) {
-			session.put("user", user);
-			session.writeAndFlush(new ServerPackets.QueryCharactorOk(new ArrayList<Character>(user.characters)));
-		} else {
-			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
-			return;
-		}
+
+		session.put("user", user);
+		session.writeAndFlush(new ServerPackets.QueryCharactorOk(new ArrayList<Character>(user.characters)));
+
+//		if (user.certification == request.cert) {
+//			session.put("user", user);
+//			session.writeAndFlush(new ServerPackets.QueryCharactorOk(new ArrayList<Character>(user.characters)));
+//		} else {
+//			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
+//			return;
+//		}
 	}
 
 }

@@ -1,10 +1,11 @@
 package com.zhaoxiaodan.mirserver.network.decoder;
 
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import org.apache.logging.log4j.LogManager;
 
 import java.nio.ByteOrder;
 import java.util.List;
@@ -30,15 +31,17 @@ public class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 	protected Packet decodePacket(short protocolId, ByteBuf in) throws Exception {
 		Protocol protocol = Protocol.get(protocolId);
-		if (null == protocol) {
-			throw new Exception("unknow protocol id:" + protocolId);
-		}
 
 		Class<? extends Packet> packetClass;
-		try {
-			packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocol.name);
-		} catch (ClassNotFoundException e) {
+		if (null == protocol) {
+			LogManager.getLogger().error("unknow protocol id {}",protocolId);
 			packetClass = Packet.class;
+		} else {
+			try {
+				packetClass = (Class<? extends Packet>) Class.forName(packetPackageName + "$" + protocol.name);
+			} catch (ClassNotFoundException e) {
+				packetClass = Packet.class;
+			}
 		}
 		Packet packet = packetClass.newInstance();
 		packet.readPacket(in);

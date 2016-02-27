@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class PacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 
-	public byte[] decode6BitBuf(byte[] src) {
+	public static byte[] decode6BitBuf(byte[] src) {
 		final byte[] Decode6BitMask = {(byte) 0xfc, (byte) 0xf8, (byte) 0xf0, (byte) 0xe0, (byte) 0xc0};
 
 		int    len  = src.length;
