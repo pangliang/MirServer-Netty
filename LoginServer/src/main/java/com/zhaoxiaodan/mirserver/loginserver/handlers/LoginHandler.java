@@ -28,7 +28,7 @@ public class LoginHandler extends Handler {
 			if (user.password.equals(loginRequest.user.password)) {
 
 				user.lastLoginTime = new Date();
-				DB.update(user);
+				session.db.update(user);
 				session.put("user", user);
 				logger.info("user {} login, login user count:{}", user.loginId, Session.size());
 

@@ -16,7 +16,7 @@ public class DeleteCharacterHandler extends UserHandler {
 
 		for (Character character : user.characters) {
 			if (character.name.equals(request.characterName)) {
-				DB.delete(character);
+				session.db.delete(character);
 
 				character.user.characters.remove(character);
 				character.user = null;

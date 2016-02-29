@@ -23,7 +23,7 @@ public class NewUserHandler extends Handler {
 			return ;
 		}else{
 			try{
-				DB.save(newUser.user);
+				session.db.save(newUser.user);
 				session.writeAndFlush(new Packet(Protocol.SM_NEWID_SUCCESS));
 			}catch (Exception e)
 			{
