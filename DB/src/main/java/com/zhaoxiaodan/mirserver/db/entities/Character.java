@@ -6,6 +6,7 @@ import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Character extends DAO {
@@ -61,5 +62,9 @@ public class Character extends DAO {
 	 * 游戏点数
 	 */
 	public int      gamePoint;
+
+	@OneToMany(mappedBy = "character")
+	@MapKey(name = "id")
+	public List<CharacterItem> items;
 
 }

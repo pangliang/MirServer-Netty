@@ -39,7 +39,7 @@ public class DB {
 			session.getTransaction().rollback();
 	}
 
-	public Session getSession() throws HibernateException {
+	public static Session getSession() throws HibernateException {
 		Session session = ourSessionFactory.getCurrentSession();
 		return session;
 	}
