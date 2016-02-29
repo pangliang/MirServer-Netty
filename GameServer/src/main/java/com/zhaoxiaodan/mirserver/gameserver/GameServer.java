@@ -38,6 +38,9 @@ public class GameServer {
 		// db init
 		DB.init();
 
+		// Map init
+		MapManager.getInstance().reload();
+
 		EventLoopGroup bossGroup   = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
