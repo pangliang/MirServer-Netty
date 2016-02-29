@@ -148,7 +148,7 @@ public class ServerPackets {
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.hair).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
-				out.writeBytes(Integer.toString(cha.alility.Level).getBytes());
+				out.writeBytes(Integer.toString(cha.ability.Level).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.gender.ordinal()).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
@@ -170,7 +170,7 @@ public class ServerPackets {
 				cha.name = parts[i + 0];
 				cha.job = Job.values()[Byte.parseByte(parts[i + 1])];
 				cha.hair = Byte.parseByte(parts[i + 2]);
-				cha.alility.Level = Short.parseShort(parts[i + 3]);
+				cha.ability.Level = Short.parseShort(parts[i + 3]);
 				cha.gender = Gender.values()[Byte.parseByte(parts[i + 4])];
 
 				characterList.add(cha);

@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.loginserver;
 
 import com.zhaoxiaodan.mirserver.db.DB;
+import com.zhaoxiaodan.mirserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.loginserver.handlers.LoginHandler;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
@@ -37,6 +38,9 @@ public class LoginServer {
 
 		// db init
 		DB.init();
+
+		ScriptEngine.reload();
+
 
 		EventLoopGroup bossGroup   = new NioEventLoopGroup(4);
 		EventLoopGroup workerGroup = new NioEventLoopGroup(10);

@@ -48,7 +48,7 @@ public class Character extends DAO {
 	/**
 	 * 能力
 	 */
-	public Ability  alility;
+	public Ability  ability;
 	/**
 	 * 金币
 	 */

@@ -1,7 +1,11 @@
 package com.zhaoxiaodan.mirserver;
 
+import com.zhaoxiaodan.mirserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.gameserver.GameServer;
 import com.zhaoxiaodan.mirserver.loginserver.LoginServer;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
 	public static void main(String[] args){
@@ -25,6 +29,19 @@ public class Main {
 				}
 			}
 		}.start();
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+		String line;
+		try {
+			while((line=in.readLine().trim())!=null){
+				if("s".equals(line)){
+					ScriptEngine.reload();
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 
 
 	}

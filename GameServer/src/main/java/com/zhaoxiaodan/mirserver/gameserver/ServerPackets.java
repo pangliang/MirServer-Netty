@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver;
 
 import com.zhaoxiaodan.mirserver.db.objects.Ability;
+import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import io.netty.buffer.ByteBuf;
@@ -301,13 +302,13 @@ public class ServerPackets {
 
 		public CharacterAbility() {}
 
-		public CharacterAbility(int gold, short gameGold, Ability tAbility) {
+		public CharacterAbility(int gold, int gameGold, Job job, Ability tAbility) {
 			super(Protocol.SM_ABILITY);
 			this.tAbility = tAbility;
 			this.recog = gold;
-			this.p1 = makeWord((byte)0,(byte)99);
-			this.p2 = getLowByte(gameGold);
-			this.p3 = getHighByte(gameGold);
+			this.p1 = makeWord((byte)job.ordinal(),(byte)99);
+			this.p2 = getLowWord(gameGold);
+			this.p3 = getHighWord(gameGold);
 		}
 
 		@Override
