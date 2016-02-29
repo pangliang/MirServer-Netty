@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.DB;
+import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.gameserver.ClientPackets;
 import com.zhaoxiaodan.mirserver.gameserver.ServerPackets;
@@ -17,22 +18,25 @@ public class GameLoginHandler extends Handler {
 	public void onPacket(Packet packet) throws Exception {
 		ClientPackets.GameLogin request = (ClientPackets.GameLogin) packet;
 
-		User                         user;
-		if ((user = (User)session.get("user")) == null) {
+		if (session.get("character") == null) {
 			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
-			if (list.size() == 0) {
-				session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
-				return;
+			if (list.size() == 1) {
+				User user = list.get(0);
+
+				if (user.certification == request.cert) {
+					for (Character c : user.characters) {
+						if (c.name.equals(request.characterName)) {
+							session.put("character", c);
+							session.writeAndFlush(new ServerPackets.SendNotice("欢迎来到胖梁测试服务器"));
+							return;
+						}
+					}
+				}
 			}
-			user = list.get(0);
 		}
-		if (user.certification == request.cert) {
-			session.put("user", user);
-			session.writeAndFlush(new ServerPackets.SendNotice("欢迎来到胖梁测试服务器"));
-		} else {
-			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
-			return;
-		}
+
+		session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
+		return;
 	}
 
 }

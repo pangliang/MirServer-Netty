@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver;
 
 import com.zhaoxiaodan.mirserver.db.DB;
+import com.zhaoxiaodan.mirserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.gameserver.handler.GameLoginHandler;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
@@ -39,7 +40,7 @@ public class GameServer {
 		DB.init();
 
 		// Map init
-		MapManager.getInstance().reload();
+		MapEngine.getInstance().reload();
 
 		EventLoopGroup bossGroup   = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();

@@ -10,7 +10,7 @@ public class User extends DAO{
 
 	@Id
 	@GeneratedValue
-	public long id;
+	public int id;
 
 	@Column(unique = true)
 	public String loginId;

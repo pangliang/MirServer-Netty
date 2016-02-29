@@ -1,8 +1,8 @@
 package com.zhaoxiaodan.mirserver.loginserver;
 
 import com.zhaoxiaodan.mirserver.db.entities.Character;
-import com.zhaoxiaodan.mirserver.objects.Gender;
-import com.zhaoxiaodan.mirserver.objects.Job;
+import com.zhaoxiaodan.mirserver.db.objects.Gender;
+import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.IndexPacket;

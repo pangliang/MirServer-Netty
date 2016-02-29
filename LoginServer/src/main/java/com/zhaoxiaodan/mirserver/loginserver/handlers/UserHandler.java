@@ -6,7 +6,7 @@ import com.zhaoxiaodan.mirserver.network.packets.Packet;
 
 public abstract class UserHandler extends Handler {
 
-	public void onPacket(Packet packet) throws Exception {
+	public final void onPacket(Packet packet) throws Exception {
 		User user = (User) session.get("user");
 		if (null == user)
 			throw new Exception("user not found for packet:" + packet.protocol);

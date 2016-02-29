@@ -1,6 +1,10 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
+import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.db.objects.Ability;
+import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
+import com.zhaoxiaodan.mirserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
@@ -26,9 +30,15 @@ public class NewCharacterHandler extends UserHandler {
 			return;
 		}
 		try {
-			request.character.user = user;
-			session.db.save(request.character);
-			user.characters.add(request.character);
+			Character character = request.character;
+			MapPoint startPoint = MapEngine.getInstance().getStartPoint();
+			character.currMapPoint = startPoint;
+
+			character.alility = new Ability();
+
+			character.user = user;
+			session.db.save(character);
+			user.characters.add(character);
 			session.writeAndFlush(new Packet(Protocol.SM_NEWCHR_SUCCESS));
 		} catch (Exception e) {
 			session.writeAndFlush(new Packet(Protocol.SM_NEWCHR_FAIL));

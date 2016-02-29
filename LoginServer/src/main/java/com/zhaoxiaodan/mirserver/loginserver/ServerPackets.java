@@ -1,8 +1,8 @@
 package com.zhaoxiaodan.mirserver.loginserver;
 
 import com.zhaoxiaodan.mirserver.db.entities.Character;
-import com.zhaoxiaodan.mirserver.objects.Gender;
-import com.zhaoxiaodan.mirserver.objects.Job;
+import com.zhaoxiaodan.mirserver.db.objects.Gender;
+import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
@@ -52,7 +52,7 @@ public class ServerPackets {
 			for (int i = 0; i + 1 < parts.length; i += 2) {
 				ServerInfo info = new ServerInfo();
 				info.name = parts[i];
-				info.id = Long.parseLong(parts[i + 1]);
+				info.id = Integer.parseInt(parts[i + 1]);
 				serverInfoList.add(info);
 			}
 		}
@@ -148,7 +148,7 @@ public class ServerPackets {
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.hair).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
-				out.writeBytes(Integer.toString(cha.level).getBytes());
+				out.writeBytes(Integer.toString(cha.alility.Level).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.gender.ordinal()).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
@@ -170,7 +170,7 @@ public class ServerPackets {
 				cha.name = parts[i + 0];
 				cha.job = Job.values()[Byte.parseByte(parts[i + 1])];
 				cha.hair = Byte.parseByte(parts[i + 2]);
-				cha.level = Integer.parseInt(parts[i + 3]);
+				cha.alility.Level = Short.parseShort(parts[i + 3]);
 				cha.gender = Gender.values()[Byte.parseByte(parts[i + 4])];
 
 				characterList.add(cha);

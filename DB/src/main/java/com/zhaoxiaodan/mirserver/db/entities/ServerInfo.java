@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class ServerInfo extends DAO{
 	@Id
 	@GeneratedValue
-	public long id;
+	public int id;
 	@OrderColumn
 	@Column(unique = true)
 	public String name;

@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver;
 
+import com.zhaoxiaodan.mirserver.db.objects.Ability;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import io.netty.buffer.ByteBuf;
@@ -115,6 +116,7 @@ public class ServerPackets {
 			this.charStatus = charStatus;
 			this.featureEx = featureEx;
 
+			this.charId = charId;
 			this.recog = charId;
 			this.p1 = currX;
 			this.p2 = currY;
@@ -293,13 +295,13 @@ public class ServerPackets {
 		}
 	}
 
-	public static final class Ability extends Packet {
+	public static final class CharacterAbility extends Packet {
 
-		TBaseObject.TAbility tAbility;
+		Ability tAbility;
 
-		public Ability() {}
+		public CharacterAbility() {}
 
-		public Ability(int gold, short gameGold, TBaseObject.TAbility tAbility) {
+		public CharacterAbility(int gold, short gameGold, Ability tAbility) {
 			super(Protocol.SM_ABILITY);
 			this.tAbility = tAbility;
 			this.recog = gold;
