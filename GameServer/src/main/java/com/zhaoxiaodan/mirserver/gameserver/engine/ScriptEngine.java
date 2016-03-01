@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.engine;
+package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import groovy.lang.GroovyObject;
 import groovy.util.GroovyScriptEngine;

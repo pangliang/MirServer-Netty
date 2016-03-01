@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.engine;
+package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;

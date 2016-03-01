@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class PacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 
-	public static byte[] decode6BitBuf(byte[] src) {
+	public static byte[] decode6BitBuf(byte[] src) throws Exception {
 		final byte[] Decode6BitMask = {(byte) 0xfc, (byte) 0xf8, (byte) 0xf0, (byte) 0xe0, (byte) 0xc0};
 
 		int    len  = src.length;
@@ -56,7 +56,8 @@ public class PacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 		return dest;
 	}
 
-	protected void decode(ByteBuf in, ByteBuf out) {
+	protected void decode(ByteBuf in, ByteBuf out) throws Exception {
+
 		byte[] bodyBytes = new byte[in.readableBytes() - 1];
 		in.readBytes(bodyBytes);
 		out.writeBytes(decode6BitBuf(bodyBytes));

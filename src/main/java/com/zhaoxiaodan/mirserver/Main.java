@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver;
 
-import com.zhaoxiaodan.mirserver.engine.ScriptEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.gameserver.GameServer;
 import com.zhaoxiaodan.mirserver.loginserver.LoginServer;
 

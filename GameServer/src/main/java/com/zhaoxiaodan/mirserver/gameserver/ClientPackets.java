@@ -38,7 +38,7 @@ public class ClientPackets {
 			if(parts.length >= 5)
 			{
 				loginId = parts[0];
-				characterName = parts[1];
+				characterName = parts[1].trim();
 				cert = Short.parseShort(parts[2].trim());
 				clientVersion=parts[3];
 			}else{

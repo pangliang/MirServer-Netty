@@ -36,11 +36,11 @@ public class ClientPackets {
 			super.readPacket(in);
 
 			user = new User();
-			String remain = readString(in);
-			int    pos    = 0;
-			if (remain != null && (pos = remain.indexOf(CONTENT_SEPARATOR_STR)) > 0) {
-				user.loginId = remain.substring(0, pos);
-				user.password = remain.substring(pos + 1);
+			String conten = in.toString(Charset.defaultCharset()).trim();
+			String[] parts = conten.split(CONTENT_SEPARATOR_STR);
+			if (parts.length > 1) {
+				user.loginId = parts[0];
+				user.password = parts[1];
 			} else {
 				throw new WrongFormatException();
 			}

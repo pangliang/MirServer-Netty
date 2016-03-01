@@ -75,7 +75,7 @@ public class PacketEncodeDecodeTest {
 	}
 
 	@Test
-	public void mytest(){
+	public void mytest()  throws Exception{
 		String            data    = "#2<<<<<KAQ<<<<<<<<<<<<<<<<<<<WBa]WbXmGrmeTRucHNxrTo@mIbTnUO<qIoa^IOY^URPmHOQ]HbHsUO<uJ?`pJ<!";
 		PacketBit6Decoder decoder = new PacketBit6Decoder();
 

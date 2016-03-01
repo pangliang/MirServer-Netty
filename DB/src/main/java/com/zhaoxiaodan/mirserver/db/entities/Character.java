@@ -49,7 +49,7 @@ public class Character extends DAO {
 	/**
 	 * 能力
 	 */
-	public Ability  ability;
+	public Ability  ability = new Ability();
 	/**
 	 * 金币
 	 */
@@ -63,7 +63,7 @@ public class Character extends DAO {
 	 */
 	public int      gamePoint;
 
-	@OneToMany(mappedBy = "character")
+	@OneToMany(mappedBy = "character" ,fetch = FetchType.EAGER)
 	@MapKey(name = "id")
 	public List<CharacterItem> items;
 

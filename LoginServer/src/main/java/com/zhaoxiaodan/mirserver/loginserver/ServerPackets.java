@@ -31,11 +31,7 @@ public class ServerPackets {
 			super.writePacket(out);
 			for (ServerInfo info : serverInfoList) {
 				String infoStr = info.name + CONTENT_SEPARATOR_STR + info.id + CONTENT_SEPARATOR_STR;
-				try {
-					out.writeBytes(infoStr.getBytes());
-				} catch (Exception e) {
-
-				}
+				out.writeBytes(infoStr.getBytes());
 			}
 		}
 

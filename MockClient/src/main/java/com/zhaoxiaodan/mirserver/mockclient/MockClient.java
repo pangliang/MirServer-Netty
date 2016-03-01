@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 
 public class MockClient {
 
-	static final String HOST = "222.187.225.55";
+	static final String HOST = "10.211.55.3";
 	static final int    PORT = 7000;
 
 	static short certification = 0;
@@ -78,7 +78,7 @@ public class MockClient {
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-			byte   cmdIndex = 0;
+			byte   cmdIndex = 1;
 			Packet packet;
 			User   user     = new User();
 			user.loginId = "liang1";
@@ -90,6 +90,10 @@ public class MockClient {
 //			ch.writeAndFlush(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
+
+//			ch.writeAndFlush("#"+cmdIndex+"PROCESS!");
+//			in.readLine();
+//			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			// login
 			packet = new ClientPackets.Login(cmdIndex, user);
@@ -148,10 +152,13 @@ public class MockClient {
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			packet = new IndexPacket(Protocol.CM_QUERYBAGITEMS, cmdIndex);
-			packet.recog = charId;
+//			packet.recog = charId;
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
+
+			in.readLine();
+			in.readLine();
 
 		} finally {
 			group.shutdownGracefully();

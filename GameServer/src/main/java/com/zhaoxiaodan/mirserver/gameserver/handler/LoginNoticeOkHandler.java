@@ -1,17 +1,41 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.entities.Character;
-import com.zhaoxiaodan.mirserver.engine.MapEngine;
+import com.zhaoxiaodan.mirserver.db.entities.CharacterItem;
+import com.zhaoxiaodan.mirserver.db.entities.StdItem;
+import com.zhaoxiaodan.mirserver.db.objects.Ability;
 import com.zhaoxiaodan.mirserver.gameserver.ClientPackets;
 import com.zhaoxiaodan.mirserver.gameserver.ServerPackets;
+import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
+
+import java.util.Map;
 
 public class LoginNoticeOkHandler extends CharacterHandler {
 
 	@Override
 	public void onPacket(Packet packet, Character character) throws Exception {
 		ClientPackets.LoginNoticeOk request = (ClientPackets.LoginNoticeOk) packet;
+
+		if(character.ability.Level == 0){
+			ScriptEngine.exce(ScriptEngine.Module.Character,"onCreate",character);
+			session.db.update(character);
+
+			Map<String,Integer> initItems = (Map<String, Integer>) ScriptEngine.exce(ScriptEngine.Module.Character,"getInitItems",character);
+			for(String itemName : initItems.keySet()){
+				StdItem stdItem = ItemEngine.getStdItemByName(itemName);
+				CharacterItem characterItem = new CharacterItem();
+				characterItem.character = character;
+				characterItem.stdItem = stdItem;
+
+				session.db.save(characterItem);
+				character.items.add(characterItem);
+			}
+		}
+
 
 		MapEngine.MapInfo currMap = MapEngine.getInstance().getMapInfo(character.currMapPoint.mapName);
 
@@ -31,6 +55,22 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 		session.writeAndFlush(new ServerPackets.GameGoldName(character.gameGold, character.gamePoint, "游戏币", "游戏点数"));
 
 		session.writeAndFlush(new ServerPackets.VersionFail(0, 0, 0));
+
+		Ability ability = new Ability();
+
+		ability.Level = 1;
+		ability.AC = 1;
+		ability.MAC = 2;
+		ability.DC = 3;
+		ability.MC = 4;
+		ability.SC=5;
+		ability.HP = 100;
+		ability.MP = 200;
+		ability.MaxHP = 200;
+		ability.MaxMP = 200;
+		ability.Exp = 10;
+		ability.MaxExp = 100;
+
 
 		session.writeAndFlush(new ServerPackets.CharacterAbility(character.gold, character.gameGold, character.job, character.ability));
 

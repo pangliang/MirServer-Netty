@@ -8,6 +8,8 @@ public enum Protocol {
 	// For CM_IDPASSWORD Process
 	CM_PROTOCOL(2000,null),
 	CM_IDPASSWORD(2001,"Login"),
+	CM_IDPASSWORD_2(22001,"Login"),
+
 	CM_ADDNEWUSER(2002,"NewUser"),
 	CM_CHANGEPASSWORD(2003,null),
 	CM_UPDATEUSER(2004,null),
@@ -258,7 +260,9 @@ public enum Protocol {
 	DBR_MAKEITEMRCD(1500,null),
 	DBR_MAKEITEMRCD2(1501,null),
 
-	DBR_FAIL(2000,null);
+	DBR_FAIL(2000,null),
+
+	UNKNOWN_1000(11088,null);
 
 	private static final Map<Short, Protocol> map;
 

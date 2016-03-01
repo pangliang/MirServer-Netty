@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class StdItem {
+public class StdItem extends DAO{
 	@Id
 	@GeneratedValue
 	public int      id;

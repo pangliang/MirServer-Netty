@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver;
 
+import com.zhaoxiaodan.mirserver.db.entities.CharacterItem;
 import com.zhaoxiaodan.mirserver.db.objects.Ability;
 import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -7,7 +8,6 @@ import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
-import java.util.List;
 
 public class ServerPackets {
 
@@ -78,9 +78,9 @@ public class ServerPackets {
 			this.p1 = getLowWord(file2CRC);
 			this.p2 = getHighWord(file2CRC);
 
-			this.file1CRC=file1CRC;
-			this.file2CRC=file2CRC;
-			this.file3CRC=file3CRC;
+			this.file1CRC = file1CRC;
+			this.file2CRC = file2CRC;
+			this.file3CRC = file3CRC;
 		}
 
 		@Override
@@ -94,7 +94,7 @@ public class ServerPackets {
 			super.readPacket(in);
 			this.file3CRC = in.readInt();
 			this.file1CRC = this.recog;
-			this.file2CRC = makeLong(this.p1,this.p2);
+			this.file2CRC = makeLong(this.p1, this.p2);
 		}
 	}
 
@@ -178,7 +178,7 @@ public class ServerPackets {
 		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
 			this.charId = recog;
-			this.feature = makeLong(p1,p2);
+			this.feature = makeLong(p1, p2);
 			this.featureEx = p3;
 		}
 	}
@@ -266,28 +266,62 @@ public class ServerPackets {
 		@Override
 		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
-			String content = in.toString(Charset.defaultCharset()).trim();
-			String[] parts = content.split(""+(char)(13));
-			if(parts.length >1){
+			String   content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts   = content.split("" + (char) (13));
+			if (parts.length > 1) {
 				this.gameGoldName = parts[0];
 				this.gamePointName = parts[1];
 			}
 		}
 	}
 
-	public static final class BagItems extends Packet {
+	public static final class AddItem extends Packet {
 
-		public BagItems() {}
+		public CharacterItem item;
 
-		public BagItems(int id, List<String> items) {
-			super(Protocol.SM_BAGITEMS);
+		public AddItem() {}
+
+		public AddItem(int id, CharacterItem item) {
+			super(Protocol.SM_ADDITEM);
 			this.recog = id;
-			this.p3 = (short) items.size();
+			this.p3 = 1;
+			this.item = item;
 		}
 
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
+			byte[] nameBytes = item.stdItem.name.getBytes();
+			out.writeByte(nameBytes.length);
+			out.writeBytes(nameBytes);
+
+			out.writeByte(item.stdItem.stdMode);
+			out.writeByte(item.stdItem.shape);
+			out.writeByte(item.stdItem.weight);
+			out.writeByte(item.stdItem.anicount);
+
+			out.writeByte(item.stdItem.source);
+
+			out.writeByte(item.stdItem.reserved);
+			out.writeByte(0);
+
+			out.writeShort(item.stdItem.looks);
+
+			out.writeInt(item.stdItem.duraMax);
+			out.writeInt(item.stdItem.ac);
+			out.writeInt(item.stdItem.mac);
+			out.writeInt(item.stdItem.dc);
+			out.writeInt(item.stdItem.mc);
+			out.writeInt(item.stdItem.sc);
+			out.writeInt(item.stdItem.need);
+			out.writeInt(item.stdItem.needLevel);
+			out.writeInt(item.stdItem.price);
+
+
+			out.writeInt(12345);
+			out.writeShort(item.stdItem.duraMax);
+			out.writeShort(item.stdItem.duraMax);
+
 		}
 
 		@Override
@@ -298,7 +332,7 @@ public class ServerPackets {
 
 	public static final class CharacterAbility extends Packet {
 
-		Ability tAbility;
+		public Ability tAbility;
 
 		public CharacterAbility() {}
 
@@ -306,7 +340,7 @@ public class ServerPackets {
 			super(Protocol.SM_ABILITY);
 			this.tAbility = tAbility;
 			this.recog = gold;
-			this.p1 = makeWord((byte)job.ordinal(),(byte)99);
+			this.p1 = makeWord((byte) job.ordinal(), (byte) 99);
 			this.p2 = getLowWord(gameGold);
 			this.p3 = getHighWord(gameGold);
 		}

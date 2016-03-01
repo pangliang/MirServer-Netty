@@ -15,7 +15,7 @@ public class DB {
 
 	private static SessionFactory  ourSessionFactory;
 	private static ServiceRegistry serviceRegistry;
-	private static Session session = null;
+	private Session session = null;
 
 	public static void init() throws Exception {
 		Configuration configuration = new Configuration();
@@ -41,6 +41,8 @@ public class DB {
 
 	public static Session getSession() throws HibernateException {
 		Session session = ourSessionFactory.getCurrentSession();
+		if(session.isOpen())
+			session.getTransaction().begin();
 		return session;
 	}
 
@@ -57,7 +59,7 @@ public class DB {
 	}
 
 	public static List query(Class clazz, SimpleExpression... simpleExpressions) {
-		Criteria criteria = session.createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(clazz);
 		for (SimpleExpression simpleExpression : simpleExpressions) {
 			criteria.add(simpleExpression);
 		}
