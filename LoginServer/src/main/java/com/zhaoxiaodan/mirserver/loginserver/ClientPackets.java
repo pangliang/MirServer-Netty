@@ -6,6 +6,7 @@ import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.IndexPacket;
+import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -32,7 +33,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
 			user = new User();
@@ -42,7 +43,7 @@ public class ClientPackets {
 				user.loginId = parts[0];
 				user.password = parts[1];
 			} else {
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			}
 		}
 
@@ -69,7 +70,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
 			user = new User();
@@ -103,7 +104,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			serverName = in.toString(Charset.defaultCharset()).trim();
 		}
@@ -127,12 +128,12 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			String   content = in.toString(Charset.defaultCharset()).trim();
 			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
 			if (parts.length < 5)
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			User user = new User();
 			user.loginId = parts[0];
 			character = new Character();
@@ -173,7 +174,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			String content = in.toString(Charset.defaultCharset()).trim();
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
@@ -182,7 +183,7 @@ public class ClientPackets {
 				loginId = parts[0];
 				cert = Short.parseShort(parts[1]);
 			}else{
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			}
 		}
 
@@ -208,7 +209,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.characterName = in.toString(Charset.defaultCharset()).trim();
 		}
@@ -234,7 +235,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			String content = in.toString(Charset.defaultCharset()).trim();
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
@@ -243,7 +244,7 @@ public class ClientPackets {
 				loginId = parts[0];
 				characterName = parts[1];
 			}else{
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			}
 		}
 

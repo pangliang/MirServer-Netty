@@ -2,6 +2,7 @@ package com.zhaoxiaodan.mirserver.gameserver;
 
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.IndexPacket;
+import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -28,7 +29,7 @@ public class ClientPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			in.readByte();  //cmdIndex
 			in.readByte();  //*
 			in.readByte();  //*
@@ -42,7 +43,7 @@ public class ClientPackets {
 				cert = Short.parseShort(parts[2].trim());
 				clientVersion=parts[3];
 			}else{
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			}
 		}
 

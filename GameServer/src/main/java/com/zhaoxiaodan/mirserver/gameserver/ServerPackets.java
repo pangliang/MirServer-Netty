@@ -5,6 +5,7 @@ import com.zhaoxiaodan.mirserver.db.objects.Ability;
 import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -30,7 +31,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.notice = in.toString(Charset.defaultCharset()).trim();
 		}
@@ -58,7 +59,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.mapId = in.toString(Charset.defaultCharset()).trim();
 		}
@@ -90,7 +91,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.file3CRC = in.readInt();
 			this.file1CRC = this.recog;
@@ -134,7 +135,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
 			this.feature = in.readInt();
@@ -175,7 +176,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.charId = recog;
 			this.feature = makeLong(p1, p2);
@@ -203,7 +204,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.userName = in.toString(Charset.defaultCharset()).trim();
 		}
@@ -228,7 +229,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.description = in.toString(Charset.defaultCharset()).trim();
 		}
@@ -264,7 +265,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			String   content = in.toString(Charset.defaultCharset()).trim();
 			String[] parts   = content.split("" + (char) (13));
@@ -291,41 +292,11 @@ public class ServerPackets {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-			byte[] nameBytes = item.stdItem.name.getBytes();
-			out.writeByte(nameBytes.length);
-			out.writeBytes(nameBytes);
-
-			out.writeByte(item.stdItem.stdMode);
-			out.writeByte(item.stdItem.shape);
-			out.writeByte(item.stdItem.weight);
-			out.writeByte(item.stdItem.anicount);
-
-			out.writeByte(item.stdItem.source);
-
-			out.writeByte(item.stdItem.reserved);
-			out.writeByte(0);
-
-			out.writeShort(item.stdItem.looks);
-
-			out.writeInt(item.stdItem.duraMax);
-			out.writeInt(item.stdItem.ac);
-			out.writeInt(item.stdItem.mac);
-			out.writeInt(item.stdItem.dc);
-			out.writeInt(item.stdItem.mc);
-			out.writeInt(item.stdItem.sc);
-			out.writeInt(item.stdItem.need);
-			out.writeInt(item.stdItem.needLevel);
-			out.writeInt(item.stdItem.price);
-
-
-			out.writeInt(12345);
-			out.writeShort(item.stdItem.duraMax);
-			out.writeShort(item.stdItem.duraMax);
-
+			item.writePacket(out);
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 		}
 	}
@@ -370,7 +341,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 		}
 	}

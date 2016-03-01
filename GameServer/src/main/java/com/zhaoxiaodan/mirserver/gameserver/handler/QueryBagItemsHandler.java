@@ -12,7 +12,6 @@ public class QueryBagItemsHandler extends CharacterHandler {
 	public void onPacket(Packet packet, Character character) throws Exception {
 		for (CharacterItem item : character.items) {
 			session.writeAndFlush(new ServerPackets.AddItem(character.id, item));
-			break;
 		}
 	}
 }

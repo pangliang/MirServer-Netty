@@ -6,6 +6,7 @@ import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -36,7 +37,7 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
 			serverInfoList = new ArrayList<>();
@@ -44,7 +45,7 @@ public class ServerPackets {
 
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
 			if (parts.length < 2)
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			for (int i = 0; i + 1 < parts.length; i += 2) {
 				ServerInfo info = new ServerInfo();
 				info.name = parts[i];
@@ -108,14 +109,14 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
 			String content = in.toString(Charset.defaultCharset()).trim();
 
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
 			if (parts.length < 3)
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			this.selectServerIp = parts[0];
 			this.selectserverPort = Integer.parseInt(parts[1]);
 			this.cert = Short.parseShort(parts[2]);
@@ -152,14 +153,14 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
 			String content = in.toString(Charset.defaultCharset()).trim();
 
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
 			if (parts.length < 5)
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			this.characterList = new ArrayList<>();
 			for (int i = 0; i + 4 < parts.length; i += 5) {
 				Character cha = new Character();
@@ -197,14 +198,14 @@ public class ServerPackets {
 		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws WrongFormatException {
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
 			String content = in.toString(Charset.defaultCharset()).trim();
 
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
 			if (parts.length < 2)
-				throw new WrongFormatException();
+				throw new Parcelable.WrongFormatException();
 			this.serverIp = parts[0];
 			this.serverPort = Integer.parseInt(parts[1]);
 		}

@@ -37,7 +37,7 @@ class CharacterScript {
         Map<String,Integer> items = new HashMap<>()
 
         items.put("金创药(小)包",5);
-        items.put("木剑",1);
+        items.put("八荒",1);
         if (c.job != Job.Warrior){
             items.put("魔法药(小)包",3);
         }

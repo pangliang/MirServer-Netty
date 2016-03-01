@@ -1,9 +1,8 @@
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.StdItem;
 import org.hibernate.Session;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.lang.reflect.Field;
 
 public class ImportDB {
 
@@ -18,7 +17,8 @@ public class ImportDB {
 			DB.init();
 			dbSession = DB.getSession();
 			dbSession.getTransaction().begin();
-			doImport(StdItem.class,"数据文件/物品数据库.txt");
+			doImport("STDITEM","数据文件/物品数据库.csv");
+			System.out.println("导入物品数据库成功 !!!");
 			dbSession.getTransaction().commit();
 		}catch (Exception e){
 			if(dbSession.isOpen())
@@ -29,23 +29,27 @@ public class ImportDB {
 	}
 
 
-	public void doImport(Class entiyClass,String fileName) throws Exception{
+	public void doImport(String tableName,String fileName) throws Exception{
 
-		String deleteSql = "delete from "+entiyClass.getSimpleName() +";";
+		String deleteSql = "delete from "+tableName +";";
 		dbSession.createSQLQuery(deleteSql).executeUpdate();
 
-		Field[] fields = StdItem.class.getDeclaredFields();
-
 		BufferedReader reader     = new BufferedReader(new FileReader(fileName));
-		String         line;
+		String         line = reader.readLine();
+		if(null == line)
+			throw new Exception("文件为空");
+
+		// 第一行为列名, 对应表字段名
+		String[] fields = line.trim().split(",");
+
 		while ((line = reader.readLine()) != null) {
-			StringBuffer sb = new StringBuffer("insert into ").append(entiyClass.getSimpleName()).append(" set ");
+			StringBuffer sb = new StringBuffer("insert into ").append(tableName).append(" set ");
 			line = line.trim();
-			String[] parts = line.split(";");
+			String[] parts = line.split(",");
 			if(parts.length < fields.length)
 				throw new Exception("数据文件列数太少, 改行为:"+line);
 			for(int i=0;i<fields.length;i++){
-				sb.append(fields[i].getName()).append("='").append(parts[i]).append("',");
+				sb.append(fields[i]).append("='").append(parts[i]).append("',");
 			}
 
 			String sql = sb.substring(0,sb.length()-1)+";";

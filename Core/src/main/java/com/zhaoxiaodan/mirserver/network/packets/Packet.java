@@ -35,7 +35,7 @@ import io.netty.buffer.ByteBuf;
  * <p>
  * Packet{  cmdIndx=2, recog=0, protocol=2001, p1=0, p2=0, p3=0, body='123/123'}
  */
-public class Packet {
+public class Packet implements Parcelable{
 
 	public static final int    DEFAULT_HEADER_SIZE    = 12;
 	public static final char   CONTENT_SEPARATOR_CHAR = '/';
@@ -62,7 +62,7 @@ public class Packet {
 		this(0, protocol, (short) 0, (short) 0, (short) 0);
 	}
 
-	public void readPacket(ByteBuf in) throws WrongFormatException {
+	public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 		recog = in.readInt();
 		protocol = Protocol.get(in.readShort());
 		p1 = in.readShort();
@@ -125,6 +125,4 @@ public class Packet {
 		return this.getClass().getSimpleName() + ":" + JSON.toJSONString(this);
 	}
 
-	public class WrongFormatException extends Exception {
-	}
 }
