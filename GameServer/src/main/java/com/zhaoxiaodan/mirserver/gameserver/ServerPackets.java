@@ -319,25 +319,7 @@ public class ServerPackets {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-
-			out.writeShort(tAbility.Level);
-			out.writeInt(tAbility.AC);
-			out.writeInt(tAbility.MAC);
-			out.writeInt(tAbility.DC);
-			out.writeInt(tAbility.MC);
-			out.writeInt(tAbility.SC);
-			out.writeShort(tAbility.HP);
-			out.writeShort(tAbility.MP);
-			out.writeShort(tAbility.MaxHP);
-			out.writeShort(tAbility.MaxMP);
-			out.writeInt(tAbility.Exp);
-			out.writeInt(tAbility.MaxExp);
-			out.writeShort(tAbility.Weight);
-			out.writeShort(tAbility.MaxWeight);
-			out.writeShort(tAbility.WearWeight);
-			out.writeShort(tAbility.MaxWearWeight);
-			out.writeShort(tAbility.HandWeight);
-			out.writeShort(tAbility.MaxHandWeight);
+			tAbility.writePacket(out);
 		}
 
 		@Override

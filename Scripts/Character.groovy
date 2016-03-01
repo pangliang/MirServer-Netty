@@ -2,6 +2,7 @@ import com.zhaoxiaodan.mirserver.db.entities.Character
 import com.zhaoxiaodan.mirserver.db.objects.Gender
 import com.zhaoxiaodan.mirserver.db.objects.Job
 import com.zhaoxiaodan.mirserver.db.objects.MapPoint
+import com.zhaoxiaodan.mirserver.network.packets.Packet
 
 class CharacterScript {
     void onCreate(Character c) {
@@ -10,9 +11,10 @@ class CharacterScript {
         c.ability.MaxHP = 200;
         c.ability.MP = 100;
         c.ability.MaxExp = 200;
-        c.ability.AC = 1;
-        c.ability.MAC = 5;
-        c.ability.DC = 1;
+        c.ability.AC = Packet.makeLong(1,1000);;
+        c.ability.MAC = Packet.makeLong(2,20);;
+        c.ability.DC = Packet.makeLong(3000,20000);
+        c.ability.MC = Packet.makeLong(4,5);
         c.ability.MaxExp = getMaxExp(c.ability.Level + 1);
         c.currMapPoint = getStartPoint();        //设置出生点
         c.gold = 10000;

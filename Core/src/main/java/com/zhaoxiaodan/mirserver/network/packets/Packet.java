@@ -104,6 +104,10 @@ public class Packet implements Parcelable{
 		return ((high << 16)|low);
 	}
 
+	public static int makeLong(int low,int high){
+		return (((short)high << 16)|(short)low);
+	}
+
 	public static short getLowWord(int number){
 		return (short)(number);
 	}
