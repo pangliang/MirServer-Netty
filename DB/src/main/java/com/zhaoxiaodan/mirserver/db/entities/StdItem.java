@@ -23,6 +23,9 @@ public class StdItem extends DAO implements Parcelable{
 	public byte   reserved;
 	public byte   needIdentify;
 	public short  looks;
+	/**
+	 * 耐久度, 客户端显示 int(duraMax/1000) 的值
+	 */
 	public int  duraMax;
 	public short  reserved1;
 	public short  ac;
@@ -47,12 +50,48 @@ public class StdItem extends DAO implements Parcelable{
 	}
 
 	public void writePacket(ByteBuf out){
+		oldVersion(out);
+	}
+
+	private void newVersion(ByteBuf out){
 		byte[] nameBytes = name.getBytes();
 		out.writeByte(nameBytes.length);
 		out.writeBytes(nameBytes);
 
 		out.writeBytes(new byte[14 - nameBytes.length]);
+
+		out.writeByte(stdMode);
+		out.writeByte(shape);
+		out.writeByte(weight);
+		out.writeByte(anicount);
+		out.writeByte(source);
+		out.writeByte(reserved);
+		out.writeByte(needIdentify);
+		out.writeShort(looks);
+		out.writeShort(duraMax);
+
+		out.writeShort(reserved1);
+
+		out.writeInt(Packet.makeLong(ac,ac2));
+		out.writeInt(Packet.makeLong(mac,mac2));
+		out.writeInt(Packet.makeLong(dc,dc2));
+		out.writeInt(Packet.makeLong(mc,mc2));
+		out.writeInt(Packet.makeLong(sc,sc2));
 		
+		out.writeByte(need);
+		out.writeByte(needLevel);
+		out.writeShort(0);
+		out.writeInt(price);
+		out.writeInt(stock);
+	}
+
+	private void oldVersion(ByteBuf out){
+		byte[] nameBytes = name.getBytes();
+		out.writeByte(nameBytes.length);
+		out.writeBytes(nameBytes);
+
+		out.writeBytes(new byte[14 - nameBytes.length]);
+
 		out.writeByte(stdMode);
 		out.writeByte(shape);
 		out.writeByte(weight);
