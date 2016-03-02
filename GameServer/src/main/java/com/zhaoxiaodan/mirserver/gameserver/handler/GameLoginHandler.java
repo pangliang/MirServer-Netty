@@ -15,7 +15,7 @@ import java.util.List;
 public class GameLoginHandler extends Handler {
 
 	@Override
-	public void onPacket(Packet packet) throws Exception {
+	public void onPacket(ClientPacket packet) throws Exception {
 		ClientPacket.GameLogin request = (ClientPacket.GameLogin) packet;
 
 		if (session.get("player") == null) {

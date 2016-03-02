@@ -16,7 +16,7 @@ class PlayerScript {
         c.ability.DC = Packet.makeLong(3000,20000);
         c.ability.MC = Packet.makeLong(4,5);
         c.ability.MaxExp = getMaxExp(c.ability.Level + 1);
-        c.currMapPoint = getStartPoint();        //设置出生点
+//        c.currMapPoint = getStartPoint();        //设置出生点
         c.gold = 10000;
         c.gameGold = 1234;
         c.gamePoint = 5678;

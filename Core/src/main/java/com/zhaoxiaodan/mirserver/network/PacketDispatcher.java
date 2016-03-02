@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.network;
 
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -16,11 +16,11 @@ public class PacketDispatcher extends ChannelHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object pakcet) throws Exception {
 
-		if (!(pakcet instanceof Packet)) {
+		if (!(pakcet instanceof ClientPacket)) {
 			throw new Exception("Recv msg is not instance of Packet");
 		}
 
-		String                   protocolName = ((Packet) pakcet).protocol.name;   //Packet 就是通过 protocol id 反射出来的 name
+		String                   protocolName = ((ClientPacket) pakcet).protocol.name;   //Packet 就是通过 protocol id 反射出来的 name
 		Class<? extends Handler> handlerClass;
 		try {
 			handlerClass = (Class<? extends Handler>) Class.forName(handlerPackageName + "." + protocolName + "Handler");
@@ -29,7 +29,7 @@ public class PacketDispatcher extends ChannelHandlerAdapter {
 			handlerClass = Handler.class;
 		}
 		Handler handler = handlerClass.newInstance();
-		handler.exce(ctx, (Packet) pakcet);
+		handler.exce(ctx, (ClientPacket) pakcet);
 	}
 
 	@Override

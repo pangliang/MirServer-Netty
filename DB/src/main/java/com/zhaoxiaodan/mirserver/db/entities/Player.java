@@ -21,6 +21,7 @@ public class Player extends BaseObject {
 	 */
 	public byte     hair;
 	public Job      job;
+	public Ability ability = new Ability();
 	/**
 	 * 性别
 	 */

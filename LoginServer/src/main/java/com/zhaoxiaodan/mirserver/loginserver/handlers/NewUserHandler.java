@@ -13,7 +13,7 @@ import java.util.List;
 public class NewUserHandler extends Handler {
 
 	@Override
-	public void onPacket(Packet packet) throws Exception {
+	public void onPacket(ClientPacket packet) throws Exception {
 		ClientPacket.NewUser newUser = (ClientPacket.NewUser) packet;
 
 		List<User> list = DB.query(User.class,Restrictions.eq("loginId", newUser.user.loginId));

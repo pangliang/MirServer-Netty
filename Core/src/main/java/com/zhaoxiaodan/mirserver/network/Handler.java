@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.network;
 
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +9,7 @@ public class Handler {
 	protected Logger logger = LogManager.getLogger(this.getClass().getName());
 	protected Session session;
 
-	protected void exce(ChannelHandlerContext ctx, Packet packet) throws Exception {
+	protected void exce(ChannelHandlerContext ctx, ClientPacket packet) throws Exception {
 		session = Session.getSession(ctx);
 		if(null == session){
 			logger.debug("new session for {}",ctx);
@@ -40,7 +40,7 @@ public class Handler {
 		onDisconnect();
 	}
 
-	public void onPacket(Packet packet) throws Exception{
+	public void onPacket(ClientPacket packet) throws Exception{
 		logger.error("overwrite it !!");
 	}
 	public void onDisconnect() throws Exception{

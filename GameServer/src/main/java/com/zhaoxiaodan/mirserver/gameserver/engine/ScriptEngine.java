@@ -16,7 +16,7 @@ public class ScriptEngine {
 	private static Map<Module, GroovyObject> modules     = new HashMap<>();
 
 	public enum Module {
-		Character("Player.groovy");
+		Player("Player.groovy");
 
 		String scriptName;
 		Module(String scriptName) {

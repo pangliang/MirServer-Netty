@@ -31,7 +31,7 @@ import java.util.List;
 public class QueryCharacterHandler extends Handler {
 
 	@Override
-	public void onPacket(Packet packet) throws Exception {
+	public void onPacket(ClientPacket packet) throws Exception {
 		ClientPacket.QueryCharacter request = (ClientPacket.QueryCharacter) packet;
 		User                        user;
 		if ((user = (User)session.get("user")) == null) {

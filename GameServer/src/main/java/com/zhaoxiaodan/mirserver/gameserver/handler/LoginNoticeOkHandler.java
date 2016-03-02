@@ -18,10 +18,15 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 	public void onPacket(Packet packet, Player player) throws Exception {
 
 		if(player.ability.Level == 0){
-			ScriptEngine.exce(ScriptEngine.Module.Character,"onCreate", player);
+			ScriptEngine.exce(ScriptEngine.Module.Player,"onCreate", player);
+			if(player.ability.Level < 1)
+				player.ability.Level = 1;
+			if(null == player.currMapPoint)
+				player.currMapPoint = MapEngine.getStartPoint();
+
 			session.db.update(player);
 
-			Map<String,Integer> initItems = (Map<String, Integer>) ScriptEngine.exce(ScriptEngine.Module.Character,"getInitItems", player);
+			Map<String,Integer> initItems = (Map<String, Integer>) ScriptEngine.exce(ScriptEngine.Module.Player,"getInitItems", player);
 			for(String itemName : initItems.keySet()){
 				StdItem    stdItem    = ItemEngine.getStdItemByName(itemName);
 				PlayerItem playerItem = new PlayerItem();

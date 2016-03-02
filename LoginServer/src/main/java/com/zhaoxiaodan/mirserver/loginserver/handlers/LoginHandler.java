@@ -7,7 +7,6 @@ import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Session;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Date;
@@ -16,7 +15,7 @@ import java.util.List;
 public class LoginHandler extends Handler {
 
 	@Override
-	public void onPacket(Packet packet) throws Exception {
+	public void onPacket(ClientPacket packet) throws Exception {
 		ClientPacket.Login loginRequest = (ClientPacket.Login) packet;
 
 		List<User> list = DB.query(User.class, Restrictions.eq("loginId", loginRequest.user.loginId));
