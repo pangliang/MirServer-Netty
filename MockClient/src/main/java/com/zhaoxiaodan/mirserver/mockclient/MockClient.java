@@ -1,15 +1,12 @@
 package com.zhaoxiaodan.mirserver.mockclient;
 
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
-import com.zhaoxiaodan.mirserver.network.decoder.PacketBit6Decoder;
-import com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder;
-import com.zhaoxiaodan.mirserver.network.encoder.ClientPacketBit6Encoder;
-import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
-import com.zhaoxiaodan.mirserver.network.packets.IndexPacket;
+import com.zhaoxiaodan.mirserver.network.decoder.ServerPacketDecoder;
+import com.zhaoxiaodan.mirserver.network.encoder.ServerPacketEncoder;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
@@ -24,7 +21,7 @@ import java.io.InputStreamReader;
 
 public class MockClient {
 
-	static final String HOST = "10.211.55.3";
+	static final String HOST = "222.187.225.55";
 	static final int    PORT = 7000;
 
 	static short certification = 0;
@@ -44,18 +41,13 @@ public class MockClient {
 								public void initChannel(SocketChannel ch) throws Exception {
 									ch.pipeline().addLast(
 											new ExceptionHandler(),
-											//编码
+
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new DelimiterBasedFrameDecoder(2048, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-											new PacketBit6Decoder(),
+											new ServerPacketDecoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
-											new PacketDecoder(com.zhaoxiaodan.mirserver.gameserver.ServerPackets.class.getName()),
 
-											//解码
-//											new MyLoggingHandler(MyLoggingHandler.Type.Write),
-											new ClientPacketBit6Encoder(),
-//											new MyLoggingHandler(MyLoggingHandler.Type.Write),
-											new PacketEncoder(),
+											new ServerPacketEncoder(),
 											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new ChannelHandlerAdapter() {
@@ -86,7 +78,7 @@ public class MockClient {
 			user.username = "pangliang";
 
 			// new user
-//			packet = new ClientPackets.CM_ADDNEWUSER(cmdIndex,user);
+//			packet = new ClientPacket.CM_ADDNEWUSER(cmdIndex,user);
 //			ch.writeAndFlush(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
@@ -96,13 +88,13 @@ public class MockClient {
 //			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			// login
-			packet = new ClientPackets.Login(cmdIndex, user);
+			packet = new ClientPacket.Login(cmdIndex, user);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			//select server
-			packet = new ClientPackets.SelectServer(cmdIndex, "功夫明星一区");
+			packet = new ClientPacket.SelectServer(cmdIndex, "功夫明星一区");
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
@@ -121,19 +113,19 @@ public class MockClient {
 //			character.hair = 1;
 //			character.job = Job.Warrior;
 //			character.gender = Gender.MALE;
-//			packet = new ClientPackets.CM_NEWCHR(cmdIndex,character);
+//			packet = new ClientPacket.CM_NEWCHR(cmdIndex,character);
 //			ch.writeAndFlush(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
 
 			// query character
-			packet = new ClientPackets.QueryCharacter(cmdIndex, user.loginId, certification);
+			packet = new ClientPacket.QueryCharacter(cmdIndex, user.loginId, certification);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			//select character
-			packet = new ClientPackets.SelectCharacter(cmdIndex, user.loginId, charName);
+			packet = new ClientPacket.SelectCharacter(cmdIndex, user.loginId, charName);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
@@ -141,18 +133,21 @@ public class MockClient {
 			// ************ game server
 			ch.closeFuture();
 			ch = b.connect(HOST, 7200).sync().channel();
-			packet = new com.zhaoxiaodan.mirserver.gameserver.ClientPackets.GameLogin(cmdIndex,user.loginId,charName,certification,"2020522");
+			packet = new ClientPacket.GameLogin(cmdIndex,user.loginId,charName,certification,"2020522");
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
-			packet = new com.zhaoxiaodan.mirserver.gameserver.ClientPackets.LoginNoticeOk(cmdIndex);
+			packet = new ClientPacket.LoginNoticeOk(cmdIndex);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
-			packet = new IndexPacket(Protocol.CM_QUERYBAGITEMS, cmdIndex);
-//			packet.recog = charId;
+			cmdIndex = 1;
+			packet = new ClientPacket(Protocol.CM_WALK, cmdIndex);
+			packet.recog = charId;
+			packet.p1 = 266;
+			packet.p2 = 594;
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;

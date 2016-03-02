@@ -1,16 +1,14 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
-import com.zhaoxiaodan.mirserver.loginserver.ServerPackets;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,8 +32,8 @@ public class QueryCharacterHandler extends Handler {
 
 	@Override
 	public void onPacket(Packet packet) throws Exception {
-		ClientPackets.QueryCharacter request = (ClientPackets.QueryCharacter) packet;
-		User                         user;
+		ClientPacket.QueryCharacter request = (ClientPacket.QueryCharacter) packet;
+		User                        user;
 		if ((user = (User)session.get("user")) == null) {
 			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
 			if (list.size() == 0) {
@@ -45,16 +43,13 @@ public class QueryCharacterHandler extends Handler {
 			user = list.get(0);
 		}
 
-		session.put("user", user);
-		session.writeAndFlush(new ServerPackets.QueryCharactorOk(new ArrayList<Character>(user.characters)));
-
-//		if (user.certification == request.cert) {
-//			session.put("user", user);
-//			session.writeAndFlush(new ServerPackets.QueryCharactorOk(new ArrayList<Character>(user.characters)));
-//		} else {
-//			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
-//			return;
-//		}
+		if (user.certification == request.cert) {
+			session.put("user", user);
+			session.writeAndFlush(new ServerPacket.QueryCharactorOk(user.characters));
+		} else {
+			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
+			return;
+		}
 	}
 
 }

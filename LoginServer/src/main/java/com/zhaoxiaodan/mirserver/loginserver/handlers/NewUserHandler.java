@@ -2,9 +2,9 @@ package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
-import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
+import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import org.hibernate.criterion.Restrictions;
 
@@ -14,7 +14,7 @@ public class NewUserHandler extends Handler {
 
 	@Override
 	public void onPacket(Packet packet) throws Exception {
-		ClientPackets.NewUser newUser = (ClientPackets.NewUser) packet;
+		ClientPacket.NewUser newUser = (ClientPacket.NewUser) packet;
 
 		List<User> list = DB.query(User.class,Restrictions.eq("loginId", newUser.user.loginId));
 		if(list.size() > 0)

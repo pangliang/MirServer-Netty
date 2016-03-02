@@ -9,5 +9,13 @@ public interface Parcelable {
 	public void writePacket(ByteBuf out);
 
 	public class WrongFormatException extends Exception {
+
+		public WrongFormatException() {
+
+		}
+
+		public WrongFormatException(String msg) {
+			super(msg);
+		}
 	}
 }

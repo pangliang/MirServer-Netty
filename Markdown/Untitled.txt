@@ -38,7 +38,7 @@ Protocol id 2000 exsit by CM_PROTOCOL
 +--------+-------------------------------------------------+----------------+
 19:32:40.827 [nioEventLoopGroup-0-0] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x585e63c3, /192.168.0.166:50716 => /222.187.225.55:7000] RECEIVED: Packet:{"p1":0,"p2":0,"p3":0,"protocol":"SM_PASSOK_SELECTSERVER","recog":0}
 
-19:32:43.862 [nioEventLoopGroup-0-1] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x585e63c3, /192.168.0.166:50716 => /222.187.225.55:7000] WRITE: SelectServer:{"cmdIndex":1,"p1":0,"p2":0,"p3":0,"protocol":"CM_SELECTSERVER","recog":0,"serverName":"¹¦·òÃ÷ÐÇÒ»Çø"}
+19:32:43.862 [nioEventLoopGroup-0-1] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x585e63c3, /192.168.0.166:50716 => /222.187.225.55:7000] WRITE: SelectServer:{"cmdIndex":1,"p1":0,"p2":0,"p3":0,"protocol":"CM_SELECTSERVER","recog":0,"serverName":"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½"}
 19:32:43.930 [nioEventLoopGroup-0-1] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x585e63c3, /192.168.0.166:50716 => /222.187.225.55:7000] RECEIVED: 50B
          +-------------------------------------------------+
          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
@@ -245,7 +245,7 @@ Protocol id 2000 exsit by CM_PROTOCOL
 |00000400| 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
 |00000410| 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
 +--------+-------------------------------------------------+----------------+
-19:32:51.414 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: SendNotice:{"notice":"¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[ \u001B ¨U £²£°£±£¶Äê ¢ÚÔÂ   (Áú»¢ÖÁ×ð) ¨U \u001B ¨d¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨g \u001B ¨U ÖÕ¼«×°±¸È«ÓÐ±¬    (¶À¼ÒÖÐ±ä) ¨U \u001B ¨U©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬¨U \u001B ¨U¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¨U \u001B ¨U  ¡è¨q¡Ð¨r¨q¡Ð¨r»¶Ó­¹âÁÙ    ¡¡¨U \u001B ¨U¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¨U \u001B ¨U  ¨u¨¨€¨€¨Ž¡è                ¨U \u001B ¨U ¦òÌï¦òÌïÌï| ¨t-------------¡¡¨U \u001B ¨U ¨p¨p¨p¨p¨p¨p¨p¨p¨p¨p¨p¨p¨p ¡¡¨U \u001B ¨U©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬¨U \u001B ¨U¡¡¡¡     ¾ø¶Ô¹«Æ½¹«Õý¡¡¡¡¡¡   ¨U \u001B ¨U¡¡       ³¤ÆÚÎÈ¶¨¿ª·Å¡¡¡¡¡¡   ¨U \u001B ¨U¡¡¡¡     É¢ÈË¼¤Çé»ð±©¡¡¡¡¡¡¡¡ ¨U \u001B ¨U©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬©¬¨U \u001B ¨U   ¹Ù·½ÍøÕ¾ www.365pcb.com¡¡¡¡¨U \u001B ¨U   ¹Ù·½ÍøÕ¾ www.365pcb.com¡¡¡¡¨U \u001B ¨U   ¹Ù·½ÍøÕ¾ www.365pcb.com¡¡¡¡¨U \u001B ¨U   ¹Ù·½ÍøÕ¾ www.365pcb.com¡¡¡¡?","p1":0,"p2":0,"p3":0,"protocol":"SM_SENDNOTICE","recog":2000}
+19:32:51.414 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: SendNotice:{"notice":"ï¿½Xï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½[ \u001B ï¿½U ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½   (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½U \u001B ï¿½dï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½Tï¿½g \u001B ï¿½U ï¿½Õ¼ï¿½×°ï¿½ï¿½È«ï¿½Ð±ï¿½    (ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½) ï¿½U \u001B ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½U  ï¿½ï¿½qï¿½Ð¨rï¿½qï¿½Ð¨rï¿½ï¿½Ó­ï¿½ï¿½ï¿½ï¿½    ï¿½ï¿½ï¿½U \u001B ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½U  ï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½                ï¿½U \u001B ï¿½U ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½| ï¿½t-------------ï¿½ï¿½ï¿½U \u001B ï¿½U ï¿½pï¿½pï¿½pï¿½pï¿½pï¿½pï¿½pï¿½pï¿½pï¿½pï¿½pï¿½pï¿½p ï¿½ï¿½ï¿½U \u001B ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½Uï¿½ï¿½ï¿½ï¿½     ï¿½ï¿½ï¿½Ô¹ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½U \u001B ï¿½Uï¿½ï¿½       ï¿½ï¿½ï¿½ï¿½ï¿½È¶ï¿½ï¿½ï¿½ï¿½Å¡ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½U \u001B ï¿½Uï¿½ï¿½ï¿½ï¿½     É¢ï¿½Ë¼ï¿½ï¿½ï¿½ð±©¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½U \u001B ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½U   ï¿½Ù·ï¿½ï¿½ï¿½Õ¾ www.365pcb.comï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½U   ï¿½Ù·ï¿½ï¿½ï¿½Õ¾ www.365pcb.comï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½U   ï¿½Ù·ï¿½ï¿½ï¿½Õ¾ www.365pcb.comï¿½ï¿½ï¿½ï¿½ï¿½U \u001B ï¿½U   ï¿½Ù·ï¿½ï¿½ï¿½Õ¾ www.365pcb.comï¿½ï¿½ï¿½ï¿½?","p1":0,"p2":0,"p3":0,"protocol":"SM_SENDNOTICE","recog":2000}
 
 19:32:52.870 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] WRITE: LoginNoticeOk:{"clientType":0,"cmdIndex":5,"p1":0,"p2":0,"p3":0,"protocol":"CM_LOGINNOTICEOK","recog":0}
 19:32:53.817 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: 20B
@@ -339,7 +339,7 @@ Protocol id 2000 exsit by CM_PROTOCOL
 |00000000| ff ff ff ff 36 00 00 00 00 00 00 00 00 00 00 b1 |....6...........|
 |00000010| c8 c6 e6 ca a1 00 00 00                         |........        |
 +--------+-------------------------------------------------+----------------+
-19:32:53.869 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: MapDescription:{"description":"±ÈÆæÊ¡","p1":0,"p2":0,"p3":0,"protocol":"SM_MAPDESCRIPTION","recog":-1}
+19:32:53.869 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: MapDescription:{"description":"ï¿½ï¿½ï¿½ï¿½Ê¡","p1":0,"p2":0,"p3":0,"protocol":"SM_MAPDESCRIPTION","recog":-1}
 19:32:53.870 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: 28B
          +-------------------------------------------------+
          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
@@ -347,7 +347,7 @@ Protocol id 2000 exsit by CM_PROTOCOL
 |00000000| 00 00 00 00 37 00 09 00 00 00 00 00 00 00 00 d4 |....7...........|
 |00000010| aa b1 a6 0d b3 c9 b3 a4 00 00 00 00             |............    |
 +--------+-------------------------------------------------+----------------+
-19:32:53.873 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: GameGoldName:{"gameGold":0,"gameGoldName":"Ôª±¦","gamePoint":0,"gamePointName":"³É³¤","p1":9,"p2":0,"p3":0,"protocol":"SM_GAMEGOLDNAME","recog":0}
+19:32:53.873 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: GameGoldName:{"gameGold":0,"gameGoldName":"Ôªï¿½ï¿½","gamePoint":0,"gamePointName":"ï¿½É³ï¿½","p1":9,"p2":0,"p3":0,"protocol":"SM_GAMEGOLDNAME","recog":0}
 19:32:53.873 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: 28B
          +-------------------------------------------------+
          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
@@ -355,7 +355,7 @@ Protocol id 2000 exsit by CM_PROTOCOL
 |00000000| 00 00 00 00 37 00 09 00 00 00 00 00 00 00 00 d4 |....7...........|
 |00000010| aa b1 a6 0d b3 c9 b3 a4 00 00 00 00             |............    |
 +--------+-------------------------------------------------+----------------+
-19:32:53.873 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: GameGoldName:{"gameGold":0,"gameGoldName":"Ôª±¦","gamePoint":0,"gamePointName":"³É³¤","p1":9,"p2":0,"p3":0,"protocol":"SM_GAMEGOLDNAME","recog":0}
+19:32:53.873 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: GameGoldName:{"gameGold":0,"gameGoldName":"Ôªï¿½ï¿½","gamePoint":0,"gamePointName":"ï¿½É³ï¿½","p1":9,"p2":0,"p3":0,"protocol":"SM_GAMEGOLDNAME","recog":0}
 19:32:53.874 [nioEventLoopGroup-0-2] INFO  io.netty.handler.logging.LoggingHandler - [id: 0x960c09f2, /192.168.0.166:51361 => /222.187.225.55:7200] RECEIVED: 22B
          +-------------------------------------------------+
          |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |
@@ -456,9 +456,9 @@ io.netty.handler.codec.DecoderException: java.lang.Exception: unknow protocol id
 	at io.netty.util.internal.chmv8.ForkJoinPool.runWorker(ForkJoinPool.java:1661) [netty-all-5.0.0.Alpha2.jar:5.0.0.Alpha2]
 	at io.netty.util.internal.chmv8.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:126) [netty-all-5.0.0.Alpha2.jar:5.0.0.Alpha2]
 Caused by: java.lang.Exception: unknow protocol id:11088
-	at com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder.decodePacket(PacketDecoder.java:34) ~[main/:?]
-	at com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder.decode(PacketDecoder.java:27) ~[main/:?]
-	at com.zhaoxiaodan.mirserver.network.decoder.PacketDecoder.decode(PacketDecoder.java:12) ~[main/:?]
+	at com.zhaoxiaodan.mirserver.network.decoder.ServerPacketDecoder.decodePacket(PacketDecoder.java:34) ~[main/:?]
+	at com.zhaoxiaodan.mirserver.network.decoder.ServerPacketDecoder.decode(PacketDecoder.java:27) ~[main/:?]
+	at com.zhaoxiaodan.mirserver.network.decoder.ServerPacketDecoder.decode(PacketDecoder.java:12) ~[main/:?]
 	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:89) ~[netty-all-5.0.0.Alpha2.jar:5.0.0.Alpha2]
 	... 39 more
 

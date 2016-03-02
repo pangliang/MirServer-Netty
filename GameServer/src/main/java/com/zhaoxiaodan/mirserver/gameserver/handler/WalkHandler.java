@@ -1,17 +1,13 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.entities.Character;
-import com.zhaoxiaodan.mirserver.db.entities.CharacterItem;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
-public class QueryBagItemsHandler extends CharacterHandler {
-
+public class WalkHandler extends CharacterHandler {
 
 	@Override
 	public void onPacket(Packet packet, Character character) throws Exception {
-		for (CharacterItem item : character.items) {
-			session.writeAndFlush(new ServerPacket.AddItem(character.id, item));
-		}
+		session.writeAndFlush(new ServerPacket.Status(ServerPacket.Status.Result.Good));
 	}
 }

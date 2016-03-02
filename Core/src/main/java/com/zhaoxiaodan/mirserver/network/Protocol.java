@@ -21,7 +21,7 @@ public enum Protocol {
 	SM_NEWID_SUCCESS(504,null),
 	SM_NEWID_FAIL(505,null),
 	SM_PASSOK_SELECTSERVER(529,"LoginSuccSelectServer"),
-	SM_SELECTSERVER_OK(530,null),
+	SM_SELECTSERVER_OK(530,"SelectServerOk"),
 
 	// For Select Character Process
 	CM_QUERYCHR(100,"QueryCharacter"),
@@ -29,12 +29,12 @@ public enum Protocol {
 	CM_DELCHR(102,"DeleteCharacter"),
 	CM_SELCHR(103,"SelectCharacter"),
 
-	SM_QUERYCHR(520,null),
+	SM_QUERYCHR(520,"QueryCharactorOk"),
 	SM_NEWCHR_SUCCESS(521,null),
 	SM_NEWCHR_FAIL(522,null),
 	SM_DELCHR_SUCCESS(523,null),
 	SM_DELCHR_FAIL(524,null),
-	SM_STARTPLAY(525,null),
+	SM_STARTPLAY(525,"StartPlay"),
 	SM_STARTFAIL(526,null),
 	SM_QUERYCHR_FAIL(527,null),
 
@@ -65,6 +65,9 @@ public enum Protocol {
 
 
 	CM_EAT(1006,null),
+
+	CM_CLICKNPC(1010,null),
+
 	CM_TURN(3010,null),
 	CM_WALK(3011,null),
 	CM_SITDOWN(3012,null),
@@ -264,22 +267,40 @@ public enum Protocol {
 
 	UNKNOWN_1000(11088,null);
 
-	private static final Map<Short, Protocol> map;
+	private static final Map<Short, Protocol> clientProtocols;
+	private static final Map<Short, Protocol> serverProtocols;
 
 	static {
-		map = new HashMap<>();
+		clientProtocols = new HashMap<>();
+		serverProtocols = new HashMap<>();
 		for (Protocol p : Protocol.values()) {
-			if(map.containsKey(p.id)) {
-				System.out.println(("Protocol id " + p.id + " exsit by " + map.get(p.id).name()));
-			}else{
-				map.put(p.id, p);
+			if(p.name().charAt(0) == 'C'){
+				if(clientProtocols.containsKey(p.id)) {
+					System.out.println(("Protocol id " + p.id + " exsit by " + clientProtocols.get(p.id).name()));
+				}else{
+					clientProtocols.put(p.id, p);
+				}
+			}else {
+				if(serverProtocols.containsKey(p.id)) {
+					System.out.println(("Protocol id " + p.id + " exsit by " + serverProtocols.get(p.id).name()));
+				}else{
+					serverProtocols.put(p.id, p);
+				}
 			}
+
 		}
 	}
 
-	public static Protocol get(short id) {
-		if (map.containsKey(id))
-			return map.get(id);
+	public static Protocol getClientProtocol(short id) {
+		if (clientProtocols.containsKey(id))
+			return clientProtocols.get(id);
+		else
+			return null;
+	}
+
+	public static Protocol getServerProtocol(short id) {
+		if (serverProtocols.containsKey(id))
+			return serverProtocols.get(id);
 		else
 			return null;
 	}

@@ -3,13 +3,13 @@ package com.zhaoxiaodan.mirserver.gameserver.handler;
 import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.entities.CharacterItem;
 import com.zhaoxiaodan.mirserver.db.entities.StdItem;
-import com.zhaoxiaodan.mirserver.gameserver.ClientPackets;
-import com.zhaoxiaodan.mirserver.gameserver.ServerPackets;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
 import java.util.Map;
 
@@ -17,7 +17,7 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 
 	@Override
 	public void onPacket(Packet packet, Character character) throws Exception {
-		ClientPackets.LoginNoticeOk request = (ClientPackets.LoginNoticeOk) packet;
+		ClientPacket.LoginNoticeOk request = (ClientPacket.LoginNoticeOk) packet;
 
 		if(character.ability.Level == 0){
 			ScriptEngine.exce(ScriptEngine.Module.Character,"onCreate",character);
@@ -38,24 +38,24 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 
 		MapEngine.MapInfo currMap = MapEngine.getInstance().getMapInfo(character.currMapPoint.mapName);
 
-		session.writeAndFlush(new ServerPackets.NewMap(character.id, character.currMapPoint.x, character.currMapPoint.y, (short) 0, character.currMapPoint.mapName));
-		session.writeAndFlush(new ServerPackets.MapDescription(-1, currMap.mapDescription));
+		session.writeAndFlush(new ServerPacket.NewMap(character.id, character.currMapPoint.x, character.currMapPoint.y, (short) 0, character.currMapPoint.mapName));
+		session.writeAndFlush(new ServerPacket.MapDescription(-1, currMap.mapDescription));
 
 		int   feature   = Packet.makeLong(Packet.makeWord((byte) 0, (byte) 0), Packet.makeWord((byte) 0, (byte) 0));
 		short featureEx = Packet.makeWord((byte) 0, (byte) 0);
-		session.writeAndFlush(new ServerPackets.Logon(character.id, character.currMapPoint.x, character.currMapPoint.y, (byte) 0, (byte) 0, feature, 0x400, featureEx));
+		session.writeAndFlush(new ServerPacket.Logon(character.id, character.currMapPoint.x, character.currMapPoint.y, (byte) 0, (byte) 0, feature, 0x400, featureEx));
 
-		session.writeAndFlush(new ServerPackets.FeatureChanged(character.id, feature, featureEx));
+		session.writeAndFlush(new ServerPacket.FeatureChanged(character.id, feature, featureEx));
 
-		session.writeAndFlush(new ServerPackets.UserName(character.id, (short) 255, character.name));
+		session.writeAndFlush(new ServerPacket.UserName(character.id, (short) 255, character.name));
 
 		session.writeAndFlush(new Packet(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
 
-		session.writeAndFlush(new ServerPackets.GameGoldName(character.gameGold, character.gamePoint, "游戏币", "游戏点数"));
+		session.writeAndFlush(new ServerPacket.GameGoldName(character.gameGold, character.gamePoint, "游戏币", "游戏点数"));
 
-		session.writeAndFlush(new ServerPackets.VersionFail(0, 0, 0));
+		session.writeAndFlush(new ServerPacket.VersionFail(0, 0, 0));
 
-		session.writeAndFlush(new ServerPackets.CharacterAbility(character.gold, character.gameGold, character.job, character.ability));
+		session.writeAndFlush(new ServerPacket.CharacterAbility(character.gold, character.gameGold, character.job, character.ability));
 
 	}
 

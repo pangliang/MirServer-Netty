@@ -1,26 +1,46 @@
-package com.zhaoxiaodan.mirserver.loginserver;
+package com.zhaoxiaodan.mirserver.network.packets;
 
 import com.zhaoxiaodan.mirserver.db.entities.Character;
+import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.db.objects.Gender;
 import com.zhaoxiaodan.mirserver.db.objects.Job;
-import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.network.packets.IndexPacket;
-import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
 
-//TODO 按道理这里是网络封包模块不应该关联 DB 的 DAO, 当时包含的属性其实基本一致; 偷懒就这么用了
-public class ClientPackets {
+public class ClientPacket extends Packet{
 
-	public static final class Process extends IndexPacket {
+	public byte cmdIndex;  // #号后面紧跟的序号, 响应包的序号要跟请求一直
+
+	public ClientPacket(){}
+
+	public ClientPacket(Protocol pid, byte cmdIndex) {
+		super(0, pid, (short) 0, (short) 0, (short) 0);
+		this.cmdIndex = cmdIndex;
+	}
+
+	@Override
+	public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+		cmdIndex = in.readByte();
+		cmdIndex = (byte) (cmdIndex - '0');
+		super.readPacket(in);
+	}
+
+	@Override
+	public void writePacket(ByteBuf out) {
+		out.writeByte(cmdIndex + '0');
+		super.writePacket(out);
+	}
+
+	public static final class Process extends ClientPacket {
+
 		public Process(byte cmdIndex) {
 			super(Protocol.CM_PROTOCOL, cmdIndex);
 		}
 	}
 
-	public static final class Login extends IndexPacket {
+	public static final class Login extends ClientPacket {
 
 		public User user;
 
@@ -37,8 +57,8 @@ public class ClientPackets {
 			super.readPacket(in);
 
 			user = new User();
-			String conten = in.toString(Charset.defaultCharset()).trim();
-			String[] parts = conten.split(CONTENT_SEPARATOR_STR);
+			String   conten = in.toString(Charset.defaultCharset()).trim();
+			String[] parts  = conten.split(CONTENT_SEPARATOR_STR);
 			if (parts.length > 1) {
 				user.loginId = parts[0];
 				user.password = parts[1];
@@ -57,7 +77,7 @@ public class ClientPackets {
 		}
 	}
 
-	public static final class NewUser extends IndexPacket {
+	public static final class NewUser extends ClientPacket {
 
 		public User user;
 
@@ -83,16 +103,16 @@ public class ClientPackets {
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 			out.writeBytes(user.loginId.getBytes());
-			out.writeBytes(new byte[]{0,0,0,0});
+			out.writeBytes(new byte[]{0, 0, 0, 0});
 			out.writeBytes(user.password.getBytes());
-			out.writeBytes(new byte[]{0,0,0,0});
+			out.writeBytes(new byte[]{0, 0, 0, 0});
 			out.writeBytes(user.username.getBytes());
-			out.writeBytes(new byte[]{0,0,0,0});
+			out.writeBytes(new byte[]{0, 0, 0, 0});
 
 		}
 	}
 
-	public static final class SelectServer extends IndexPacket {
+	public static final class SelectServer extends ClientPacket {
 
 		public String serverName;
 
@@ -116,7 +136,7 @@ public class ClientPackets {
 		}
 	}
 
-	public static final class NewCharacter extends IndexPacket {
+	public static final class NewCharacter extends ClientPacket {
 
 		public Character character;
 
@@ -160,7 +180,7 @@ public class ClientPackets {
 		}
 	}
 
-	public static final class QueryCharacter extends IndexPacket {
+	public static final class QueryCharacter extends ClientPacket {
 
 		public String loginId;
 		public short  cert;
@@ -176,13 +196,12 @@ public class ClientPackets {
 		@Override
 		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
-			String content = in.toString(Charset.defaultCharset()).trim();
-			String[] parts = content.split(CONTENT_SEPARATOR_STR);
-			if(parts.length >= 2)
-			{
+			String   content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length >= 2) {
 				loginId = parts[0];
 				cert = Short.parseShort(parts[1]);
-			}else{
+			} else {
 				throw new Parcelable.WrongFormatException();
 			}
 		}
@@ -197,7 +216,7 @@ public class ClientPackets {
 		}
 	}
 
-	public static final class DeleteCharacter extends IndexPacket {
+	public static final class DeleteCharacter extends ClientPacket {
 
 		public String characterName;
 
@@ -221,14 +240,14 @@ public class ClientPackets {
 		}
 	}
 
-	public static final class SelectCharacter extends IndexPacket {
+	public static final class SelectCharacter extends ClientPacket {
 
 		public String loginId;
 		public String characterName;
 
 		public SelectCharacter() {}
 
-		public SelectCharacter(byte cmdIndex, String loginId,String characterName) {
+		public SelectCharacter(byte cmdIndex, String loginId, String characterName) {
 			super(Protocol.CM_SELCHR, cmdIndex);
 			this.loginId = loginId;
 			this.characterName = characterName;
@@ -237,13 +256,12 @@ public class ClientPackets {
 		@Override
 		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
-			String content = in.toString(Charset.defaultCharset()).trim();
-			String[] parts = content.split(CONTENT_SEPARATOR_STR);
-			if(parts.length >= 2)
-			{
+			String   content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length >= 2) {
 				loginId = parts[0];
 				characterName = parts[1];
-			}else{
+			} else {
 				throw new Parcelable.WrongFormatException();
 			}
 		}
@@ -254,6 +272,79 @@ public class ClientPackets {
 			out.writeBytes(this.loginId.getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(this.characterName.getBytes());
+		}
+	}
+
+	/********************************************************************
+	 * GameServer
+	 ********************************************************************/
+
+	public static final class GameLogin extends ClientPacket {
+
+		public String loginId;
+		public String characterName;
+		public short  cert;
+		public String clientVersion;
+		public String gateIndex;
+
+		public GameLogin() {
+		}
+
+		public GameLogin(byte cmdIndex, String loginId, String characterName, short cert, String clientVersion) {
+			super(Protocol.CM_QUERYUSERSTATE, cmdIndex);
+			this.loginId = loginId;
+			this.characterName = characterName;
+			this.cert = cert;
+			this.clientVersion = clientVersion;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			this.cmdIndex = (byte) (in.readByte() - '0');  //cmdIndex
+			in.readByte();  //*
+			in.readByte();  //*
+
+			String   content = in.toString(Charset.defaultCharset()).trim();
+			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length >= 5) {
+				loginId = parts[0];
+				characterName = parts[1].trim();
+				cert = Short.parseShort(parts[2].trim());
+				clientVersion = parts[3];
+				gateIndex = parts[4];
+			} else {
+				throw new Parcelable.WrongFormatException();
+			}
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			out.writeByte(cmdIndex + '0');
+			out.writeByte('*');
+			out.writeByte('*');
+
+			out.writeBytes(loginId.getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(characterName.getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(Short.toString(cert).getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(clientVersion.getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(gateIndex.getBytes());
+		}
+	}
+
+	public static final class LoginNoticeOk extends ClientPacket {
+
+		public short clientType;
+
+		public LoginNoticeOk() {
+		}
+
+		public LoginNoticeOk(byte cmdIndex) {
+			super(Protocol.CM_LOGINNOTICEOK, cmdIndex);
+			this.p3 = 0;
 		}
 	}
 }

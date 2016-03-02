@@ -35,7 +35,7 @@ import io.netty.buffer.ByteBuf;
  * <p>
  * Packet{  cmdIndx=2, recog=0, protocol=2001, p1=0, p2=0, p3=0, body='123/123'}
  */
-public class Packet implements Parcelable{
+public class Packet implements Parcelable {
 
 	public static final int    DEFAULT_HEADER_SIZE    = 12;
 	public static final char   CONTENT_SEPARATOR_CHAR = '/';
@@ -46,6 +46,8 @@ public class Packet implements Parcelable{
 	public short    p1;        //
 	public short    p2;
 	public short    p3;
+
+	public ByteBuf in;
 
 	public Packet() {
 	}
@@ -64,15 +66,17 @@ public class Packet implements Parcelable{
 
 	public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 		recog = in.readInt();
-		protocol = Protocol.get(in.readShort());
+		in.readShort();
 		p1 = in.readShort();
 		p2 = in.readShort();
 		p3 = in.readShort();
+
+		this.in = in.retain();
 	}
 
 	public void writePacket(ByteBuf out) {
 		out.writeInt(recog);
-		out.writeShort(protocol.id);
+		out.writeShort(protocol == null ? 0 : protocol.id);
 		out.writeShort(p1);
 		out.writeShort(p2);
 		out.writeShort(p3);
@@ -96,37 +100,38 @@ public class Packet implements Parcelable{
 		return sb.toString().trim();
 	}
 
-	public static short makeWord(byte low, byte high){
-		return (short)((high << 8)|low);
+	public static short makeWord(byte low, byte high) {
+		return (short) ((high << 8) | low);
 	}
 
-	public static int makeLong(short low,short high){
-		return ((high << 16)|low);
+	public static int makeLong(short low, short high) {
+		return ((high << 16) | low);
 	}
 
-	public static int makeLong(int low,int high){
-		return (((short)high << 16)|(short)low);
+	public static int makeLong(int low, int high) {
+		return (((short) high << 16) | (short) low);
 	}
 
-	public static short getLowWord(int number){
-		return (short)(number);
+	public static short getLowWord(int number) {
+		return (short) (number);
 	}
 
-	public static short getHighWord(int number){
-		return (short)(number >> 16);
+	public static short getHighWord(int number) {
+		return (short) (number >> 16);
 	}
 
-	public static byte getLowByte(short number){
-		return (byte)(number);
+	public static byte getLowByte(short number) {
+		return (byte) (number);
 	}
 
-	public static byte getHighByte(short number){
-		return (byte)(number >> 8);
+	public static byte getHighByte(short number) {
+		return (byte) (number >> 8);
 	}
 
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName() + ":" + JSON.toJSONString(this);
 	}
+
 
 }

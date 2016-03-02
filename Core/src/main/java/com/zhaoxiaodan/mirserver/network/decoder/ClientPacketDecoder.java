@@ -1,19 +1,16 @@
 package com.zhaoxiaodan.mirserver.network.decoder;
 
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToMessageDecoder;
+import org.apache.logging.log4j.LogManager;
 
 import java.nio.ByteOrder;
 import java.util.List;
 
-public class ClientPacketDecoder extends PacketDecoder {
-
-
-	public ClientPacketDecoder(String packetPackageName) {
-		super(packetPackageName);
-	}
+public class ClientPacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -30,7 +27,25 @@ public class ClientPacketDecoder extends PacketDecoder {
 			int pidPos = 1 + 4;
 			protocolId = in.getShort(pidPos);
 		}
-		Packet packet = decodePacket(protocolId, in);
+
+		Protocol protocol = Protocol.getClientProtocol(protocolId);
+
+		Class<? extends ClientPacket> packetClass;
+		if (null == protocol) {
+			LogManager.getLogger().error("unknow protocol id {}",protocolId);
+			packetClass = ClientPacket.class;
+		} else {
+			try {
+				packetClass = (Class<? extends ClientPacket>) Class.forName(ClientPacket.class.getCanonicalName() + "$" + protocol.name);
+			} catch (ClassNotFoundException e) {
+				packetClass = ClientPacket.class;
+			}
+		}
+		ClientPacket packet = packetClass.newInstance();
+		packet.readPacket(in);
+		packet.protocol = protocol;
+
+
 		out.add(packet);
 	}
 }

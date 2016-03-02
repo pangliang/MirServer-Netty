@@ -11,14 +11,12 @@ import java.util.List;
 /**
  * 解密, request有cmdIndex , response没有
  */
-public class ClientPacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
-
+public class ServerPacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
 		ByteBuf buf = Unpooled.buffer();
 		in.readByte(); //  # , 在这里就去掉 头尾
-		buf.writeByte(in.readByte());  //cmdIndex
 
 		byte[] bodyBytes = new byte[in.readableBytes() - 1];
 		in.readBytes(bodyBytes);

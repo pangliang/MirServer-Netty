@@ -10,8 +10,8 @@ import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
-import com.zhaoxiaodan.mirserver.network.encoder.PacketBit6Encoder;
-import com.zhaoxiaodan.mirserver.network.encoder.PacketEncoder;
+import com.zhaoxiaodan.mirserver.network.encoder.ServerPacketBit6Encoder;
+import com.zhaoxiaodan.mirserver.network.encoder.ServerPacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -57,19 +57,18 @@ public class GameServer {
 
 									new ExceptionHandler(),
 
-									//编码
+									//解码
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new DelimiterBasedFrameDecoder(REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ClientPacketBit6Decoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
-									new ClientPacketDecoder(ClientPackets.class.getCanonicalName()),
+									new ClientPacketDecoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
-									//解码
+									//编码
+									new ServerPacketBit6Encoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
-									new PacketBit6Encoder(),
-									new MyLoggingHandler(MyLoggingHandler.Type.Write),
-									new PacketEncoder(),
+									new ServerPacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 
 									//分包分发

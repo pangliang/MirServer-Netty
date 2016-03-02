@@ -2,8 +2,8 @@ package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
 import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.loginserver.ClientPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 
 /**
@@ -21,7 +21,7 @@ public class NewCharacterHandler extends UserHandler {
 
 	@Override
 	public void onPacket(Packet packet, User user) throws Exception {
-		ClientPackets.NewCharacter request = (ClientPackets.NewCharacter) packet;
+		ClientPacket.NewCharacter request = (ClientPacket.NewCharacter) packet;
 		if (user.characters.size() >= 2) {
 			session.writeAndFlush(new Packet(Protocol.SM_NEWCHR_FAIL));
 			return;
