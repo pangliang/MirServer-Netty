@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 import javax.persistence.*;
 
 @Entity
-public class CharacterItem extends DAO implements Parcelable{
+public class CharacterItem implements Parcelable{
 
 	@Id
 	@GeneratedValue

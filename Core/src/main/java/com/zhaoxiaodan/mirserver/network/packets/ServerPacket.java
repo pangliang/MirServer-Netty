@@ -7,6 +7,7 @@ import com.zhaoxiaodan.mirserver.db.objects.Ability;
 import com.zhaoxiaodan.mirserver.db.objects.Gender;
 import com.zhaoxiaodan.mirserver.db.objects.Job;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.utils.Timer;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -567,7 +568,7 @@ public class ServerPacket extends Packet{
 
 		public Status(Result result) {
 			this.result =result;
-			this.tickCount = System.nanoTime()/1000000;
+			this.tickCount = Timer.getTickCount();
 		}
 
 		@Override

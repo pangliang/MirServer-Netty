@@ -5,7 +5,9 @@ import com.zhaoxiaodan.mirserver.loginserver.handlers.LoginHandler;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
+import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
+import com.zhaoxiaodan.mirserver.network.encoder.ServerPacketBit6Encoder;
 import com.zhaoxiaodan.mirserver.network.encoder.ServerPacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -52,11 +54,13 @@ public class LoginServer {
 									//解码
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new DelimiterBasedFrameDecoder(REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
+									new ClientPacketBit6Decoder(),
+									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new ClientPacketDecoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
-									new ExceptionHandler(),
 									//编码
+									new ServerPacketBit6Encoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new ServerPacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),

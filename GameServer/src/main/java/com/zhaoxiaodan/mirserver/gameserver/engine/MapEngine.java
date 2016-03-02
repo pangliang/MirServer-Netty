@@ -1,11 +1,13 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
+import com.zhaoxiaodan.mirserver.db.entities.Character;
 import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MapEngine {
 
@@ -13,40 +15,35 @@ public class MapEngine {
 	private static final String MINIMAP_CONFIG_FILE    = "Envir/MiniMap.cfg";
 	private static final String STARTPOINT_CONFIG_FILE = "Envir/StartPoint.cfg";
 
-	private        Map<String, MapInfo> maps       = null;
-	private        MapPoint             startPoint = null;
-	private static MapEngine            instance   = null;
+	private        static Map<String, MapInfo> maps       = null;
+	private        static MapPoint             startPoint = null;
 
-	public class MapInfo {
-
+	public static class MapInfo {
 		public String mapName;
 		public String mapDescription;
 		public String miniMapName;
-	}
 
-	private MapEngine() {
-
-	}
-
-	public synchronized static MapEngine getInstance() {
-		if (null == instance) {
-			instance = new MapEngine();
+		private Map<Integer,Character> characterInMap = new ConcurrentHashMap<Integer,Character>();
+		public void addCharacter(Character c){
+			characterInMap.put(c.id,c);
 		}
-		return instance;
+		public void removeCharacter(Character c){
+			characterInMap.remove(c.id);
+		}
 	}
 
-	public synchronized void reload() throws Exception {
+	public static synchronized void reload() throws Exception {
 		Map<String, MapInfo> maps = new HashMap<>();
 		reloadMapInfo(maps);
 		reloadMiniMap(maps);
 		MapPoint startPoint = reloadStartPoint();
 
 		// 保证读出来的无异常再替换原有的;
-		this.maps = maps;
-		this.startPoint = startPoint;
+		MapEngine.maps = maps;
+		MapEngine.startPoint = startPoint;
 	}
 
-	private void reloadMapInfo(Map<String, MapInfo> maps) throws Exception {
+	private static void reloadMapInfo(Map<String, MapInfo> maps) throws Exception {
 
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(MAP_CONFIG_FILE, 2)) {
 
@@ -61,10 +58,10 @@ public class MapEngine {
 			maps.put(info.mapName, info);
 		}
 
-		this.maps = maps;
+		MapEngine.maps = maps;
 	}
 
-	private void reloadMiniMap(Map<String, MapInfo> maps) throws Exception {
+	private static void reloadMiniMap(Map<String, MapInfo> maps) throws Exception {
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(MINIMAP_CONFIG_FILE, 2)) {
 			String fileName = (String) tokenizer.nextElement();
 			if (!maps.containsKey(fileName))
@@ -74,7 +71,7 @@ public class MapEngine {
 		}
 	}
 
-	private MapPoint reloadStartPoint() throws Exception {
+	private static MapPoint reloadStartPoint() throws Exception {
 		MapPoint startPoint = null;
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(STARTPOINT_CONFIG_FILE, 2)) {
 			startPoint = new MapPoint();
@@ -92,11 +89,11 @@ public class MapEngine {
 		return startPoint;
 	}
 
-	public MapInfo getMapInfo(String mapFileNamp) {
+	public static MapInfo getMapInfo(String mapFileNamp) {
 		return maps.get(mapFileNamp);
 	}
 
-	public MapPoint getStartPoint() {
+	public static MapPoint getStartPoint() {
 		return startPoint;
 	}
 }

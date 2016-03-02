@@ -1,15 +1,12 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
-import com.zhaoxiaodan.mirserver.db.objects.Ability;
-import com.zhaoxiaodan.mirserver.db.objects.Gender;
-import com.zhaoxiaodan.mirserver.db.objects.Job;
-import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
+import com.zhaoxiaodan.mirserver.db.objects.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Character extends DAO {
+public class Character extends BaseObject {
 
 	@Id
 	@GeneratedValue
@@ -46,10 +43,7 @@ public class Character extends DAO {
 			@AttributeOverride(name="y", column=@Column(name="homeY"))
 	})
 	public MapPoint homeMapPoint;
-	/**
-	 * 能力
-	 */
-	public Ability  ability = new Ability();
+
 	/**
 	 * 金币
 	 */

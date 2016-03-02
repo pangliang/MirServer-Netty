@@ -334,17 +334,4 @@ public class ClientPacket extends Packet{
 			out.writeBytes(gateIndex.getBytes());
 		}
 	}
-
-	public static final class LoginNoticeOk extends ClientPacket {
-
-		public short clientType;
-
-		public LoginNoticeOk() {
-		}
-
-		public LoginNoticeOk(byte cmdIndex) {
-			super(Protocol.CM_LOGINNOTICEOK, cmdIndex);
-			this.p3 = 0;
-		}
-	}
 }

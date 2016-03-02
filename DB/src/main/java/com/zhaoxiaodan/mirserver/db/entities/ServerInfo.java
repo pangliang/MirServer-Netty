@@ -3,7 +3,7 @@ package com.zhaoxiaodan.mirserver.db.entities;
 import javax.persistence.*;
 
 @Entity
-public class ServerInfo extends DAO{
+public class ServerInfo{
 	@Id
 	@GeneratedValue
 	public int id;

@@ -68,10 +68,10 @@ public enum Protocol {
 
 	CM_CLICKNPC(1010,null),
 
-	CM_TURN(3010,null),
-	CM_WALK(3011,null),
+	CM_TURN(3010,"MoveAction"),
+	CM_WALK(3011,"MoveAction"),
 	CM_SITDOWN(3012,null),
-	CM_RUN(3013,null),
+	CM_RUN(3013,"MoveAction"),
 	CM_HIT(3014,null),
 	CM_HEAVYHIT(3015,null),
 	CM_BIGHIT(3016,null),

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class User extends DAO{
+public class User{
 
 	@Id
 	@GeneratedValue

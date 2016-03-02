@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class StdItem extends DAO implements Parcelable{
+public class StdItem implements Parcelable{
 
 	@Id
 	@GeneratedValue

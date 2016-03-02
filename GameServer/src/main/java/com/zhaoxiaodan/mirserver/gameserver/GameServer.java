@@ -40,7 +40,7 @@ public class GameServer {
 
 		// db init
 		DB.init();
-		MapEngine.getInstance().reload();
+		MapEngine.reload();
 		ScriptEngine.reload();
 		ItemEngine.reload();
 

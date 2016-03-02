@@ -138,7 +138,7 @@ public class MockClient {
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
-			packet = new ClientPacket.LoginNoticeOk(cmdIndex);
+			packet = new ClientPacket(Protocol.CM_LOGINNOTICEOK, cmdIndex);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;

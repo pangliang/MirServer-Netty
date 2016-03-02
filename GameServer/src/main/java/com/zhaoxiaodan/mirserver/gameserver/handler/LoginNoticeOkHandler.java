@@ -7,7 +7,6 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
@@ -17,7 +16,6 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 
 	@Override
 	public void onPacket(Packet packet, Character character) throws Exception {
-		ClientPacket.LoginNoticeOk request = (ClientPacket.LoginNoticeOk) packet;
 
 		if(character.ability.Level == 0){
 			ScriptEngine.exce(ScriptEngine.Module.Character,"onCreate",character);
@@ -35,8 +33,9 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 			}
 		}
 
+		character.inGame = true;
 
-		MapEngine.MapInfo currMap = MapEngine.getInstance().getMapInfo(character.currMapPoint.mapName);
+		MapEngine.MapInfo currMap = MapEngine.getMapInfo(character.currMapPoint.mapName);
 
 		session.writeAndFlush(new ServerPacket.NewMap(character.id, character.currMapPoint.x, character.currMapPoint.y, (short) 0, character.currMapPoint.mapName));
 		session.writeAndFlush(new ServerPacket.MapDescription(-1, currMap.mapDescription));
@@ -49,7 +48,7 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 
 		session.writeAndFlush(new ServerPacket.UserName(character.id, (short) 255, character.name));
 
-		session.writeAndFlush(new Packet(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
+		session.writeAndFlush(new ServerPacket(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
 
 		session.writeAndFlush(new ServerPacket.GameGoldName(character.gameGold, character.gamePoint, "游戏币", "游戏点数"));
 
