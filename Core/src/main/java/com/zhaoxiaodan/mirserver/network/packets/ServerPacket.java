@@ -548,11 +548,11 @@ public class ServerPacket extends Packet{
 		}
 	}
 
-	public static final class Status implements Parcelable {
+	public static final class Status extends ServerPacket {
 
 		public enum Result{
-			Good("+GOOD/"),
-			Fail("+FAIL/");
+			Good("+GOOD"),
+			Fail("+FAIL");
 
 			public String content;
 			private Result(String content){
@@ -561,30 +561,37 @@ public class ServerPacket extends Packet{
 		}
 
 		public Result result;
+		public long tickCount;
 
 		public Status() {}
 
 		public Status(Result result) {
 			this.result =result;
+			this.tickCount = System.nanoTime()/1000000;
 		}
 
 		@Override
 		public void writePacket(ByteBuf out) {
 			out.writeBytes(result.content.getBytes());
-			out.writeBytes((System.nanoTime()/1000000+"").getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(Long.toString(this.tickCount).getBytes());
 		}
 
 		@Override
 		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
-			String content = in.toString(Charset.defaultCharset()).trim();
-			for(Result result : Result.values()){
-				if(result.content.equals(content))
-				{
-					this.result = result;
-					return;
+			String content = in.toString(1,in.readableBytes()-2,Charset.defaultCharset()).trim();
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			if(parts.length > 1)
+			{
+				for(Result result : Result.values()){
+					if(result.content.equals(parts[0]))
+					{
+						this.result = result;
+						this.tickCount = Long.parseLong(parts[1]);
+						return;
+					}
 				}
 			}
-
 			throw new WrongFormatException("content not match !! content:"+content);
 		}
 	}

@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.network.decoder;
 
 import com.zhaoxiaodan.mirserver.network.Bit6Coder;
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,15 +16,23 @@ public class ServerPacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
-		ByteBuf buf = Unpooled.buffer();
-		in.readByte(); //  # , 在这里就去掉 头尾
+		if('+' == in.getByte(1)){
+			// Status 包: 格式如: #+GOOD/1234567
+			ServerPacket.Status status = new ServerPacket.Status();
+			status.readPacket(in);
+			out.add(status);
+		}else{
+			ByteBuf buf = Unpooled.buffer();
+			in.readByte(); //  # , 在这里就去掉 头尾
 
-		byte[] bodyBytes = new byte[in.readableBytes() - 1];
-		in.readBytes(bodyBytes);
-		buf.writeBytes(Bit6Coder.decode6BitBuf(bodyBytes));
+			byte[] bodyBytes = new byte[in.readableBytes() - 1];
+			in.readBytes(bodyBytes);
+			buf.writeBytes(Bit6Coder.decode6BitBuf(bodyBytes));
 
-		in.readByte(); //  !
+			in.readByte(); //  !
 
-		out.add(buf);
+			out.add(buf);
+		}
+
 	}
 }

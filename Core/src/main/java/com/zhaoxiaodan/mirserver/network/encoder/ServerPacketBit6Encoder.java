@@ -15,17 +15,24 @@ public class ServerPacketBit6Encoder extends MessageToMessageEncoder<ByteBuf> {
 	@Override
 	protected void encode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
+
+
 		ByteBuf buf = Unpooled.buffer();
 
 		buf.writeByte('#');     // 加上 头分割符
 
-		byte[] header = new byte[Packet.DEFAULT_HEADER_SIZE];
-		in.readBytes(header);
-		buf.writeBytes(Bit6Coder.encoder6BitBuf(header));
+		if('+' == in.getByte(0)){
+			buf.writeBytes(in);
+		}else{
+			byte[] header = new byte[Packet.DEFAULT_HEADER_SIZE];
+			in.readBytes(header);
+			buf.writeBytes(Bit6Coder.encoder6BitBuf(header));
 
-		byte[] body = new byte[in.readableBytes()];
-		in.readBytes(body);
-		buf.writeBytes(Bit6Coder.encoder6BitBuf(body));
+			byte[] body = new byte[in.readableBytes()];
+			in.readBytes(body);
+			buf.writeBytes(Bit6Coder.encoder6BitBuf(body));
+		}
+
 
 		buf.writeByte('!');     // 加上 尾分割符
 
