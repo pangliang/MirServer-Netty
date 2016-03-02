@@ -106,25 +106,25 @@ public class MockClient {
 
 			String charName = "pangliang";
 
-			// new character
-//			Character character = new Character();
-//			character.user = user;
-//			character.name = charName;
-//			character.hair = 1;
-//			character.job = Job.Warrior;
-//			character.gender = Gender.MALE;
-//			packet = new ClientPacket.CM_NEWCHR(cmdIndex,character);
+			// new player
+//			Player player = new Player();
+//			player.user = user;
+//			player.name = charName;
+//			player.hair = 1;
+//			player.job = Job.Warrior;
+//			player.gender = Gender.MALE;
+//			packet = new ClientPacket.CM_NEWCHR(cmdIndex,player);
 //			ch.writeAndFlush(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
 
-			// query character
+			// query player
 			packet = new ClientPacket.QueryCharacter(cmdIndex, user.loginId, certification);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
-			//select character
+			//select player
 			packet = new ClientPacket.SelectCharacter(cmdIndex, user.loginId, charName);
 			ch.writeAndFlush(packet);
 			in.readLine();

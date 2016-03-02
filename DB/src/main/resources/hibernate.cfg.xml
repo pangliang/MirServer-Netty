@@ -18,7 +18,7 @@
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdItem"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.User"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.ServerInfo"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.Character"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.CharacterItem"/>
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.Player"/>
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.PlayerItem"/>
     </session-factory>
 </hibernate-configuration>

@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Character extends BaseObject {
+public class Player extends BaseObject {
 
 	@Id
 	@GeneratedValue
@@ -57,8 +57,8 @@ public class Character extends BaseObject {
 	 */
 	public int      gamePoint;
 
-	@OneToMany(mappedBy = "character" ,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "player",fetch = FetchType.EAGER)
 	@MapKey(name = "id")
-	public List<CharacterItem> items;
+	public List<PlayerItem> items;
 
 }

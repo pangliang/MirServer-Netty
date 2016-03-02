@@ -6,14 +6,14 @@ import io.netty.buffer.ByteBuf;
 import javax.persistence.*;
 
 @Entity
-public class CharacterItem implements Parcelable{
+public class PlayerItem implements Parcelable{
 
 	@Id
 	@GeneratedValue
-	public int       id;
+	public int    id;
 	@ManyToOne
-	@JoinColumn(name = "characterId")
-	public Character character;
+	@JoinColumn(name = "playerId")
+	public Player player;
 
 	@OneToOne
 	@JoinColumn(name = "stdItemId")

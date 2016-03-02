@@ -21,7 +21,7 @@ public class User{
 
 	@OneToMany(mappedBy = "user")
 	@MapKey(name = "id")
-	public List<Character> characters;
+	public List<Player> players;
 
 
 }

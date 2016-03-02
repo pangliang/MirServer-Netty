@@ -1,11 +1,11 @@
-import com.zhaoxiaodan.mirserver.db.entities.Character
+import com.zhaoxiaodan.mirserver.db.entities.Player
 import com.zhaoxiaodan.mirserver.db.objects.Gender
 import com.zhaoxiaodan.mirserver.db.objects.Job
 import com.zhaoxiaodan.mirserver.db.objects.MapPoint
 import com.zhaoxiaodan.mirserver.network.packets.Packet
 
-class CharacterScript {
-    void onCreate(Character c) {
+class PlayerScript {
+    void onCreate(Player c) {
         c.ability.Level = 1;
         c.ability.HP = 100;
         c.ability.MaxHP = 200;
@@ -35,7 +35,7 @@ class CharacterScript {
         return startPoint;
     }
 
-    Map<String,Integer> getInitItems(Character c){
+    Map<String,Integer> getInitItems(Player c){
         Map<String,Integer> items = new HashMap<>()
 
         items.put("金创药(小)包",5);

@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.network.packets;
 
-import com.zhaoxiaodan.mirserver.db.entities.Character;
+import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.db.objects.Gender;
 import com.zhaoxiaodan.mirserver.db.objects.Job;
@@ -138,13 +138,13 @@ public class ClientPacket extends Packet{
 
 	public static final class NewCharacter extends ClientPacket {
 
-		public Character character;
+		public Player player;
 
 		public NewCharacter() {}
 
-		public NewCharacter(byte cmdIndex, Character character) {
+		public NewCharacter(byte cmdIndex, Player player) {
 			super(Protocol.CM_NEWCHR, cmdIndex);
-			this.character = character;
+			this.player = player;
 		}
 
 		@Override
@@ -156,26 +156,26 @@ public class ClientPacket extends Packet{
 				throw new Parcelable.WrongFormatException();
 			User user = new User();
 			user.loginId = parts[0];
-			character = new Character();
-			character.user = user;
-			character.name = parts[1];
-			character.hair = Byte.parseByte(parts[2]);
-			character.job = Job.values()[Byte.parseByte(parts[3])];
-			character.gender = Gender.values()[Byte.parseByte(parts[4])];
+			player = new Player();
+			player.user = user;
+			player.name = parts[1];
+			player.hair = Byte.parseByte(parts[2]);
+			player.job = Job.values()[Byte.parseByte(parts[3])];
+			player.gender = Gender.values()[Byte.parseByte(parts[4])];
 		}
 
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-			out.writeBytes(character.user.loginId.getBytes());
+			out.writeBytes(player.user.loginId.getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
-			out.writeBytes(character.name.getBytes());
+			out.writeBytes(player.name.getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
-			out.writeByte(character.hair + '0');
+			out.writeByte(player.hair + '0');
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
-			out.writeByte(character.job.ordinal() + '0');
+			out.writeByte(player.job.ordinal() + '0');
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
-			out.writeByte(character.gender.ordinal() + '0');
+			out.writeByte(player.gender.ordinal() + '0');
 			out.writeBytes(new byte[10]);
 		}
 	}

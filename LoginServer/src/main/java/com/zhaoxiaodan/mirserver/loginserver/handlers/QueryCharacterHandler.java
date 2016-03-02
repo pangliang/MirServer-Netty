@@ -45,7 +45,7 @@ public class QueryCharacterHandler extends Handler {
 
 		if (user.certification == request.cert) {
 			session.put("user", user);
-			session.writeAndFlush(new ServerPacket.QueryCharactorOk(user.characters));
+			session.writeAndFlush(new ServerPacket.QueryCharactorOk(user.players));
 		} else {
 			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
 			return;

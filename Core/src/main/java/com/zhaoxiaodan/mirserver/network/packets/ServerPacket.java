@@ -1,7 +1,7 @@
 package com.zhaoxiaodan.mirserver.network.packets;
 
-import com.zhaoxiaodan.mirserver.db.entities.Character;
-import com.zhaoxiaodan.mirserver.db.entities.CharacterItem;
+import com.zhaoxiaodan.mirserver.db.entities.Player;
+import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.db.objects.Ability;
 import com.zhaoxiaodan.mirserver.db.objects.Gender;
@@ -138,21 +138,21 @@ public class ServerPacket extends Packet{
 
 	public static final class QueryCharactorOk extends ServerPacket {
 
-		public List<Character> characterList;
+		public List<Player> playerList;
 
 		public QueryCharactorOk() {}
 
-		public QueryCharactorOk(List<Character> characterList) {
+		public QueryCharactorOk(List<Player> playerList) {
 			super(Protocol.SM_QUERYCHR);
-			this.characterList = characterList;
-			this.recog = characterList.size();
+			this.playerList = playerList;
+			this.recog = playerList.size();
 		}
 
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 
-			for (Character cha : this.characterList) {
+			for (Player cha : this.playerList) {
 				out.writeBytes(cha.name.getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.job.ordinal()).getBytes());
@@ -176,16 +176,16 @@ public class ServerPacket extends Packet{
 				String[] parts = content.split(CONTENT_SEPARATOR_STR);
 				if (parts.length < 5*this.recog)
 					throw new Parcelable.WrongFormatException();
-				this.characterList = new ArrayList<>();
+				this.playerList = new ArrayList<>();
 				for (int i = 0; i + 4 < parts.length; i += 5) {
-					Character cha = new Character();
+					Player cha = new Player();
 					cha.name = parts[i + 0];
 					cha.job = Job.values()[Byte.parseByte(parts[i + 1])];
 					cha.hair = Byte.parseByte(parts[i + 2]);
 					cha.ability.Level = Short.parseShort(parts[i + 3]);
 					cha.gender = Gender.values()[Byte.parseByte(parts[i + 4])];
 
-					characterList.add(cha);
+					playerList.add(cha);
 				}
 			}
 		}
@@ -499,11 +499,11 @@ public class ServerPacket extends Packet{
 
 	public static final class AddItem extends ServerPacket {
 
-		public CharacterItem item;
+		public PlayerItem item;
 
 		public AddItem() {}
 
-		public AddItem(int id, CharacterItem item) {
+		public AddItem(int id, PlayerItem item) {
 			super(Protocol.SM_ADDITEM);
 			this.recog = id;
 			this.p3 = 1;

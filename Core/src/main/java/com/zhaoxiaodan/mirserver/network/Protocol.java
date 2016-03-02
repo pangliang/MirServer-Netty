@@ -23,7 +23,7 @@ public enum Protocol {
 	SM_PASSOK_SELECTSERVER(529,"LoginSuccSelectServer"),
 	SM_SELECTSERVER_OK(530,"SelectServerOk"),
 
-	// For Select Character Process
+	// For Select Player Process
 	CM_QUERYCHR(100,"QueryCharacter"),
 	CM_NEWCHR(101,"NewCharacter"),
 	CM_DELCHR(102,"DeleteCharacter"),

@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
-import com.zhaoxiaodan.mirserver.db.entities.Character;
+import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 
@@ -23,11 +23,11 @@ public class MapEngine {
 		public String mapDescription;
 		public String miniMapName;
 
-		private Map<Integer,Character> characterInMap = new ConcurrentHashMap<Integer,Character>();
-		public void addCharacter(Character c){
+		private Map<Integer,Player> characterInMap = new ConcurrentHashMap<Integer,Player>();
+		public void addCharacter(Player c){
 			characterInMap.put(c.id,c);
 		}
-		public void removeCharacter(Character c){
+		public void removeCharacter(Player c){
 			characterInMap.remove(c.id);
 		}
 	}

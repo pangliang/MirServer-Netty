@@ -1,17 +1,17 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
-import com.zhaoxiaodan.mirserver.db.entities.Character;
+import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.packets.Packet;
 
 public abstract class CharacterHandler extends Handler {
 	public final void onPacket(Packet packet) throws Exception {
-		Character character = (Character) session.get("character");
-		if (null == character)
-			throw new Exception("character not found for packet:" + packet.protocol);
+		Player player = (Player) session.get("player");
+		if (null == player)
+			throw new Exception("player not found for packet:" + packet.protocol);
 
-		onPacket(packet, character);
+		onPacket(packet, player);
 	}
 
-	public abstract void onPacket(Packet packet, Character character) throws Exception;
+	public abstract void onPacket(Packet packet, Player player) throws Exception;
 }

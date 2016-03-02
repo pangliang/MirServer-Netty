@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
-import com.zhaoxiaodan.mirserver.db.entities.Character;
+import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
@@ -13,12 +13,12 @@ public class DeleteCharacterHandler extends UserHandler {
 
 		ClientPacket.DeleteCharacter request = (ClientPacket.DeleteCharacter) packet;
 
-		for (Character character : user.characters) {
-			if (character.name.equals(request.characterName)) {
-				session.db.delete(character);
+		for (Player player : user.players) {
+			if (player.name.equals(request.characterName)) {
+				session.db.delete(player);
 
-				character.user.characters.remove(character);
-				character.user = null;
+				player.user.players.remove(player);
+				player.user = null;
 
 				session.writeAndFlush(new Packet(Protocol.SM_DELCHR_SUCCESS));
 				return;
