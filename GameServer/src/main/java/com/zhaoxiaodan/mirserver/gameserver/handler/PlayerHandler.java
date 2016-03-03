@@ -4,7 +4,7 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 
-public abstract class CharacterHandler extends Handler {
+public abstract class PlayerHandler extends Handler {
 	public final void onPacket(ClientPacket packet) throws Exception {
 		Player player = (Player) session.get("player");
 		if (null == player)

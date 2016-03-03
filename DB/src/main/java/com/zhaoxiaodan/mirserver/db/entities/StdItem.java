@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
-import com.zhaoxiaodan.mirserver.db.objects.ItemAttr;
+import com.zhaoxiaodan.mirserver.db.types.ItemAttr;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

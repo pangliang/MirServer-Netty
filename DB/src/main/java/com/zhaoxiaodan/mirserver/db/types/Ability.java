@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.db.types;
 
 import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;

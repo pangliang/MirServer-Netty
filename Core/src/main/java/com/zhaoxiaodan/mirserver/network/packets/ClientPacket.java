@@ -2,8 +2,8 @@ package com.zhaoxiaodan.mirserver.network.packets;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.db.objects.Gender;
-import com.zhaoxiaodan.mirserver.db.objects.Job;
+import com.zhaoxiaodan.mirserver.db.types.Gender;
+import com.zhaoxiaodan.mirserver.db.types.Job;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import io.netty.buffer.ByteBuf;
 
@@ -110,6 +110,25 @@ public class ClientPacket extends Packet{
 			out.writeBytes(new byte[]{0, 0, 0, 0});
 
 		}
+
+		private String readString(ByteBuf in) {
+			StringBuilder sb = new StringBuilder();
+			while (in.readableBytes() > 0) {
+				byte c = in.readByte();
+				if (c < 0x08) {
+					if (0 == sb.length()) // 开头就是 空
+						continue;
+					else {
+						break;
+					}
+				} else {
+					sb.append((char) c);
+				}
+			}
+
+			return sb.toString().trim();
+		}
+
 	}
 
 	public static final class SelectServer extends ClientPacket {
@@ -332,6 +351,30 @@ public class ClientPacket extends Packet{
 			out.writeBytes(clientVersion.getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(gateIndex.getBytes());
+		}
+	}
+
+	public static final class Say extends ClientPacket {
+
+		public String msg;
+
+		public Say() {}
+
+		public Say(byte cmdIndex, String msg) {
+			super(Protocol.CM_QUERYCHR, cmdIndex);
+			this.msg = msg;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			this.msg = in.toString(Charset.defaultCharset()).trim();
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(this.msg.getBytes());
 		}
 	}
 }

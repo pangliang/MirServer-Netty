@@ -42,11 +42,11 @@ public class Bit6Coder {
 
 	}
 
-	public static byte[] decode6BitBuf(byte[] src) throws Exception {
+	public static byte[] decode6BitBuf(byte[] src) {
 		final byte[] Decode6BitMask = {(byte) 0xfc, (byte) 0xf8, (byte) 0xf0, (byte) 0xe0, (byte) 0xc0};
 
 		int    len  = src.length;
-		byte[] dest = new byte[len];
+		byte[] dest = new byte[10000];
 
 		int destPos = 0;
 		int bitPos  = 2;
@@ -62,7 +62,7 @@ public class Bit6Coder {
 				break;
 			}
 
-			if (destPos >= len)
+			if (destPos >= dest.length)
 				break;
 
 			if (madeBit + 6 >= 8) {
@@ -83,6 +83,7 @@ public class Bit6Coder {
 			madeBit += 8 - bitPos;
 		}
 
-		return dest;
+		return Arrays.copyOf(dest,destPos);
+
 	}
 }

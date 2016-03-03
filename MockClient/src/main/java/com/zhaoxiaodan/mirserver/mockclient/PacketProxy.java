@@ -1,7 +1,6 @@
 package com.zhaoxiaodan.mirserver.mockclient;
 
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
-import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ServerPacketBit6Decoder;
@@ -61,16 +60,16 @@ public class PacketProxy {
 //											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											//这里是服务器的连接端
 											//来自服务器的封包, 解码成Packet
-											new DelimiterBasedFrameDecoder(2048, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-											new MyLoggingHandler(MyLoggingHandler.Type.Read),
+											new DelimiterBasedFrameDecoder(4096, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
+//											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new ServerPacketBit6Decoder(),
-											new MyLoggingHandler(MyLoggingHandler.Type.Read),
+//											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new ServerPacketDecoder(),
 
 											//来自客户端的封包, 发给服务器
-											new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new ClientPacketBit6Encoder(),
-											new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//											new MyLoggingHandler(MyLoggingHandler.Type.Write),
 											new ChannelHandlerAdapter() {
 												@Override
 												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -92,11 +91,9 @@ public class PacketProxy {
 
 													LogManager.getLogger().debug("server packet => {}", packet.toString());
 													packet.writePacket(out);
-													if (packet.getClass().equals(ServerPacket.class)) {
+													if (packet.getClass().getSimpleName().equals(ServerPacket.class.getSimpleName())) {
 														// 未知的 包结构, body没读取
-														byte[] body = new byte[packet.in.readableBytes()];
-														packet.in.readBytes(body);
-														out.writeBytes(body);
+														out.writeBytes(packet.remainBytes());
 													}
 
 													// 来自服务器的封包, 通过 client 连接端 发给客户端
@@ -121,14 +118,16 @@ public class PacketProxy {
 									//这里是客户端的连接端
 
 									//客户端发来的封包, 解码成 Packet
-									new DelimiterBasedFrameDecoder(2048, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
+									new DelimiterBasedFrameDecoder(4096, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ClientPacketBit6Decoder(),
-									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new ClientPacketDecoder(),
+
+									new ExceptionHandler(),
 
 									//发给客户端的封包, 从Packet还原成加密封包
 									new ServerPacketBit6Encoder(),
-									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new ChannelHandlerAdapter() {
 										@Override
 										public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -146,9 +145,7 @@ public class PacketProxy {
 											packet.writePacket(out);
 											if (packet.getClass().equals(ClientPacket.class)) {
 												// 未知的 包结构, body没读取
-												byte[] body = new byte[packet.in.readableBytes()];
-												packet.in.readBytes(body);
-												out.writeBytes(body);
+												out.writeBytes(packet.remainBytes());
 											}
 
 											serverChannel.writeAndFlush(out);

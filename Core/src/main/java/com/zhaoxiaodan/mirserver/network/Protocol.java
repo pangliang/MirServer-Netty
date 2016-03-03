@@ -80,14 +80,14 @@ public enum Protocol {
 	CM_LONGHIT(3019,null),
 	CM_WIDEHIT(3024,null),
 	CM_FIREHIT(3025,null),
-	CM_SAY(3030,null),
+	CM_SAY(3030,"Say"),
 	CM_RIDE(3031,null),
 
 	// Server to Client Commands
 	SM_RUSH(6,null),
 	SM_FIREHIT(8,null),
 	SM_BACKSTEP(9,null),
-	SM_TURN(10,null),
+	SM_TURN(10,"Turn"),
 	SM_WALK(11,null),
 	SM_SITDOWN(12,null),
 	SM_RUN(13,null),
@@ -120,7 +120,7 @@ public enum Protocol {
 	SM_GAMEGOLDNAME(55,"GameGoldName"),
 	SM_SPELL2(117,null),
 
-	SM_SYSMESSAGE(100,null),
+	SM_SYSMESSAGE(100,"SysMessage"),
 	SM_GROUPMESSAGE(101,null),
 	SM_CRY(102,null),
 	SM_WHISPER(103,null),
@@ -134,7 +134,7 @@ public enum Protocol {
 	SM_DROPITEM_SUCCESS(600,null),
 	SM_DROPITEM_FAIL(601,null),
 
-	SM_ITEMSHOW(610,null),
+	SM_ITEMSHOW(610,"ItemShow"),
 	SM_ITEMHIDE(611,null),
 	SM_DOOROPEN(612,null),
 	SM_TAKEON_OK(615,null),
@@ -160,7 +160,7 @@ public enum Protocol {
 	SM_AREASTATE(708,"AreaState"),
 	SM_SUBABILITY(752,null),
 
-	SM_SHOWEVENT(804,null),
+	SM_SHOWEVENT(804,"ShowEvent"),
 	SM_HIDEEVENT(805,null),
 
 	SM_OPENHEALTH(1100,null),

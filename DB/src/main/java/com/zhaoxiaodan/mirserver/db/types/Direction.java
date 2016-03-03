@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.db.types;
 
 /**
  *     0

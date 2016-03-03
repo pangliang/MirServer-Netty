@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
-import com.zhaoxiaodan.mirserver.db.objects.*;
+import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.db.types.*;
 
 import javax.persistence.*;
 import java.util.List;

@@ -1,8 +1,7 @@
 package com.zhaoxiaodan.mirserver.network;
 
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import io.netty.channel.ChannelHandlerAdapter;
-import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.*;
 
 public class PacketDispatcher extends ChannelHandlerAdapter {
 
@@ -39,5 +38,23 @@ public class PacketDispatcher extends ChannelHandlerAdapter {
 		Class<? extends Handler> handlerClass = (Class<? extends Handler>) Class.forName(handlerPackageName + ".DisconnectHandler");
 		Handler handler = handlerClass.newInstance();
 		handler.onDisconnect(ctx);
+	}
+
+	@Override
+	public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+		promise.addListener(new ChannelFutureListener() {
+			@Override
+			public void operationComplete(ChannelFuture future) throws Exception {
+				if (!future.isSuccess()) {
+					promise.cause().printStackTrace();
+				}
+			}
+		});
+		ctx.write(msg, promise);
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		cause.printStackTrace();
 	}
 }

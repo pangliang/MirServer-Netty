@@ -1,7 +1,7 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.db.types;
 
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
+import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import io.netty.buffer.ByteBuf;
 
 import javax.persistence.Embeddable;
@@ -66,11 +66,11 @@ public class ItemAttr implements Parcelable{
 
 		out.writeShort(reserved1);
 
-		out.writeInt(Packet.makeLong(ac,ac2));
-		out.writeInt(Packet.makeLong(mac,mac2));
-		out.writeInt(Packet.makeLong(dc,dc2));
-		out.writeInt(Packet.makeLong(mc,mc2));
-		out.writeInt(Packet.makeLong(sc,sc2));
+		out.writeInt(NumUtil.makeLong(ac,ac2));
+		out.writeInt(NumUtil.makeLong(mac,mac2));
+		out.writeInt(NumUtil.makeLong(dc,dc2));
+		out.writeInt(NumUtil.makeLong(mc,mc2));
+		out.writeInt(NumUtil.makeLong(sc,sc2));
 
 		out.writeByte(need);
 		out.writeByte(needLevel);
@@ -96,11 +96,11 @@ public class ItemAttr implements Parcelable{
 		out.writeShort(looks);
 		out.writeShort(duraMax);
 
-		out.writeShort(Packet.makeWord((byte)ac,(byte)ac2));
-		out.writeShort(Packet.makeWord((byte)mac,(byte)mac2));
-		out.writeShort(Packet.makeWord((byte)dc,(byte)dc2));
-		out.writeShort(Packet.makeWord((byte)mc,(byte)mc2));
-		out.writeShort(Packet.makeWord((byte)sc,(byte)sc2));
+		out.writeShort(NumUtil.makeWord((byte)ac,(byte)ac2));
+		out.writeShort(NumUtil.makeWord((byte)mac,(byte)mac2));
+		out.writeShort(NumUtil.makeWord((byte)dc,(byte)dc2));
+		out.writeShort(NumUtil.makeWord((byte)mc,(byte)mc2));
+		out.writeShort(NumUtil.makeWord((byte)sc,(byte)sc2));
 		out.writeByte(need);
 		out.writeByte(needLevel);
 		out.writeShort(0);

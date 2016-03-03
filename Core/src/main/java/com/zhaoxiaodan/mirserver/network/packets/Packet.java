@@ -47,7 +47,7 @@ public class Packet implements Parcelable {
 	public short    p2;
 	public short    p3;
 
-	public ByteBuf in;
+	private ByteBuf in;
 
 	public Packet() {
 	}
@@ -82,55 +82,25 @@ public class Packet implements Parcelable {
 		out.writeShort(p3);
 	}
 
-	public String readString(ByteBuf in) {
-		StringBuilder sb = new StringBuilder();
-		while (in.readableBytes() > 0) {
-			byte c = in.readByte();
-			if (c < 0x08) {
-				if (0 == sb.length()) // 开头就是 空
-					continue;
-				else {
-					break;
-				}
-			} else {
-				sb.append((char) c);
-			}
-		}
-
-		return sb.toString().trim();
+	public byte[] remainBytes() {
+		if (null == in)
+			return null;
+		byte[] buf = new byte[in.readableBytes()];
+		in.readBytes(buf);
+		return buf;
 	}
 
-	public static short makeWord(byte low, byte high) {
-		return (short) ((high << 8) | low);
-	}
-
-	public static int makeLong(short low, short high) {
-		return ((high << 16) | low);
-	}
-
-	public static int makeLong(int low, int high) {
-		return (((short) high << 16) | (short) low);
-	}
-
-	public static short getLowWord(int number) {
-		return (short) (number);
-	}
-
-	public static short getHighWord(int number) {
-		return (short) (number >> 16);
-	}
-
-	public static byte getLowByte(short number) {
-		return (byte) (number);
-	}
-
-	public static byte getHighByte(short number) {
-		return (byte) (number >> 8);
+	public String remainString() {
+		byte[] buf = remainBytes();
+		if (null == buf)
+			return null;
+		else
+			return new String(buf).trim();
 	}
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + ":" + JSON.toJSONString(this);
+		return this.getClass().getSimpleName() + ":" + JSON.toJSONString(this) + " ,remain:" + remainString();
 	}
 
 

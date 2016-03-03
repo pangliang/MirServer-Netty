@@ -3,18 +3,19 @@ package com.zhaoxiaodan.mirserver.network.packets;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
-import com.zhaoxiaodan.mirserver.db.objects.Ability;
-import com.zhaoxiaodan.mirserver.db.objects.Gender;
-import com.zhaoxiaodan.mirserver.db.objects.Job;
+import com.zhaoxiaodan.mirserver.db.types.Ability;
+import com.zhaoxiaodan.mirserver.db.types.Direction;
+import com.zhaoxiaodan.mirserver.db.types.Gender;
+import com.zhaoxiaodan.mirserver.db.types.Job;
 import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.utils.Timer;
+import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerPacket extends Packet{
+public class ServerPacket extends Packet {
 
 	public ServerPacket() {
 		super();
@@ -98,7 +99,7 @@ public class ServerPacket extends Packet{
 
 		public String selectServerIp;
 		public int    selectserverPort;
-		public int  cert;
+		public int    cert;
 
 		public SelectServerOk() {}
 
@@ -170,11 +171,11 @@ public class ServerPacket extends Packet{
 		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 
-			if(this.recog > 0){
+			if (this.recog > 0) {
 				String content = in.toString(Charset.defaultCharset()).trim();
 
 				String[] parts = content.split(CONTENT_SEPARATOR_STR);
-				if (parts.length < 5*this.recog)
+				if (parts.length < 5 * this.recog)
 					throw new Parcelable.WrongFormatException();
 				this.playerList = new ArrayList<>();
 				for (int i = 0; i + 4 < parts.length; i += 5) {
@@ -228,9 +229,7 @@ public class ServerPacket extends Packet{
 	}
 
 	/********************************************************************
-	 *
-	 *                       GameServer
-	 *
+	 * GameServer
 	 ********************************************************************/
 
 	public static final class SendNotice extends ServerPacket {
@@ -297,8 +296,8 @@ public class ServerPacket extends Packet{
 		public VersionFail(int file1CRC, int file2CRC, int file3CRC) {
 			super(Protocol.SM_VERSION_FAIL);
 			this.recog = file1CRC;
-			this.p1 = getLowWord(file2CRC);
-			this.p2 = getHighWord(file2CRC);
+			this.p1 = NumUtil.getLowWord(file2CRC);
+			this.p2 = NumUtil.getHighWord(file2CRC);
 
 			this.file1CRC = file1CRC;
 			this.file2CRC = file2CRC;
@@ -316,7 +315,7 @@ public class ServerPacket extends Packet{
 			super.readPacket(in);
 			this.file3CRC = in.readInt();
 			this.file1CRC = this.recog;
-			this.file2CRC = makeLong(this.p1, this.p2);
+			this.file2CRC = NumUtil.makeLong(this.p1, this.p2);
 		}
 	}
 
@@ -343,7 +342,7 @@ public class ServerPacket extends Packet{
 			this.recog = charId;
 			this.p1 = currX;
 			this.p2 = currY;
-			this.p3 = makeWord(direction, light);
+			this.p3 = NumUtil.makeWord(direction, light);
 		}
 
 		@Override
@@ -366,8 +365,8 @@ public class ServerPacket extends Packet{
 			this.charId = this.recog;
 			this.currX = p1;
 			this.currY = p2;
-			this.direction = getLowByte(p3);
-			this.light = getHighByte(p3);
+			this.direction = NumUtil.getLowByte(p3);
+			this.light = NumUtil.getHighByte(p3);
 		}
 	}
 
@@ -383,9 +382,9 @@ public class ServerPacket extends Packet{
 			super(Protocol.SM_FEATURECHANGED);
 			this.charId = charId;
 			this.recog = charId;
-			this.p1 = 0;//getLowWord(feature);
-			this.p2 = 4;//getHighWord(feature);
-			this.p3 = 0;//featureEx;
+			this.p1 = NumUtil.getLowWord(feature);
+			this.p2 = NumUtil.getHighWord(feature);
+			this.p3 = featureEx;
 
 			this.feature = feature;
 			this.featureEx = featureEx;
@@ -400,7 +399,7 @@ public class ServerPacket extends Packet{
 		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
 			super.readPacket(in);
 			this.charId = recog;
-			this.feature = makeLong(p1, p2);
+			this.feature = NumUtil.makeLong(p1, p2);
 			this.featureEx = p3;
 		}
 	}
@@ -473,8 +472,8 @@ public class ServerPacket extends Packet{
 			this.gamePointName = gamePointName;
 
 			this.recog = gameGold;
-			this.p1 = getLowWord(gamePoint);
-			this.p2 = getHighWord(gamePoint);
+			this.p1 = NumUtil.getLowWord(gamePoint);
+			this.p2 = NumUtil.getHighWord(gamePoint);
 		}
 
 		@Override
@@ -522,19 +521,19 @@ public class ServerPacket extends Packet{
 		}
 	}
 
-	public static final class CharacterAbility extends ServerPacket {
+	public static final class PlayerAbility extends ServerPacket {
 
 		public Ability tAbility;
 
-		public CharacterAbility() {}
+		public PlayerAbility() {}
 
-		public CharacterAbility(int gold, int gameGold, Job job, Ability tAbility) {
+		public PlayerAbility(int gold, int gameGold, Job job, Ability tAbility) {
 			super(Protocol.SM_ABILITY);
 			this.tAbility = tAbility;
 			this.recog = gold;
-			this.p1 = makeWord((byte) job.ordinal(), (byte) 99);
-			this.p2 = getLowWord(gameGold);
-			this.p3 = getHighWord(gameGold);
+			this.p1 = NumUtil.makeWord((byte) job.ordinal(), (byte) 99);
+			this.p2 = NumUtil.getLowWord(gameGold);
+			this.p3 = NumUtil.getHighWord(gameGold);
 		}
 
 		@Override
@@ -551,24 +550,25 @@ public class ServerPacket extends Packet{
 
 	public static final class Status extends ServerPacket {
 
-		public enum Result{
+		public enum Result {
 			Good("+GOOD"),
 			Fail("+FAIL");
 
 			public String content;
-			private Result(String content){
+
+			private Result(String content) {
 				this.content = content;
 			}
 		}
 
 		public Result result;
-		public long tickCount;
+		public long   tickCount;
 
 		public Status() {}
 
 		public Status(Result result) {
-			this.result =result;
-			this.tickCount = Timer.getTickCount();
+			this.result = result;
+			this.tickCount = NumUtil.getTickCount();
 		}
 
 		@Override
@@ -580,20 +580,196 @@ public class ServerPacket extends Packet{
 
 		@Override
 		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
-			String content = in.toString(1,in.readableBytes()-2,Charset.defaultCharset()).trim();
-			String[] parts = content.split(CONTENT_SEPARATOR_STR);
-			if(parts.length > 1)
-			{
-				for(Result result : Result.values()){
-					if(result.content.equals(parts[0]))
-					{
+			String   content = in.toString(1, in.readableBytes() - 2, Charset.defaultCharset()).trim();
+			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
+			if (parts.length > 1) {
+				for (Result result : Result.values()) {
+					if (result.content.equals(parts[0])) {
 						this.result = result;
 						this.tickCount = Long.parseLong(parts[1]);
 						return;
 					}
 				}
 			}
-			throw new WrongFormatException("content not match !! content:"+content);
+			throw new WrongFormatException("content not match !! content:" + content);
 		}
 	}
+
+	protected static class XYPacket extends ServerPacket {
+
+		public short x;
+		public short y;
+
+		public XYPacket() {}
+
+		public XYPacket(Protocol protocol, short x, short y) {
+			super(protocol);
+			this.x = x;
+			this.y = y;
+			this.p1 = x;
+			this.p2 = y;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			this.x = p1;
+			this.y = p2;
+		}
+	}
+
+	public static final class ItemShow extends XYPacket {
+
+
+		public int    itemId;
+		public short  itemLook;
+		public String itemName;
+
+		public ItemShow() {}
+
+		public ItemShow(int itemId, short itemLook, short x, short y, String itemName) {
+			super(Protocol.SM_ITEMSHOW, x, y);
+			this.itemLook = itemLook;
+			this.itemId = itemId;
+			this.itemName = itemName;
+
+			this.recog = itemId;
+			this.p3 = itemLook;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(itemName.getBytes());
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+
+			itemLook = p3;
+			itemId = recog;
+			String content = in.toString(Charset.defaultCharset());
+			itemName = content.trim();
+		}
+	}
+
+	public static final class Turn extends XYPacket {
+
+		public int       id;
+		public Direction direction;
+		public String    desc;
+
+		public int  feature;
+		public int  status;
+		public byte light;
+
+		public Turn() {}
+
+		public Turn(int id, Direction direction, short x, short y, int feature, int status, byte light, String desc) {
+			super(Protocol.SM_TURN, x, y);
+			this.id = id;
+			this.direction = direction;
+			this.desc = desc;
+			this.recog = id;
+			this.p3 = NumUtil.makeWord((byte) direction.ordinal(), light);
+			this.feature = feature;
+			this.status = status;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeInt(feature);
+			out.writeInt(status);
+			out.writeBytes(desc.getBytes(Charset.defaultCharset()));
+		}
+
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			id = recog;
+			direction = Direction.values()[NumUtil.getLowByte(p3)];
+			light = NumUtil.getHighByte(p3);
+
+			feature = in.readInt();
+			status = in.readInt();
+
+			desc = in.toString(Charset.defaultCharset());
+		}
+	}
+
+	/**
+	 * 这个包又是不一样的, p2 x  p3 y, 别人都是 p1 x p2 y
+	 */
+	public static final class ShowEvent extends XYPacket {
+
+		public int    id;
+		public short  look;
+		public String desc;
+
+		public ShowEvent() {}
+
+		public ShowEvent(int id, short look, short x, short y, String desc) {
+			super(Protocol.SM_SHOWEVENT, x, y);
+			this.id = id;
+			this.look = look;
+			this.desc = desc;
+			this.recog = id;
+			this.p1 = look;
+			this.p2 = x;
+			this.p3 = y;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(desc.getBytes());
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			id = recog;
+			look = p1;
+			x = p2;
+			y = p3;
+			String content = in.toString(Charset.defaultCharset());
+			desc = content.trim();
+		}
+	}
+
+	public static final class SysMessage extends ServerPacket {
+
+		public short  frontColor;
+		public short  backgroundColor;
+		public String msg;
+
+		public SysMessage() {}
+
+		public SysMessage(short frontColor, short backgroundColor, String msg) {
+			super(Protocol.SM_SYSMESSAGE);
+			this.frontColor = frontColor;
+			this.backgroundColor = backgroundColor;
+			this.msg = msg;
+
+			this.p1 = frontColor;
+			this.p2 = backgroundColor;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(msg.getBytes());
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			this.frontColor = p1;
+			this.backgroundColor = p2;
+			this.msg = in.toString(Charset.defaultCharset()).trim();
+		}
+	}
+
+
 }

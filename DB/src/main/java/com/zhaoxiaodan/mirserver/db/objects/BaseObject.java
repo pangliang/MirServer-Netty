@@ -1,9 +1,9 @@
-package com.zhaoxiaodan.mirserver.db.entities;
+package com.zhaoxiaodan.mirserver.db.objects;
 
-import com.zhaoxiaodan.mirserver.db.objects.Ability;
-import com.zhaoxiaodan.mirserver.db.objects.Direction;
-import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
-import com.zhaoxiaodan.mirserver.utils.Timer;
+import com.zhaoxiaodan.mirserver.db.types.Ability;
+import com.zhaoxiaodan.mirserver.db.types.Direction;
+import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
 public class BaseObject {
 
@@ -31,7 +31,7 @@ public class BaseObject {
 	public long lastActionTime = 0;
 
 	public boolean checkAndIncActionTime(int interval){
-		long now = Timer.getTickCount();
+		long now = NumUtil.getTickCount();
 		if(now - lastActionTime < interval){
 			return false;
 		}

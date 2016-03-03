@@ -9,10 +9,11 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
+import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
 import java.util.Map;
 
-public class LoginNoticeOkHandler extends CharacterHandler {
+public class LoginNoticeOkHandler extends PlayerHandler {
 
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
@@ -45,8 +46,8 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 		session.writeAndFlush(new ServerPacket.NewMap(player.id, player.currMapPoint.x, player.currMapPoint.y, (short) 0, player.currMapPoint.mapName));
 		session.writeAndFlush(new ServerPacket.MapDescription(-1, currMap.mapDescription));
 
-		int   feature   = ServerPacket.makeLong(ServerPacket.makeWord((byte) 0, (byte) 0), ServerPacket.makeWord((byte) 0, (byte) 0));
-		short featureEx = ServerPacket.makeWord((byte) 0, (byte) 0);
+		int   feature   = NumUtil.makeLong(NumUtil.makeWord((byte) 0, (byte) 0), NumUtil.makeWord((byte) 0, (byte) 0));
+		short featureEx = NumUtil.makeWord((byte) 0, (byte) 0);
 		session.writeAndFlush(new ServerPacket.Logon(player.id, player.currMapPoint.x, player.currMapPoint.y, (byte) 0, (byte) 0, feature, 0x400, featureEx));
 
 		session.writeAndFlush(new ServerPacket.FeatureChanged(player.id, feature, featureEx));
@@ -59,8 +60,11 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 
 		session.writeAndFlush(new ServerPacket.VersionFail(0, 0, 0));
 
-		session.writeAndFlush(new ServerPacket.CharacterAbility(player.gold, player.gameGold, player.job, player.ability));
+		session.writeAndFlush(new ServerPacket.PlayerAbility(player.gold, player.gameGold, player.job, player.ability));
 
+		session.writeAndFlush(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)612,""));
+		session.writeAndFlush(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)611,""));
+		session.writeAndFlush(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)613,""));
 	}
 
 

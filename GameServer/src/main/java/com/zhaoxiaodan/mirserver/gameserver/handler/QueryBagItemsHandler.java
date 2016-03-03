@@ -5,7 +5,7 @@ import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
-public class QueryBagItemsHandler extends CharacterHandler {
+public class QueryBagItemsHandler extends PlayerHandler {
 
 
 	@Override

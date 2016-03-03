@@ -1,13 +1,11 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.objects.MapPoint;
+import com.zhaoxiaodan.mirserver.db.types.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MapEngine {
 
@@ -15,31 +13,23 @@ public class MapEngine {
 	private static final String MINIMAP_CONFIG_FILE    = "Envir/MiniMap.cfg";
 	private static final String STARTPOINT_CONFIG_FILE = "Envir/StartPoint.cfg";
 
-	private        static Map<String, MapInfo> maps       = null;
+	private        static Map<String, MapInfo> mapList    = null;
 	private        static MapPoint             startPoint = null;
 
 	public static class MapInfo {
 		public String mapName;
 		public String mapDescription;
 		public String miniMapName;
-
-		private Map<Integer,Player> characterInMap = new ConcurrentHashMap<Integer,Player>();
-		public void addCharacter(Player c){
-			characterInMap.put(c.id,c);
-		}
-		public void removeCharacter(Player c){
-			characterInMap.remove(c.id);
-		}
 	}
 
 	public static synchronized void reload() throws Exception {
 		Map<String, MapInfo> maps = new HashMap<>();
 		reloadMapInfo(maps);
 		reloadMiniMap(maps);
-		MapPoint startPoint = reloadStartPoint();
+		MapPoint startPoint = reloadStartPoint(maps);
 
 		// 保证读出来的无异常再替换原有的;
-		MapEngine.maps = maps;
+		MapEngine.mapList = maps;
 		MapEngine.startPoint = startPoint;
 	}
 
@@ -57,8 +47,6 @@ public class MapEngine {
 
 			maps.put(info.mapName, info);
 		}
-
-		MapEngine.maps = maps;
 	}
 
 	private static void reloadMiniMap(Map<String, MapInfo> maps) throws Exception {
@@ -71,7 +59,7 @@ public class MapEngine {
 		}
 	}
 
-	private static MapPoint reloadStartPoint() throws Exception {
+	private static MapPoint reloadStartPoint(Map<String, MapInfo> maps) throws Exception {
 		MapPoint startPoint = null;
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(STARTPOINT_CONFIG_FILE, 2)) {
 			startPoint = new MapPoint();
@@ -90,7 +78,7 @@ public class MapEngine {
 	}
 
 	public static MapInfo getMapInfo(String mapFileNamp) {
-		return maps.get(mapFileNamp);
+		return mapList.get(mapFileNamp);
 	}
 
 	public static MapPoint getStartPoint() {

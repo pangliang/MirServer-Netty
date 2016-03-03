@@ -2,12 +2,12 @@ package com.zhaoxiaodan.mirserver.gameserver.handler;
 
 import com.zhaoxiaodan.mirserver.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.objects.Direction;
+import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
-public class MoveActionHandler extends CharacterHandler {
+public class MoveActionHandler extends PlayerHandler {
 
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {

@@ -49,8 +49,6 @@ public class LoginServer {
 						public void initChannel(SocketChannel ch) throws Exception {
 							ch.pipeline().addLast(
 
-									new ExceptionHandler(),
-
 									//解码
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new DelimiterBasedFrameDecoder(REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
@@ -65,10 +63,9 @@ public class LoginServer {
 									new ServerPacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 
+									new ExceptionHandler(),
 									//分包分发
-									new PacketDispatcher(LoginHandler.class.getPackage().getName()),
-
-									new ExceptionHandler()
+									new PacketDispatcher(LoginHandler.class.getPackage().getName())
 							);
 						}
 					})
