@@ -7,7 +7,7 @@ import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.ServerPacketDecoder;
 import com.zhaoxiaodan.mirserver.network.encoder.ServerPacketEncoder;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -53,7 +53,7 @@ public class MockClient {
 											new ChannelHandlerAdapter() {
 												@Override
 												public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-													Packet packet = (Packet)msg;
+													ServerPacket packet = (ServerPacket)msg;
 													if (packet.protocol == Protocol.SM_SELECTSERVER_OK) {
 														certification = (short) packet.recog;
 													}else if(packet.protocol == Protocol.SM_LOGON){
@@ -71,7 +71,7 @@ public class MockClient {
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 			byte   cmdIndex = 1;
-			Packet packet;
+			ClientPacket packet;
 			User   user     = new User();
 			user.loginId = "liang1";
 			user.password = "liang1";

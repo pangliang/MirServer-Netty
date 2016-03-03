@@ -3,10 +3,9 @@ package com.zhaoxiaodan.mirserver.gameserver.handler;
 import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.Handler;
+import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import org.hibernate.criterion.Restrictions;
 
@@ -35,7 +34,7 @@ public class GameLoginHandler extends Handler {
 			}
 		}
 
-		session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
+		session.writeAndFlush(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
 		return;
 	}
 

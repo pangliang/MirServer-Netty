@@ -4,12 +4,12 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
 public class DeleteCharacterHandler extends UserHandler {
 
 	@Override
-	public void onPacket(Packet packet, User user) throws Exception {
+	public void onPacket(ClientPacket packet, User user) throws Exception {
 
 		ClientPacket.DeleteCharacter request = (ClientPacket.DeleteCharacter) packet;
 
@@ -20,12 +20,12 @@ public class DeleteCharacterHandler extends UserHandler {
 				player.user.players.remove(player);
 				player.user = null;
 
-				session.writeAndFlush(new Packet(Protocol.SM_DELCHR_SUCCESS));
+				session.writeAndFlush(new ServerPacket(Protocol.SM_DELCHR_SUCCESS));
 				return;
 			}
 		}
 
-		session.writeAndFlush(new Packet(Protocol.SM_DELCHR_FAIL));
+		session.writeAndFlush(new ServerPacket(Protocol.SM_DELCHR_FAIL));
 		return;
 	}
 

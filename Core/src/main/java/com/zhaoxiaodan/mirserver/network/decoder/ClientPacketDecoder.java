@@ -33,7 +33,7 @@ public class ClientPacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 		Class<? extends ClientPacket> packetClass;
 		if (null == protocol) {
 			LogManager.getLogger().error("unknow protocol id {}",protocolId);
-			packetClass = ClientPacket.class;
+			return ;
 		} else {
 			try {
 				packetClass = (Class<? extends ClientPacket>) Class.forName(ClientPacket.class.getCanonicalName() + "$" + protocol.name);

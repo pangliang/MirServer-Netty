@@ -4,13 +4,13 @@ import com.zhaoxiaodan.mirserver.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.objects.Direction;
 import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
 public class MoveActionHandler extends CharacterHandler {
 
 	@Override
-	public void onPacket(Packet packet, Player player) throws Exception {
+	public void onPacket(ClientPacket packet, Player player) throws Exception {
 		if(packet.p2 < 0 || packet.p2 >= Direction.values().length)
 			return;
 

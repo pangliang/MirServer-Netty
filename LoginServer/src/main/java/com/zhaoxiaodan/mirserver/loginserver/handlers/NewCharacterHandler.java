@@ -4,7 +4,6 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
 /**
@@ -21,7 +20,7 @@ import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 public class NewCharacterHandler extends UserHandler {
 
 	@Override
-	public void onPacket(Packet packet, User user) throws Exception {
+	public void onPacket(ClientPacket packet, User user) throws Exception {
 		ClientPacket.NewCharacter request = (ClientPacket.NewCharacter) packet;
 		if (user.players.size() >= 2) {
 			session.writeAndFlush(new ServerPacket(Protocol.SM_NEWCHR_FAIL));

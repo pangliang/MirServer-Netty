@@ -18,7 +18,7 @@ public class ItemEngine {
 		Map<String, StdItem>  itemNames = new HashMap<>();
 		for (StdItem item : itemList) {
 			itemIds.put(item.id, item);
-			itemNames.put(item.name, item);
+			itemNames.put(item.attr.name, item);
 		}
 
 		ItemEngine.itemIds = itemIds;

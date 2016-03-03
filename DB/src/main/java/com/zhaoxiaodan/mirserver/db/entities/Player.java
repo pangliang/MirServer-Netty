@@ -58,7 +58,7 @@ public class Player extends BaseObject {
 	 */
 	public int      gamePoint;
 
-	@OneToMany(mappedBy = "player",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "player",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
 	@MapKey(name = "id")
 	public List<PlayerItem> items;
 

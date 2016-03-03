@@ -5,7 +5,6 @@ import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import org.hibernate.criterion.Restrictions;
 
@@ -37,7 +36,7 @@ public class QueryCharacterHandler extends Handler {
 		if ((user = (User)session.get("user")) == null) {
 			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
 			if (list.size() == 0) {
-				session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
+				session.writeAndFlush(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
 				return;
 			}
 			user = list.get(0);
@@ -47,7 +46,7 @@ public class QueryCharacterHandler extends Handler {
 			session.put("user", user);
 			session.writeAndFlush(new ServerPacket.QueryCharactorOk(user.players));
 		} else {
-			session.writeAndFlush(new Packet(Protocol.SM_CERTIFICATION_FAIL));
+			session.writeAndFlush(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
 			return;
 		}
 	}

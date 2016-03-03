@@ -3,7 +3,6 @@ package com.zhaoxiaodan.mirserver.loginserver.handlers;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
 
 public abstract class UserHandler extends Handler {
 
@@ -15,5 +14,5 @@ public abstract class UserHandler extends Handler {
 		onPacket(packet, user);
 	}
 
-	public abstract void onPacket(Packet packet, User user) throws Exception;
+	public abstract void onPacket(ClientPacket packet, User user) throws Exception;
 }

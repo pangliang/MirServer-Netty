@@ -7,7 +7,7 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
+import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class LoginNoticeOkHandler extends CharacterHandler {
 
 	@Override
-	public void onPacket(Packet packet, Player player) throws Exception {
+	public void onPacket(ClientPacket packet, Player player) throws Exception {
 
 		if(player.ability.Level == 0){
 			ScriptEngine.exce(ScriptEngine.Module.Player,"onCreate", player);
@@ -31,7 +31,7 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 				StdItem    stdItem    = ItemEngine.getStdItemByName(itemName);
 				PlayerItem playerItem = new PlayerItem();
 				playerItem.player = player;
-				playerItem.stdItem = stdItem;
+				playerItem.attr = stdItem.attr;
 
 				session.db.save(playerItem);
 				player.items.add(playerItem);
@@ -45,8 +45,8 @@ public class LoginNoticeOkHandler extends CharacterHandler {
 		session.writeAndFlush(new ServerPacket.NewMap(player.id, player.currMapPoint.x, player.currMapPoint.y, (short) 0, player.currMapPoint.mapName));
 		session.writeAndFlush(new ServerPacket.MapDescription(-1, currMap.mapDescription));
 
-		int   feature   = Packet.makeLong(Packet.makeWord((byte) 0, (byte) 0), Packet.makeWord((byte) 0, (byte) 0));
-		short featureEx = Packet.makeWord((byte) 0, (byte) 0);
+		int   feature   = ServerPacket.makeLong(ServerPacket.makeWord((byte) 0, (byte) 0), ServerPacket.makeWord((byte) 0, (byte) 0));
+		short featureEx = ServerPacket.makeWord((byte) 0, (byte) 0);
 		session.writeAndFlush(new ServerPacket.Logon(player.id, player.currMapPoint.x, player.currMapPoint.y, (byte) 0, (byte) 0, feature, 0x400, featureEx));
 
 		session.writeAndFlush(new ServerPacket.FeatureChanged(player.id, feature, featureEx));

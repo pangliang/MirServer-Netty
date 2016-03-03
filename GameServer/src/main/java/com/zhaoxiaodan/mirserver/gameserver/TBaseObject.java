@@ -1,7 +1,5 @@
 package com.zhaoxiaodan.mirserver.gameserver;
 
-import com.zhaoxiaodan.mirserver.network.packets.Packet;
-
 import java.util.List;
 
 public class TBaseObject {
@@ -312,7 +310,7 @@ public class TBaseObject {
 	public int     m_nFixStatus;
 	public boolean m_boFastParalysis; // 快速麻痹，受攻击后麻痹立即消失
 
-	public Packet m_DefMsg; // 0x550
+	public Object m_DefMsg; // 0x550
 	public int    m_nSocket; // 0x59C nSocket
 	public int    m_nGSocketIdx; // 0x5A0 wGateIndex 人物连接到游戏网关SOCKET ID
 	public int    m_nGateIdx; // 0x5A8 nGateIdx   人物所在网关号

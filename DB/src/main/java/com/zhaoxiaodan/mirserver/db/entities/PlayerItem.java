@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
+import com.zhaoxiaodan.mirserver.db.objects.ItemAttr;
 import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 
@@ -15,12 +16,10 @@ public class PlayerItem implements Parcelable{
 	@JoinColumn(name = "playerId")
 	public Player player;
 
-	@OneToOne
-	@JoinColumn(name = "stdItemId")
-	public StdItem stdItem;
+	@Embedded
+	public ItemAttr attr;
 
 	public short dura;
-	public short duraMax;
 
 	@Override
 	public void readPacket(ByteBuf in) throws WrongFormatException {
@@ -29,9 +28,9 @@ public class PlayerItem implements Parcelable{
 
 	@Override
 	public void writePacket(ByteBuf out) {
-		stdItem.writePacket(out);
+		attr.writePacket(out);
 		out.writeInt(id);
 		out.writeShort(dura);
-		out.writeShort(duraMax);
+		out.writeShort(attr.duraMax);
 	}
 }
