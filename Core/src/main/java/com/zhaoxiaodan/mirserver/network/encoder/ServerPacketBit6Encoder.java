@@ -26,16 +26,21 @@ public class ServerPacketBit6Encoder extends MessageToMessageEncoder<ByteBuf> {
 			buf.writeBytes(in);
 		}else{
 
-			short protocolId = in.getByte(4);
-
 			byte[] header = new byte[Packet.DEFAULT_HEADER_SIZE];
 			in.readBytes(header);
 			buf.writeBytes(Bit6Coder.encoder6BitBuf(header));
 
-			if(protocolId == Protocol.SM_TURN.id){
-				byte[] body = new byte[8];
-				in.readBytes(body);
-				buf.writeBytes(Bit6Coder.encoder6BitBuf(body));
+			Protocol protocol = Protocol.getServerProtocol(in.getByte(4));
+			if (protocol != null && protocol.lenghtOfSections != null) {
+				for (int lenght : protocol.lenghtOfSections) {
+					if (in.readableBytes() > lenght) {
+						byte[] bodyBytes = new byte[lenght];
+						in.readBytes(bodyBytes);
+						buf.writeBytes(Bit6Coder.encoder6BitBuf(bodyBytes));
+					} else {
+						break;
+					}
+				}
 			}
 			byte[] body = new byte[in.readableBytes()];
 			in.readBytes(body);

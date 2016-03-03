@@ -46,7 +46,7 @@ public class Bit6Coder {
 		final byte[] Decode6BitMask = {(byte) 0xfc, (byte) 0xf8, (byte) 0xf0, (byte) 0xe0, (byte) 0xc0};
 
 		int    len  = src.length;
-		byte[] dest = new byte[10000];
+		byte[] dest = new byte[len*3/4];
 
 		int destPos = 0;
 		int bitPos  = 2;
@@ -83,7 +83,7 @@ public class Bit6Coder {
 			madeBit += 8 - bitPos;
 		}
 
-		return Arrays.copyOf(dest,destPos);
+		return dest;
 
 	}
 }
