@@ -1,6 +1,5 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
-import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -17,7 +16,7 @@ public class SelectServerHandler extends UserHandler {
 	public void onPacket(ClientPacket packet, User user) throws Exception {
 		ClientPacket.SelectServer selectServer = (ClientPacket.SelectServer) packet;
 
-		List<ServerInfo> list = DB.query(ServerInfo.class,Restrictions.eq("name",selectServer.serverName));
+		List<ServerInfo> list = session.db.query(ServerInfo.class,Restrictions.eq("name",selectServer.serverName));
 		if(1 != list.size())
 		{
 			session.writeAndFlush(new ServerPacket(Protocol.SM_ID_NOTFOUND));

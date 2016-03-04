@@ -13,7 +13,7 @@ public class ItemEngine {
 	private static Map<String, StdItem>  itemNames = new HashMap<>();
 
 	public synchronized static void reload() {
-		List<StdItem>         itemList  = DB.query(StdItem.class);
+		List<StdItem>         itemList  = new DB().begin().query(StdItem.class);
 		Map<Integer, StdItem> itemIds   = new HashMap<>();
 		Map<String, StdItem>  itemNames = new HashMap<>();
 		for (StdItem item : itemList) {

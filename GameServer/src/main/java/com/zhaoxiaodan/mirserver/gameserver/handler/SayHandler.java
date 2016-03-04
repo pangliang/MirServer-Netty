@@ -1,10 +1,9 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.types.Direction;
+import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
-import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
-import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
 public class SayHandler extends PlayerHandler {
 
@@ -16,23 +15,12 @@ public class SayHandler extends PlayerHandler {
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 
-		r=0;
-		x = (short) (player.currMapPoint.x+1);
-		y = player.currMapPoint.y;
-		for(int i=0 ;i<100;i++){
-//			x = (short) (280 + i % 10);
-//			y = (short) (610 + i/10);
+		ClientPacket.Say request = (ClientPacket.Say)packet;
 
-			x++;
-
-			int id = NumUtil.newAtomicId();
-
-			int f =  NumUtil.makeLong(NumUtil.makeWord((byte)50, (byte)0), r++);
-
-			session.writeAndFlush(new ServerPacket.Turn(id, Direction.LEFT, x, y, f,0,(byte)3,r+"/255"));
-//			session.writeAndFlush(new ServerPacket.FeatureChanged(1000, f, (short) 0));
-		}
-
-
+		MapPoint p = new MapPoint();
+		p.mapName = request.msg.trim();
+		p.x = 10;
+		p.y = 20;
+		MapEngine.enter(player,p);
 	}
 }

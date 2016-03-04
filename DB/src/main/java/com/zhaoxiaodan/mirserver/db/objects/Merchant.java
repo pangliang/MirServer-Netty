@@ -1,12 +1,14 @@
 package com.zhaoxiaodan.mirserver.db.objects;
 
-import com.zhaoxiaodan.mirserver.db.types.MapPoint;
 import groovy.lang.GroovyObject;
 
-public class Npc {
+public class Merchant extends BaseObject{
 
-	public String       name;
-	public MapPoint     mapPoint;
 	public String       scriptName;
 	public GroovyObject scriptInstance;
+
+	@Override
+	public void onTick() {
+
+	}
 }

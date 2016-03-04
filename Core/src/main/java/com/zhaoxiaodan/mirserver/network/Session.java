@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.network;
 
 import com.zhaoxiaodan.mirserver.db.DB;
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,21 +15,21 @@ public class Session {
 	private static final Map<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 
 	private final Map<String, Object> values = new ConcurrentHashMap<String, Object>();
-	public final ChannelHandlerContext context;
-	public final DB db;
+	private final ChannelHandlerContext socket;
+	public final DB                    db;
 
 	private Session(ChannelHandlerContext ctx){
-		this.context = ctx;
+		this.socket = ctx;
 		this.db = new DB();
 	}
 
 	public void remove() {
-		logger.debug("remove session for {}", context.toString());
-		sessions.remove(context.channel().remoteAddress().toString());
+		logger.debug("remove session for {}", socket.toString());
+		sessions.remove(socket.channel().remoteAddress().toString());
 	}
 
-	public void writeAndFlush(Object msg){
-		context.writeAndFlush(msg);
+	public void writeAndFlush(ServerPacket msg){
+		socket.writeAndFlush(msg);
 	}
 
 	public void put(String key, Object value) {
@@ -55,6 +56,6 @@ public class Session {
 	}
 
 	public String toString(){
-		return context.toString();
+		return socket.toString();
 	}
 }

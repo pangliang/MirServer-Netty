@@ -1,8 +1,8 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
-import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.gameserver.engine.NoticeEngine;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
@@ -18,15 +18,17 @@ public class GameLoginHandler extends Handler {
 		ClientPacket.GameLogin request = (ClientPacket.GameLogin) packet;
 
 		if (session.get("player") == null) {
-			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
+			List<User> list = session.db.query(User.class, Restrictions.eq("loginId", request.loginId));
 			if (list.size() == 1) {
 				User user = list.get(0);
 
 				if (user.certification == request.cert) {
-					for (Player c : user.players) {
-						if (c.name.equals(request.characterName)) {
-							session.put("player", c);
-							session.writeAndFlush(new ServerPacket.SendNotice("欢迎来到胖梁测试服务器"));
+					for (Player player : user.players) {
+						if (player.name.equals(request.characterName)) {
+							player.session = session;
+							session.put("player", player);
+
+							session.writeAndFlush(new ServerPacket.SendNotice(NoticeEngine.getNotice()));
 							return;
 						}
 					}

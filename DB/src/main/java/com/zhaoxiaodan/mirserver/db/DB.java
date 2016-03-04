@@ -1,9 +1,6 @@
 package com.zhaoxiaodan.mirserver.db;
 
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.SimpleExpression;
@@ -25,9 +22,10 @@ public class DB {
 		ourSessionFactory = configuration.buildSessionFactory();
 	}
 
-	public void begin(){
+	public DB begin(){
 		session = ourSessionFactory.getCurrentSession();
 		session.getTransaction().begin();
+		return this;
 	}
 
 	public void commit(){
@@ -37,13 +35,6 @@ public class DB {
 	public void rollback(){
 		if(session.isOpen())
 			session.getTransaction().rollback();
-	}
-
-	public static Session getSession() throws HibernateException {
-		Session session = ourSessionFactory.getCurrentSession();
-		if(session.isOpen())
-			session.getTransaction().begin();
-		return session;
 	}
 
 	public void save(Object object) {
@@ -58,13 +49,17 @@ public class DB {
 		session.delete(object);
 	}
 
-	public static List query(Class clazz, SimpleExpression... simpleExpressions) {
-		Criteria criteria = getSession().createCriteria(clazz);
+	public List query(Class clazz, SimpleExpression... simpleExpressions) {
+		Criteria criteria = session.createCriteria(clazz);
 		for (SimpleExpression simpleExpression : simpleExpressions) {
 			criteria.add(simpleExpression);
 		}
 		List result = criteria.list();
 		return result;
+	}
+
+	public SQLQuery createSQLQuery(String queryString){
+		return session.createSQLQuery(queryString);
 	}
 
 }

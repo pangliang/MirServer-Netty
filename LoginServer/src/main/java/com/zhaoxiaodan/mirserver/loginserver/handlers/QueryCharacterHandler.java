@@ -34,7 +34,7 @@ public class QueryCharacterHandler extends Handler {
 		ClientPacket.QueryCharacter request = (ClientPacket.QueryCharacter) packet;
 		User                        user;
 		if ((user = (User)session.get("user")) == null) {
-			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
+			List<User> list = session.db.query(User.class, Restrictions.eq("loginId", request.loginId));
 			if (list.size() == 0) {
 				session.writeAndFlush(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
 				return;

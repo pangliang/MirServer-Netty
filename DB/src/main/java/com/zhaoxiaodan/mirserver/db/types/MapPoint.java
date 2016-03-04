@@ -4,7 +4,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class MapPoint {
-	public String mapName;
+	public String mapName = "0";
 	public short x;
 	public short y;
 	

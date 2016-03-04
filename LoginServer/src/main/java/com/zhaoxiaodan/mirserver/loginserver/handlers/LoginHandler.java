@@ -18,7 +18,7 @@ public class LoginHandler extends Handler {
 	public void onPacket(ClientPacket packet) throws Exception {
 		ClientPacket.Login loginRequest = (ClientPacket.Login) packet;
 
-		List<User> list = DB.query(User.class, Restrictions.eq("loginId", loginRequest.user.loginId));
+		List<User> list = session.db.query(User.class, Restrictions.eq("loginId", loginRequest.user.loginId));
 		if (1 != list.size()) {
 			session.writeAndFlush(new ServerPacket.LoginFail(ServerPacket.LoginFail.Reason.UserNotFound));
 			return;
@@ -31,7 +31,7 @@ public class LoginHandler extends Handler {
 				session.put("user", user);
 				logger.info("user {} login, login user count:{}", user.loginId, Session.size());
 
-				List<ServerInfo> serverInfoList = DB.query(ServerInfo.class);
+				List<ServerInfo> serverInfoList = session.db.query(ServerInfo.class);
 				session.writeAndFlush(new ServerPacket.LoginSuccSelectServer(serverInfoList));
 			} else {
 				session.writeAndFlush(new ServerPacket.LoginFail(ServerPacket.LoginFail.Reason.WrongPwd));

@@ -1,41 +1,60 @@
 package com.zhaoxiaodan.mirserver.db.objects;
 
-import com.zhaoxiaodan.mirserver.db.types.Ability;
+import com.zhaoxiaodan.mirserver.db.types.Color;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.db.types.Race;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
-public class BaseObject {
+import javax.persistence.*;
 
-	public String   name;
+@MappedSuperclass
+public abstract class BaseObject {
+
+	public final int inGameId = NumUtil.newAtomicId();
+
+	public String name      ;
+	public Color  nameColor = Color.White;
+
+	public Race race = Race.Animal;
+	public short appr = 0;
+
+	/**
+	 * 亮度
+	 */
+	public byte light;
+
+	@AttributeOverrides({
+			@AttributeOverride(name = "mapName", column = @Column(name = "currMapName")),
+			@AttributeOverride(name = "x", column = @Column(name = "currX")),
+			@AttributeOverride(name = "y", column = @Column(name = "currY"))
+	})
 	/**
 	 * 当前地图位置
 	 */
-	public MapPoint currMapPoint;
-	/**
-	 * 能力
-	 */
-	public Ability ability = new Ability();
+	public MapPoint currMapPoint = new MapPoint();
 
 	/**
-	 * 在游戏中的标志, 退出游戏后设置为false
-	 * 各个系统的引用在遍历时 检查 如果为false则从各自系统的集合中删除
+	 * 方向, 8个方向
 	 */
-	public boolean inGame = false;
-
 	public Direction direction = Direction.DOWN;
 
-	/**
-	 * 最后动作时间, 用来防止加速
-	 */
-	public long lastActionTime = 0;
-
-	public boolean checkAndIncActionTime(int interval){
-		long now = NumUtil.getTickCount();
-		if(now - lastActionTime < interval){
-			return false;
-		}
-		lastActionTime = now;
-		return true;
+	public int getFeature() {
+		return NumUtil.makeLong(NumUtil.makeWord(race.id, (byte) 0), appr);
 	}
+
+	public int getFeatureEx() {
+		return 0;
+	}
+
+	public int getStatus() {
+		return 0;
+	}
+
+	/**
+	 * 每一秒钟引擎会触发一下, 让它获得执行机会, 处理一些自身的变化
+	 * 比如Npc自己变色, 玩家在经验房里增加经验, 中毒掉血等
+	 */
+	public abstract void onTick();
+
 }

@@ -3,10 +3,8 @@ package com.zhaoxiaodan.mirserver.network.packets;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
-import com.zhaoxiaodan.mirserver.db.types.Ability;
-import com.zhaoxiaodan.mirserver.db.types.Direction;
-import com.zhaoxiaodan.mirserver.db.types.Gender;
-import com.zhaoxiaodan.mirserver.db.types.Job;
+import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.db.types.*;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import io.netty.buffer.ByteBuf;
@@ -345,6 +343,17 @@ public class ServerPacket extends Packet {
 			this.p3 = NumUtil.makeWord(direction, light);
 		}
 
+		public Logon(Player player){
+			this(player.inGameId,
+					player.currMapPoint.x,
+					player.currMapPoint.y,
+					(byte)player.direction.ordinal(),
+					player.light,
+					player.getFeature(),
+					player.getStatus(),
+					(short)player.getFeatureEx());
+		}
+
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
@@ -388,6 +397,10 @@ public class ServerPacket extends Packet {
 
 			this.feature = feature;
 			this.featureEx = featureEx;
+		}
+
+		public FeatureChanged(BaseObject object){
+			this(object.inGameId,object.getFeature(),(short)object.getFeatureEx());
 		}
 
 		@Override
@@ -658,23 +671,36 @@ public class ServerPacket extends Packet {
 
 		public int       id;
 		public Direction direction;
-		public String    desc;
-
-		public int  feature;
-		public int  status;
-		public byte light;
+		public String    name;
+		public int       nameColor;
+		public int       feature;
+		public int       status;
+		public byte      light;
 
 		public Turn() {}
 
-		public Turn(int id, Direction direction, short x, short y, int feature, int status, byte light, String desc) {
+		public Turn(int id, Direction direction, short x, short y, int feature, int status, byte light, String name, int nameColor) {
 			super(Protocol.SM_TURN, x, y);
 			this.id = id;
 			this.direction = direction;
-			this.desc = desc;
+			this.name = name;
 			this.recog = id;
 			this.p3 = NumUtil.makeWord((byte) direction.ordinal(), light);
 			this.feature = feature;
 			this.status = status;
+			this.nameColor = nameColor;
+		}
+
+		public Turn(BaseObject object) {
+			this(object.inGameId,
+					object.direction,
+					object.currMapPoint.x,
+					object.currMapPoint.y,
+					object.getFeature(),
+					object.getStatus(),
+					object.light,
+					object.name,
+					object.nameColor.i);
 		}
 
 		@Override
@@ -682,7 +708,9 @@ public class ServerPacket extends Packet {
 			super.writePacket(out);
 			out.writeInt(feature);
 			out.writeInt(status);
-			out.writeBytes(desc.getBytes(Charset.defaultCharset()));
+			out.writeBytes(name.getBytes(Charset.defaultCharset()));
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(Integer.toString(nameColor).getBytes());
 		}
 
 		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
@@ -690,11 +718,12 @@ public class ServerPacket extends Packet {
 			id = recog;
 			direction = Direction.values()[NumUtil.getLowByte(p3)];
 			light = NumUtil.getHighByte(p3);
-
 			feature = in.readInt();
 			status = in.readInt();
-
-			desc = in.toString(Charset.defaultCharset());
+			String content = in.toString(Charset.defaultCharset());
+			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			name = parts[0];
+			nameColor = parts.length > 1? Integer.parseInt(parts[1]): Color.White.i;
 		}
 	}
 

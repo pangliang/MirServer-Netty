@@ -2,7 +2,6 @@ import com.zhaoxiaodan.mirserver.db.entities.Player
 import com.zhaoxiaodan.mirserver.db.types.Gender
 import com.zhaoxiaodan.mirserver.db.types.Job
 import com.zhaoxiaodan.mirserver.db.types.MapPoint
-import com.zhaoxiaodan.mirserver.network.packets.Packet
 import com.zhaoxiaodan.mirserver.utils.NumUtil
 
 class PlayerScript {
@@ -10,7 +9,8 @@ class PlayerScript {
         c.ability.Level = 1;
         c.ability.HP = 100;
         c.ability.MaxHP = 200;
-        c.ability.MP = 100;
+        c.ability.MP = 10;
+        c.ability.MaxMP = 10;
         c.ability.MaxExp = 200;
         c.ability.AC = NumUtil.makeLong(1,1000);;
         c.ability.MAC = NumUtil.makeLong(2,20);;

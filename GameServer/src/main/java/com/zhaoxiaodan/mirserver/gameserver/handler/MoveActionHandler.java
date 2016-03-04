@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
-import com.zhaoxiaodan.mirserver.Config;
+import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -35,7 +35,7 @@ public class MoveActionHandler extends PlayerHandler {
 				p.p1 = player.currMapPoint.x;
 				p.p2 = player.currMapPoint.y;
 				p.p3 = (short) player.direction.ordinal();
-				session.context.writeAndFlush(p);
+				session.writeAndFlush(p);
 				break;
 			default:
 				break;

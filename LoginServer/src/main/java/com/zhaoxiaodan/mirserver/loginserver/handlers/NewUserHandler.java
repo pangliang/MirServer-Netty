@@ -16,7 +16,7 @@ public class NewUserHandler extends Handler {
 	public void onPacket(ClientPacket packet) throws Exception {
 		ClientPacket.NewUser newUser = (ClientPacket.NewUser) packet;
 
-		List<User> list = DB.query(User.class,Restrictions.eq("loginId", newUser.user.loginId));
+		List<User> list = session.db.query(User.class,Restrictions.eq("loginId", newUser.user.loginId));
 		if(list.size() > 0)
 		{
 			session.writeAndFlush(new ServerPacket(Protocol.SM_NEWID_FAIL));
