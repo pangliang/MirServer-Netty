@@ -283,6 +283,34 @@ public class ServerPacket extends Packet {
 		}
 	}
 
+	public static final class ChangeMap extends ServerPacket {
+
+		public String mapId;
+
+		public ChangeMap() {}
+
+		public ChangeMap(int id, short x, short y, short objectCount, String mapId) {
+			super(Protocol.SM_CHANGEMAP);
+			this.mapId = mapId;
+			this.recog = id;
+			this.p1 = x;
+			this.p2 = y;
+			this.p3 = objectCount;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(mapId.getBytes());
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			this.mapId = in.toString(Charset.defaultCharset()).trim();
+		}
+	}
+
 	public static final class VersionFail extends ServerPacket {
 
 		public int file1CRC;
@@ -730,18 +758,23 @@ public class ServerPacket extends Packet {
 	/**
 	 * 这个包又是不一样的, p2 x  p3 y, 别人都是 p1 x p2 y
 	 */
-	public static final class ShowEvent extends XYPacket {
+	public static final class ShowEvent extends ServerPacket {
 
 		public int    id;
 		public short  look;
 		public String desc;
+		public short x;
+		public short y;
 
 		public ShowEvent() {}
 
 		public ShowEvent(int id, short look, short x, short y, String desc) {
-			super(Protocol.SM_SHOWEVENT, x, y);
+			super(Protocol.SM_SHOWEVENT);
 			this.id = id;
 			this.look = look;
+			this.x = x;
+			this.y = y;
+
 			this.desc = desc;
 			this.recog = id;
 			this.p1 = look;

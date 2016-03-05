@@ -11,7 +11,7 @@ public class QueryBagItemsHandler extends PlayerHandler {
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 		for (PlayerItem item : player.items) {
-			session.writeAndFlush(new ServerPacket.AddItem(player.id, item));
+			session.writeAndFlush(new ServerPacket.AddItem(player.inGameId, item));
 		}
 	}
 }

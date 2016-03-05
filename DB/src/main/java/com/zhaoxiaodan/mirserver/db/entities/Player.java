@@ -17,7 +17,7 @@ public class Player extends BaseObject {
 
 	@Id
 	@GeneratedValue
-	public int  id;
+	private int  id;
 	@ManyToOne
 	@JoinColumn(name = "userId")
 	public User user;

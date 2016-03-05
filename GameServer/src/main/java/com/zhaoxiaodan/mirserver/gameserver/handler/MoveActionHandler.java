@@ -3,7 +3,6 @@ package com.zhaoxiaodan.mirserver.gameserver.handler;
 import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
-import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
@@ -30,12 +29,7 @@ public class MoveActionHandler extends PlayerHandler {
 				break;
 			case CM_TURN:
 				player.direction = direction;
-				ServerPacket p = new ServerPacket(Protocol.SM_TURN);
-				p.recog = player.id;
-				p.p1 = player.currMapPoint.x;
-				p.p2 = player.currMapPoint.y;
-				p.p3 = (short) player.direction.ordinal();
-				session.writeAndFlush(p);
+				session.writeAndFlush(new ServerPacket.Turn(player));
 				break;
 			default:
 				break;
