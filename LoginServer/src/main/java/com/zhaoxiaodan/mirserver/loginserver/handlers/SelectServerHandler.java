@@ -19,14 +19,14 @@ public class SelectServerHandler extends UserHandler {
 		List<ServerInfo> list = session.db.query(ServerInfo.class,Restrictions.eq("name",selectServer.serverName));
 		if(1 != list.size())
 		{
-			session.writeAndFlush(new ServerPacket(Protocol.SM_ID_NOTFOUND));
+			session.sendPacket(new ServerPacket(Protocol.SM_ID_NOTFOUND));
 			return ;
 		}else{
 			user.certification = (byte)new Random().nextInt(200);
 			session.db.update(user);
 
 			ServerInfo info = list.get(0);
-			session.writeAndFlush(new ServerPacket.SelectServerOk(info.ip,info.port, user.certification));
+			session.sendPacket(new ServerPacket.SelectServerOk(info.ip,info.port, user.certification));
 		}
 	}
 

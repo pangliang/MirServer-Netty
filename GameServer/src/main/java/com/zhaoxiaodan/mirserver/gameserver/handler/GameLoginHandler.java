@@ -2,7 +2,7 @@ package com.zhaoxiaodan.mirserver.gameserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
-import com.zhaoxiaodan.mirserver.gameserver.engine.NoticeEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.MessageEngine;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
@@ -28,7 +28,7 @@ public class GameLoginHandler extends Handler {
 							player.session = session;
 							session.put("player", player);
 
-							session.writeAndFlush(new ServerPacket.SendNotice(NoticeEngine.getNotice()));
+							session.sendPacket(new ServerPacket.SendNotice(MessageEngine.getNotice()));
 							return;
 						}
 					}
@@ -36,7 +36,7 @@ public class GameLoginHandler extends Handler {
 			}
 		}
 
-		session.writeAndFlush(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
+		session.sendPacket(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
 		return;
 	}
 

@@ -20,12 +20,12 @@ public class DeleteCharacterHandler extends UserHandler {
 				player.user.players.remove(player);
 				player.user = null;
 
-				session.writeAndFlush(new ServerPacket(Protocol.SM_DELCHR_SUCCESS));
+				session.sendPacket(new ServerPacket(Protocol.SM_DELCHR_SUCCESS));
 				return;
 			}
 		}
 
-		session.writeAndFlush(new ServerPacket(Protocol.SM_DELCHR_FAIL));
+		session.sendPacket(new ServerPacket(Protocol.SM_DELCHR_FAIL));
 		return;
 	}
 

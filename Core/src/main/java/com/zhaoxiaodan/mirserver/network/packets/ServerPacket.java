@@ -728,7 +728,7 @@ public class ServerPacket extends Packet {
 					object.getStatus(),
 					object.light,
 					object.name,
-					object.nameColor.i);
+					object.nameColor.c);
 		}
 
 		@Override
@@ -751,7 +751,7 @@ public class ServerPacket extends Packet {
 			String content = in.toString(Charset.defaultCharset());
 			String[] parts = content.split(CONTENT_SEPARATOR_STR);
 			name = parts[0];
-			nameColor = parts.length > 1? Integer.parseInt(parts[1]): Color.White.i;
+			nameColor = parts.length > 1? Integer.parseInt(parts[1]): Color.White.c;
 		}
 	}
 
@@ -802,20 +802,27 @@ public class ServerPacket extends Packet {
 
 	public static final class SysMessage extends ServerPacket {
 
+		public int inGameId;
 		public short  frontColor;
 		public short  backgroundColor;
 		public String msg;
 
 		public SysMessage() {}
 
-		public SysMessage(short frontColor, short backgroundColor, String msg) {
+		public SysMessage(int inGameId,String msg, Color ftCorol, Color bgColor) {
+			this(inGameId,msg,ftCorol.c,bgColor.c);
+		}
+
+		public SysMessage(int inGameId, String msg, short frontColor, short backgroundColor) {
 			super(Protocol.SM_SYSMESSAGE);
+			this.inGameId = inGameId;
 			this.frontColor = frontColor;
 			this.backgroundColor = backgroundColor;
 			this.msg = msg;
 
-			this.p1 = frontColor;
-			this.p2 = backgroundColor;
+			this.recog = inGameId;
+			this.p1 = NumUtil.makeWord(frontColor,backgroundColor);
+			this.p3 = 1;
 		}
 
 		@Override
@@ -827,8 +834,8 @@ public class ServerPacket extends Packet {
 		@Override
 		public void readPacket(ByteBuf in) throws WrongFormatException {
 			super.readPacket(in);
-			this.frontColor = p1;
-			this.backgroundColor = p2;
+			this.frontColor = NumUtil.getLowByte(p1);
+			this.backgroundColor = NumUtil.getHighByte(p1);
 			this.msg = in.toString(Charset.defaultCharset()).trim();
 		}
 	}

@@ -41,22 +41,22 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 
 
 		// 登录
-		player.session.writeAndFlush(new ServerPacket.Logon(player));
+		player.session.sendPacket(new ServerPacket.Logon(player));
 		// 玩家属性, 必须发, 不然血量是0 就闪退
-		player.session.writeAndFlush(new ServerPacket.PlayerAbility(player.gold, player.gameGold, player.job, player.ability));
+		player.session.sendPacket(new ServerPacket.PlayerAbility(player.gold, player.gameGold, player.job, player.ability));
 
 		//进入地图
 		MapEngine.enter(player,player.currMapPoint);
 
-		player.session.writeAndFlush(new ServerPacket.FeatureChanged(player));
-		player.session.writeAndFlush(new ServerPacket.UserName(player.inGameId, (short) player.nameColor.i, player.name));
+		player.session.sendPacket(new ServerPacket.FeatureChanged(player));
+		player.session.sendPacket(new ServerPacket.UserName(player.inGameId, (short) player.nameColor.c, player.name));
 
-		session.writeAndFlush(new ServerPacket.GameGoldName(player.gameGold, player.gamePoint, Config.GAME_GOLD_NAME, Config.GAME_POINT_NAME));
-		session.writeAndFlush(new ServerPacket.VersionFail(0, 0, 0));
+		session.sendPacket(new ServerPacket.GameGoldName(player.gameGold, player.gamePoint, Config.GAME_GOLD_NAME, Config.GAME_POINT_NAME));
+		session.sendPacket(new ServerPacket.VersionFail(0, 0, 0));
 
-		session.writeAndFlush(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)612,""));
-		session.writeAndFlush(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)611,""));
-		session.writeAndFlush(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)613,""));
+		session.sendPacket(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)612,""));
+		session.sendPacket(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)611,""));
+		session.sendPacket(new ServerPacket.ShowEvent(NumUtil.newAtomicId(),(short)4,(short)283,(short)613,""));
 	}
 
 

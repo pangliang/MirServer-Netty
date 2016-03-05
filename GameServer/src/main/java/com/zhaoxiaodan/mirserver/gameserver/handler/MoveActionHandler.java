@@ -14,7 +14,7 @@ public class MoveActionHandler extends PlayerHandler {
 			return;
 
 		if(!player.checkAndIncActionTime(Config.PLAYER_ACTION_INTERVAL_TIME)){
-			session.writeAndFlush(new ServerPacket.Status(ServerPacket.Status.Result.Fail));
+			session.sendPacket(new ServerPacket.Status(ServerPacket.Status.Result.Fail));
 			return;
 		}
 
@@ -29,11 +29,11 @@ public class MoveActionHandler extends PlayerHandler {
 				break;
 			case CM_TURN:
 				player.direction = direction;
-				session.writeAndFlush(new ServerPacket.Turn(player));
+				session.sendPacket(new ServerPacket.Turn(player));
 				break;
 			default:
 				break;
 		}
-		session.writeAndFlush(new ServerPacket.Status(ServerPacket.Status.Result.Good));
+		session.sendPacket(new ServerPacket.Status(ServerPacket.Status.Result.Good));
 	}
 }

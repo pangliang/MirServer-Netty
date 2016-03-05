@@ -171,21 +171,21 @@ public class MapEngine {
 		player.currMapPoint = mapPoint;
 
 		// 清除物品
-		player.session.writeAndFlush(new ServerPacket(Protocol.SM_CLEAROBJECTS));
+		player.session.sendPacket(new ServerPacket(Protocol.SM_CLEAROBJECTS));
 
 		// 新图信息发给玩家
-		player.session.writeAndFlush(new ServerPacket.ChangeMap(player.inGameId, mapPoint.x, mapPoint.y, (short) 0, player.currMapPoint.mapId));
-		player.session.writeAndFlush(new ServerPacket.MapDescription(-1, mapInfo.mapDescription));
+		player.session.sendPacket(new ServerPacket.ChangeMap(player.inGameId, mapPoint.x, mapPoint.y, (short) 0, player.currMapPoint.mapId));
+		player.session.sendPacket(new ServerPacket.MapDescription(-1, mapInfo.mapDescription));
 
 		// 是否安全区
-		player.session.writeAndFlush(new ServerPacket(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
+		player.session.sendPacket(new ServerPacket(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
 
 		// 广播进入地图
 		broadcast(mapPoint, new ServerPacket.Turn(player));
 
 		//地图上的object 发给玩家
 		for (BaseObject objInMap : mapInfo.objects.values()) {
-			player.session.writeAndFlush(new ServerPacket.Turn(objInMap));
+			player.session.sendPacket(new ServerPacket.Turn(objInMap));
 		}
 
 		mapInfo.players.put(player.inGameId, player);
@@ -221,7 +221,7 @@ public class MapEngine {
 			return;
 
 		for (Player player : mapInfo.players.values()) {
-			player.session.writeAndFlush(serverPacket);
+			player.session.sendPacket(serverPacket);
 		}
 	}
 

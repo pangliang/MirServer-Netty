@@ -28,7 +28,7 @@ public class Session {
 		sessions.remove(socket.channel().remoteAddress().toString());
 	}
 
-	public void writeAndFlush(ServerPacket msg){
+	public void sendPacket(ServerPacket msg){
 		socket.writeAndFlush(msg);
 	}
 

@@ -23,7 +23,7 @@ public class NewCharacterHandler extends UserHandler {
 	public void onPacket(ClientPacket packet, User user) throws Exception {
 		ClientPacket.NewCharacter request = (ClientPacket.NewCharacter) packet;
 		if (user.players.size() >= 2) {
-			session.writeAndFlush(new ServerPacket(Protocol.SM_NEWCHR_FAIL));
+			session.sendPacket(new ServerPacket(Protocol.SM_NEWCHR_FAIL));
 			return;
 		}
 		try {
@@ -31,9 +31,9 @@ public class NewCharacterHandler extends UserHandler {
 			player.user = user;
 			session.db.save(player);
 			user.players.add(player);
-			session.writeAndFlush(new ServerPacket(Protocol.SM_NEWCHR_SUCCESS));
+			session.sendPacket(new ServerPacket(Protocol.SM_NEWCHR_SUCCESS));
 		} catch (Exception e) {
-			session.writeAndFlush(new ServerPacket(Protocol.SM_NEWCHR_FAIL));
+			session.sendPacket(new ServerPacket(Protocol.SM_NEWCHR_FAIL));
 			throw e;
 		}
 	}

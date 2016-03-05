@@ -15,12 +15,12 @@ public class SelectCharacterHandler extends UserHandler {
 
 		for(Player player :user.players){
 			if(player.name.equals(request.characterName)){
-				session.writeAndFlush(new ServerPacket.StartPlay("192.168.0.166",7400));
+				session.sendPacket(new ServerPacket.StartPlay("192.168.0.166",7400));
 				return;
 			}
 		}
 
-		session.writeAndFlush(new ServerPacket(Protocol.SM_STARTFAIL));
+		session.sendPacket(new ServerPacket(Protocol.SM_STARTFAIL));
 		return ;
 	}
 

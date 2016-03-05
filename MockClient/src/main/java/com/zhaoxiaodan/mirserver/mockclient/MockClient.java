@@ -79,11 +79,11 @@ public class MockClient {
 
 			// new user
 //			packet = new ClientPacket.CM_ADDNEWUSER(cmdIndex,user);
-//			ch.writeAndFlush(packet);
+//			ch.sendPacket(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
 
-//			ch.writeAndFlush("#"+cmdIndex+"PROCESS!");
+//			ch.sendPacket("#"+cmdIndex+"PROCESS!");
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
@@ -114,7 +114,7 @@ public class MockClient {
 //			player.job = Job.Warrior;
 //			player.gender = Gender.MALE;
 //			packet = new ClientPacket.CM_NEWCHR(cmdIndex,player);
-//			ch.writeAndFlush(packet);
+//			ch.sendPacket(packet);
 //			in.readLine();
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
 

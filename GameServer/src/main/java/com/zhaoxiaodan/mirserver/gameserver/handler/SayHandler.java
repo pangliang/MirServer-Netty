@@ -1,9 +1,12 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.types.MapPoint;
-import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class SayHandler extends PlayerHandler {
 
@@ -17,17 +20,19 @@ public class SayHandler extends PlayerHandler {
 
 		ClientPacket.Say request = (ClientPacket.Say) packet;
 
-		String parts[] = request.msg.trim().split(" ");
-		if (parts.length == 3) {
-			MapPoint p = new MapPoint();
-			p.mapId = parts[0];
-			p.x = Short.parseShort(parts[1]);
-			p.y = Short.parseShort(parts[2]);
+		String msg = request.msg.trim();
+		if(msg.length() < 0)
+			return;
+		if('@' == msg.charAt(0) && msg.length() >1){
+			StringTokenizer tokenizer = new StringTokenizer(msg);
+			String cmd = ((String)tokenizer.nextElement()).substring(1);
+			List<String>    args      = new ArrayList<>();
+			while(tokenizer.hasMoreElements())
+				args.add((String) tokenizer.nextElement());
 
-
-			MapEngine.enter(player,p);
-
+			ScriptEngine.exce(ScriptEngine.Module.Cmd, cmd, player, args);
 		}
+
 
 	}
 }
