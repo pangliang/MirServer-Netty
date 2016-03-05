@@ -25,7 +25,7 @@ public abstract class BaseObject {
 	public byte light;
 
 	@AttributeOverrides({
-			@AttributeOverride(name = "mapName", column = @Column(name = "currMapName")),
+			@AttributeOverride(name = "mapId", column = @Column(name = "currMapName")),
 			@AttributeOverride(name = "x", column = @Column(name = "currX")),
 			@AttributeOverride(name = "y", column = @Column(name = "currY"))
 	})

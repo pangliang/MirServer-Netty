@@ -29,7 +29,7 @@ class PlayerScript {
 
     MapPoint getStartPoint() {
         MapPoint startPoint = new MapPoint();
-        startPoint.mapName = "0";
+        startPoint.mapId = "0";
         startPoint.x = 289;
         startPoint.y = 618;
 

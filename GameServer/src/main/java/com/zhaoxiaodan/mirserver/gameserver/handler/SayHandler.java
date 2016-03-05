@@ -20,7 +20,7 @@ public class SayHandler extends PlayerHandler {
 		String parts[] = request.msg.trim().split(" ");
 		if (parts.length == 3) {
 			MapPoint p = new MapPoint();
-			p.mapName = parts[0];
+			p.mapId = parts[0];
 			p.x = Short.parseShort(parts[1]);
 			p.y = Short.parseShort(parts[2]);
 

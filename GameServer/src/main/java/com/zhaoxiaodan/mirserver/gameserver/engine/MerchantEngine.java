@@ -41,7 +41,7 @@ public class MerchantEngine {
 			Merchant merchant = new Merchant();
 			merchant.name = (String) tokenizer.nextElement();
 			merchant.currMapPoint = new MapPoint();
-			merchant.currMapPoint.mapName = (String) tokenizer.nextElement();
+			merchant.currMapPoint.mapId = (String) tokenizer.nextElement();
 			merchant.currMapPoint.x = Short.parseShort((String) tokenizer.nextElement());
 			merchant.currMapPoint.y = Short.parseShort((String) tokenizer.nextElement());
 			merchant.scriptName = tokenizer.nextElement() + ".groovy";

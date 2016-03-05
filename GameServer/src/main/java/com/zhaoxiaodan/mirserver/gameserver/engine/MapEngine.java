@@ -12,9 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MapEngine {
@@ -55,6 +53,8 @@ public class MapEngine {
 		 * 服务器只关心当前格子是否能走
 		 */
 		public boolean[][] tileCanWalkFlags;
+		//空间换时间, 方便取地图上可以行走的随机点
+		public List<Integer> allCanWalkTileXY = new ArrayList<>();
 
 		public final Map<Integer, BaseObject> objects = new ConcurrentHashMap<>();
 		public final Map<Integer, Player>     players = new ConcurrentHashMap<>();
@@ -75,9 +75,10 @@ public class MapEngine {
 
 				width = NumUtil.readShort(buf, 0, true);
 				height = NumUtil.readShort(buf, 2, true);
-				mapTitle = new String(buf, 4, 17);
+				mapTitle = new String(buf, 4, 16);
 				logger.debug("读取文件地图:{} , width:{}, height:{}, title:{}", filename, width, height, mapTitle);
 				tileCanWalkFlags = new boolean[width][height];
+
 
 				for (short x = 0; x < width; x++) {
 					for (short y = 0; y < height; y++) {
@@ -85,14 +86,31 @@ public class MapEngine {
 							throw new Exception("地图文件tile大小不正确,文件,x,y:" + filename + "," + x + "," + y);
 						short frontImg = NumUtil.readShort(buf, 4, true);
 						//最高位是1 则不能站人
-						tileCanWalkFlags[x][y] = !((frontImg & 0x8000) == 0x8000);
+						boolean canWalk = !((frontImg & 0x8000) == 0x8000);
+						tileCanWalkFlags[x][y] = canWalk;
+
+						if (canWalk)
+							allCanWalkTileXY.add(NumUtil.makeLong(x, y));
 					}
 				}
 			} finally {
 				if (null != in)
 					in.close();
 			}
+
+
 		}
+	}
+
+	public static boolean canWalk(MapPoint mapPoint) {
+		MapInfo mapInfo = mapList.get(mapPoint.mapId);
+		if (null == mapInfo)
+			return false;
+
+		if (mapPoint.x < 0 || mapPoint.x >= mapInfo.width || mapPoint.y < 0 || mapPoint.y >= mapInfo.height)
+			return false;
+
+		return mapInfo.tileCanWalkFlags[mapPoint.x][mapPoint.y];
 	}
 
 	/**
@@ -102,9 +120,9 @@ public class MapEngine {
 	 * @param mapPoint
 	 */
 	public static void enter(BaseObject object, MapPoint mapPoint) {
-		MapInfo mapInfo = mapList.get(mapPoint.mapName);
+		MapInfo mapInfo = mapList.get(mapPoint.mapId);
 		if (mapInfo == null) {
-			logger.error("{} 进入地图, 但是地图 {} 的信息不存在!", object.name, mapPoint.mapName);
+			logger.error("{} 进入地图, 但是地图 {} 的信息不存在!", object.name, mapPoint.mapId);
 			return;
 		}
 
@@ -117,10 +135,20 @@ public class MapEngine {
 	 * 玩家进入地图, 但是坐标根据地图情况随机安排
 	 *
 	 * @param player
-	 * @param mapName
+	 * @param mapId
 	 */
-	public static void enter(Player player, String mapName) {
-		//Todo 地图情况读取
+	public static void enter(Player player, String mapId) {
+		MapInfo mapInfo = mapList.get(mapId);
+
+		int      r        = new Random().nextInt(mapInfo.allCanWalkTileXY.size());
+		int     v = mapInfo.allCanWalkTileXY.get(r);
+		MapPoint mapPoint = new MapPoint();
+		mapPoint.mapId = mapId;
+		mapPoint.x = NumUtil.getLowWord(v);
+		mapPoint.y = NumUtil.getHighWord(v);
+
+		enter(player,mapPoint);
+
 	}
 
 	/**
@@ -131,9 +159,14 @@ public class MapEngine {
 	 */
 	public static void enter(Player player, MapPoint mapPoint) {
 
-		MapInfo mapInfo = mapList.get(mapPoint.mapName);
+		MapInfo mapInfo = mapList.get(mapPoint.mapId);
 		if (mapInfo == null)
 			return;
+
+		if(!canWalk(mapPoint)) {
+			enter(player, mapPoint.mapId);
+			return;
+		}
 
 		player.currMapPoint = mapPoint;
 
@@ -141,7 +174,7 @@ public class MapEngine {
 		player.session.writeAndFlush(new ServerPacket(Protocol.SM_CLEAROBJECTS));
 
 		// 新图信息发给玩家
-		player.session.writeAndFlush(new ServerPacket.ChangeMap(player.inGameId, mapPoint.x, mapPoint.y, (short) 0, player.currMapPoint.mapName));
+		player.session.writeAndFlush(new ServerPacket.ChangeMap(player.inGameId, mapPoint.x, mapPoint.y, (short) 0, player.currMapPoint.mapId));
 		player.session.writeAndFlush(new ServerPacket.MapDescription(-1, mapInfo.mapDescription));
 
 		// 是否安全区
@@ -166,7 +199,7 @@ public class MapEngine {
 	private static void leave(BaseObject object) {
 		//删掉原来在的地图
 		MapInfo currMapInfo;
-		if (object.currMapPoint.mapName != null && (currMapInfo = mapList.get(object.currMapPoint.mapName)) != null) {
+		if (object.currMapPoint.mapId != null && (currMapInfo = mapList.get(object.currMapPoint.mapId)) != null) {
 			if (object instanceof Player)
 				currMapInfo.players.remove(object.inGameId);
 			else
@@ -235,9 +268,9 @@ public class MapEngine {
 		MapPoint startPoint = null;
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(STARTPOINT_CONFIG_FILE, 2)) {
 			startPoint = new MapPoint();
-			startPoint.mapName = (String) tokenizer.nextElement();
-			if (!maps.containsKey(startPoint.mapName))
-				throw new Exception("出生点所在地图" + startPoint.mapName + "在地图配置中不存在, 先在地图配置文件" + MAP_CONFIG_FILE + "中添加");
+			startPoint.mapId = (String) tokenizer.nextElement();
+			if (!maps.containsKey(startPoint.mapId))
+				throw new Exception("出生点所在地图" + startPoint.mapId + "在地图配置中不存在, 先在地图配置文件" + MAP_CONFIG_FILE + "中添加");
 
 			startPoint.x = Short.parseShort((String) tokenizer.nextElement());
 			startPoint.y = Short.parseShort((String) tokenizer.nextElement());
@@ -249,7 +282,7 @@ public class MapEngine {
 		return startPoint;
 	}
 
-	public static MapInfo getMapInfoByMapId(String mapId) {
+	public static MapInfo getMapInfo(String mapId) {
 		return mapList.get(mapId);
 	}
 

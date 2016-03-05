@@ -8,7 +8,7 @@ public class LoadMapInfoTest {
 	public void loadTest() throws Exception {
 		MapEngine.reload();
 
-		MapEngine.MapInfo info = MapEngine.getMapInfoByMapId("G003");
+		MapEngine.MapInfo info = MapEngine.getMapInfo("G003");
 		for (short y = 0; y < info.height; y++) {
 			for (short x = 0; x < info.width; x++) {
 

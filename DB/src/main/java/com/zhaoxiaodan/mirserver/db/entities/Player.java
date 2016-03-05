@@ -37,7 +37,7 @@ public class Player extends BaseObject {
 	 * 回城点
 	 */
 	@AttributeOverrides({
-			@AttributeOverride(name = "mapName", column = @Column(name = "homeMapName")),
+			@AttributeOverride(name = "mapId", column = @Column(name = "homeMapName")),
 			@AttributeOverride(name = "x", column = @Column(name = "homeX")),
 			@AttributeOverride(name = "y", column = @Column(name = "homeY"))
 	})
