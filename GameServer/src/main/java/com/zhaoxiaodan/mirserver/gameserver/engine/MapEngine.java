@@ -84,9 +84,9 @@ public class MapEngine {
 					for (short y = 0; y < height; y++) {
 						if (in.read(buf, 0, MAP_FILE_TILE_SIZE) != MAP_FILE_TILE_SIZE)
 							throw new Exception("地图文件tile大小不正确,文件,x,y:" + filename + "," + x + "," + y);
-						short frontImg = NumUtil.readShort(buf, 4, true);
+						short floorImg = NumUtil.readShort(buf, 0, true);
 						//最高位是1 则不能站人
-						boolean canWalk = !((frontImg & 0x8000) == 0x8000);
+						boolean canWalk = !((floorImg & 0x8000) == 0x8000);
 						tileCanWalkFlags[x][y] = canWalk;
 
 						if (canWalk)
