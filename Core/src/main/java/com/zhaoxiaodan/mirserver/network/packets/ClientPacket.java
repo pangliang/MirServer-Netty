@@ -9,11 +9,11 @@ import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
 
-public class ClientPacket extends Packet{
+public class ClientPacket extends Packet {
 
 	public byte cmdIndex;  // #号后面紧跟的序号, 响应包的序号要跟请求一直
 
-	public ClientPacket(){}
+	public ClientPacket() {}
 
 	public ClientPacket(Protocol pid, byte cmdIndex) {
 		super(0, pid, (short) 0, (short) 0, (short) 0);
@@ -361,7 +361,7 @@ public class ClientPacket extends Packet{
 		public Say() {}
 
 		public Say(byte cmdIndex, String msg) {
-			super(Protocol.CM_QUERYCHR, cmdIndex);
+			super(Protocol.CM_SAY, cmdIndex);
 			this.msg = msg;
 		}
 
@@ -375,6 +375,35 @@ public class ClientPacket extends Packet{
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 			out.writeBytes(this.msg.getBytes());
+		}
+	}
+
+	public static final class Merchant extends ClientPacket {
+
+		public int    npcInGameId;
+		public String msg;
+
+		public Merchant() {}
+
+		public Merchant(byte cmdIndex, Protocol protocol, int npcInGameId, String msg) {
+			super(protocol, cmdIndex);
+			this.npcInGameId = npcInGameId;
+			this.recog = npcInGameId;
+			this.msg = msg;
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			this.npcInGameId = this.recog;
+			this.msg = in.toString(Charset.defaultCharset()).trim();
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+
+			out.writeBytes(msg.getBytes());
 		}
 	}
 }

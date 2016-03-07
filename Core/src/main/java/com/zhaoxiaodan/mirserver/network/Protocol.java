@@ -66,7 +66,8 @@ public enum Protocol {
 
 	CM_EAT(1006,null,null),
 
-	CM_CLICKNPC(1010,null,null),
+	CM_CLICKNPC(1010,"Merchant",null),
+	CM_MERCHANTDLGSELECT(1011,"Merchant",null),
 
 	CM_TURN(3010,"MoveAction",null),
 	CM_WALK(3011,"MoveAction",null),
@@ -151,7 +152,7 @@ public enum Protocol {
 	SM_MAGICFIRE(638,null,null),
 	SM_MAGIC_LVEXP(640,null,null),
 	SM_DURACHANGE(642,null,null),
-	SM_MERCHANTSAY(643,null,null),
+	SM_MERCHANTSAY(643,"MerchantSay",null),
 	SM_GOLDCHANGED(653,null,null),
 	SM_CHANGELIGHT(654,null,null),
 	SM_CHANGENAMECOLOR(656,null,null),

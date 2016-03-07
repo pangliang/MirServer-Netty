@@ -18,22 +18,29 @@ public class MerchantEngine {
 	private static final String NPC_CONFIG_FILE = "Envir/Merchant.cfg";
 	private static final String NPC_SCRIPT_DIR  = "Scripts/Merchant";
 
-	private static Map<String, Merchant> nameIndexMap;
+	private static Map<Integer, Merchant> inGameIdIndexMap;
 
 
 	public static synchronized void reload() throws Exception {
-		Map<String, Merchant> loadNpcs = new HashMap<>();
+
+		if (MerchantEngine.inGameIdIndexMap != null && MerchantEngine.inGameIdIndexMap.size() > 0) {
+			for (Merchant merchant : MerchantEngine.inGameIdIndexMap.values()) {
+				MapEngine.leave(merchant);
+			}
+		}
+
+		Map<Integer, Merchant> loadNpcs = new HashMap<>();
 		loadConfig(loadNpcs);
 
 		// 保证读出来的无异常再替换原有的;
-		MerchantEngine.nameIndexMap = loadNpcs;
+		MerchantEngine.inGameIdIndexMap = loadNpcs;
 
 		for (Merchant merchat : loadNpcs.values()) {
 			MapEngine.enter(merchat, merchat.currMapPoint);
 		}
 	}
 
-	private static void loadConfig(Map<String, Merchant> loadNpcs) throws Exception {
+	private static void loadConfig(Map<Integer, Merchant> loadNpcs) throws Exception {
 		GroovyScriptEngine engine = new GroovyScriptEngine(NPC_SCRIPT_DIR);
 
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(NPC_CONFIG_FILE, 2)) {
@@ -50,12 +57,13 @@ public class MerchantEngine {
 			Class groovyClass = engine.loadScriptByName(merchant.scriptName);
 			merchant.scriptInstance = (GroovyObject) groovyClass.newInstance();
 
-			loadNpcs.put(merchant.name, merchant);
+			loadNpcs.put(merchant.inGameId, merchant);
 		}
 	}
 
-	public static Object exce(String npcName, String fn, Object... args) throws Exception {
-		return nameIndexMap.get(npcName).scriptInstance.invokeMethod(fn, args);
+	public static Merchant getMerchant(int inGameId) {
+		return inGameIdIndexMap.get(inGameId);
 	}
+
 
 }

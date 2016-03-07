@@ -23,6 +23,10 @@ public class ServerPacket extends Packet {
 		super(recog, protocol, p1, p2, p3);
 	}
 
+	public ServerPacket(int recog, Protocol protocol) {
+		this(recog, protocol, (short) 0, (short) 0, (short) 0);
+	}
+
 	public ServerPacket(Protocol protocol) {
 		super(protocol);
 	}
@@ -371,15 +375,15 @@ public class ServerPacket extends Packet {
 			this.p3 = NumUtil.makeWord(direction, light);
 		}
 
-		public Logon(Player player){
+		public Logon(Player player) {
 			this(player.inGameId,
 					player.currMapPoint.x,
 					player.currMapPoint.y,
-					(byte)player.direction.ordinal(),
+					(byte) player.direction.ordinal(),
 					player.light,
 					player.getFeature(),
 					player.getStatus(),
-					(short)player.getFeatureEx());
+					(short) player.getFeatureEx());
 		}
 
 		@Override
@@ -427,8 +431,8 @@ public class ServerPacket extends Packet {
 			this.featureEx = featureEx;
 		}
 
-		public FeatureChanged(BaseObject object){
-			this(object.inGameId,object.getFeature(),(short)object.getFeatureEx());
+		public FeatureChanged(BaseObject object) {
+			this(object.inGameId, object.getFeature(), (short) object.getFeatureEx());
 		}
 
 		@Override
@@ -748,10 +752,10 @@ public class ServerPacket extends Packet {
 			light = NumUtil.getHighByte(p3);
 			feature = in.readInt();
 			status = in.readInt();
-			String content = in.toString(Charset.defaultCharset());
-			String[] parts = content.split(CONTENT_SEPARATOR_STR);
+			String   content = in.toString(Charset.defaultCharset());
+			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
 			name = parts[0];
-			nameColor = parts.length > 1? Integer.parseInt(parts[1]): Color.White.c;
+			nameColor = parts.length > 1 ? Integer.parseInt(parts[1]) : Color.White.c;
 		}
 	}
 
@@ -763,8 +767,8 @@ public class ServerPacket extends Packet {
 		public int    id;
 		public short  look;
 		public String desc;
-		public short x;
-		public short y;
+		public short  x;
+		public short  y;
 
 		public ShowEvent() {}
 
@@ -802,15 +806,15 @@ public class ServerPacket extends Packet {
 
 	public static final class SysMessage extends ServerPacket {
 
-		public int inGameId;
+		public int    inGameId;
 		public short  frontColor;
 		public short  backgroundColor;
 		public String msg;
 
 		public SysMessage() {}
 
-		public SysMessage(int inGameId,String msg, Color ftCorol, Color bgColor) {
-			this(inGameId,msg,ftCorol.c,bgColor.c);
+		public SysMessage(int inGameId, String msg, Color ftCorol, Color bgColor) {
+			this(inGameId, msg, ftCorol.c, bgColor.c);
 		}
 
 		public SysMessage(int inGameId, String msg, short frontColor, short backgroundColor) {
@@ -821,7 +825,7 @@ public class ServerPacket extends Packet {
 			this.msg = msg;
 
 			this.recog = inGameId;
-			this.p1 = NumUtil.makeWord(frontColor,backgroundColor);
+			this.p1 = NumUtil.makeWord(frontColor, backgroundColor);
 			this.p3 = 1;
 		}
 
@@ -837,6 +841,45 @@ public class ServerPacket extends Packet {
 			this.frontColor = NumUtil.getLowByte(p1);
 			this.backgroundColor = NumUtil.getHighByte(p1);
 			this.msg = in.toString(Charset.defaultCharset()).trim();
+		}
+	}
+
+	public static final class MerchantSay extends ServerPacket {
+
+		public int    inGameId;
+		public String msg;
+		public String merchantName;
+
+		public MerchantSay() {}
+
+
+		public MerchantSay(int inGameId, String msg, String merchantName) {
+			super(Protocol.SM_MERCHANTSAY);
+			this.inGameId = inGameId;
+			this.msg = msg;
+			this.merchantName = merchantName;
+
+			this.recog = inGameId;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeBytes(merchantName.getBytes());
+			out.writeByte(CONTENT_SEPARATOR_CHAR);
+			out.writeBytes(msg.getBytes());
+		}
+
+		@Override
+		public void readPacket(ByteBuf in) throws WrongFormatException {
+			super.readPacket(in);
+			String[] parts = in.toString(Charset.defaultCharset()).trim().split(CONTENT_SEPARATOR_STR);
+			if (parts.length > 1) {
+				this.merchantName = parts[0];
+				this.msg = parts[1].trim();
+			} else {
+				this.msg = parts[0].trim();
+			}
 		}
 	}
 

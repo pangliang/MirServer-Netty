@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver;
 
+import com.zhaoxiaodan.mirserver.gameserver.engine.MerchantEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.gameserver.GameServer;
 import com.zhaoxiaodan.mirserver.loginserver.LoginServer;
@@ -37,6 +38,7 @@ public class Main {
 			while((line=in.readLine().trim())!=null){
 				if("s".equals(line)){
 					ScriptEngine.reload();
+					MerchantEngine.reload();
 				}
 			}
 		}catch (Exception e){

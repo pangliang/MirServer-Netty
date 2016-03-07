@@ -10,11 +10,6 @@ import java.util.StringTokenizer;
 
 public class SayHandler extends PlayerHandler {
 
-
-	static int   r = 0;
-	static short x = 280;
-	static short y = 610;
-
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 

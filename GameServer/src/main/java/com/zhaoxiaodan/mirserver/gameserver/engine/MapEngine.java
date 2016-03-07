@@ -196,7 +196,7 @@ public class MapEngine {
 	 *
 	 * @param object
 	 */
-	private static void leave(BaseObject object) {
+	public static void leave(BaseObject object) {
 		//删掉原来在的地图
 		MapInfo currMapInfo;
 		if (object.currMapPoint.mapId != null && (currMapInfo = mapList.get(object.currMapPoint.mapId)) != null) {
@@ -205,7 +205,7 @@ public class MapEngine {
 			else
 				currMapInfo.objects.remove(object.inGameId);
 
-			//TODO 广播离开地图
+			broadcast(object.currMapPoint,new ServerPacket(object.inGameId,Protocol.SM_DISAPPEAR));
 		}
 	}
 
@@ -216,7 +216,7 @@ public class MapEngine {
 	 * @param serverPacket
 	 */
 	public static void broadcast(MapPoint mapPoint, ServerPacket serverPacket) {
-		MapInfo mapInfo = mapList.get(mapPoint);
+		MapInfo mapInfo = mapList.get(mapPoint.mapId);
 		if (mapInfo == null)
 			return;
 
