@@ -16,4 +16,5 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-core:2.5'
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.5'
     compile 'com.alibaba:fastjson:1.2.4'
+    compile 'org.codehaus.groovy:groovy-all:2.4.6'
 }

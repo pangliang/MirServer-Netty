@@ -60,16 +60,16 @@ public class GameServer {
 									new ExceptionHandler(),
 
 									//解码
-									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new DelimiterBasedFrameDecoder(REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ClientPacketBit6Decoder(),
-									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new ClientPacketDecoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//编码
 									new ServerPacketBit6Encoder(),
-									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new ServerPacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 

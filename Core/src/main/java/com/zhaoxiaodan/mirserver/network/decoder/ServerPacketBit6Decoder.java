@@ -21,9 +21,9 @@ public class ServerPacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 
 		if ('+' == in.getByte(1)) {
 			// Status 包: 格式如: #+GOOD/1234567
-			ServerPacket.Status status = new ServerPacket.Status();
-			status.readPacket(in);
-			out.add(status);
+			ServerPacket.ActionStatus actionStatus = new ServerPacket.ActionStatus();
+			actionStatus.readPacket(in);
+			out.add(actionStatus);
 		} else {
 			ByteBuf buf = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
 			in.readByte(); //  # , 在这里就去掉 头尾

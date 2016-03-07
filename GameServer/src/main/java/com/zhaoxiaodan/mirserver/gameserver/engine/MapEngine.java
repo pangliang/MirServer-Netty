@@ -168,6 +168,9 @@ public class MapEngine {
 			return;
 		}
 
+		if(!player.currMapPoint.mapId.equals(mapPoint.mapId))
+			leave(player);
+
 		player.currMapPoint = mapPoint;
 
 		// 清除物品
@@ -182,6 +185,11 @@ public class MapEngine {
 
 		// 广播进入地图
 		broadcast(mapPoint, new ServerPacket.Turn(player));
+
+		//发送地图上的其他玩家
+		for (Player p : mapInfo.players.values()) {
+			player.session.sendPacket(new ServerPacket.Turn(p));
+		}
 
 		//地图上的object 发给玩家
 		for (BaseObject objInMap : mapInfo.objects.values()) {

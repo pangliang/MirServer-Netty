@@ -593,7 +593,7 @@ public class ServerPacket extends Packet {
 		}
 	}
 
-	public static final class Status extends ServerPacket {
+	public static final class ActionStatus extends ServerPacket {
 
 		public enum Result {
 			Good("+GOOD"),
@@ -609,9 +609,9 @@ public class ServerPacket extends Packet {
 		public Result result;
 		public long   tickCount;
 
-		public Status() {}
+		public ActionStatus() {}
 
-		public Status(Result result) {
+		public ActionStatus(Result result) {
 			this.result = result;
 			this.tickCount = NumUtil.getTickCount();
 		}
@@ -696,6 +696,56 @@ public class ServerPacket extends Packet {
 			itemId = recog;
 			String content = in.toString(Charset.defaultCharset());
 			itemName = content.trim();
+		}
+	}
+
+	public static final class Action extends XYPacket {
+
+		public int       inGameId;
+		public Direction direction;
+		public int       feature;
+		public int       status;
+		public byte      light;
+
+		public Action() {}
+
+		public Action(Protocol protocol, int inGameId, Direction direction, short x, short y, int feature, int status, byte light) {
+			super(protocol, x, y);
+			this.inGameId = inGameId;
+			this.direction = direction;
+			this.recog = inGameId;
+			this.p3 = NumUtil.makeWord((byte) direction.ordinal(), light);
+			this.feature = feature;
+			this.status = status;
+		}
+
+		public Action(Protocol protocol,BaseObject object) {
+			this(protocol,
+					object.inGameId,
+					object.direction,
+					object.currMapPoint.x,
+					object.currMapPoint.y,
+					object.getFeature(),
+					object.getStatus(),
+					object.light);
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			out.writeInt(feature);
+			out.writeInt(status);
+		}
+
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			inGameId = recog;
+			direction = Direction.values()[NumUtil.getLowByte(p3)];
+			light = NumUtil.getHighByte(p3);
+			feature = in.readInt();
+			status = in.readInt();
+			String   content = in.toString(Charset.defaultCharset());
+			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
 		}
 	}
 
