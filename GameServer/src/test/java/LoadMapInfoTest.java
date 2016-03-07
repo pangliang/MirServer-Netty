@@ -12,7 +12,7 @@ public class LoadMapInfoTest {
 		for (short y = 0; y < info.height; y++) {
 			for (short x = 0; x < info.width; x++) {
 
-				if (info.tileCanWalkFlags[x][y])
+				if (info.tiles[x][y].canWalk)
 					System.out.print("***");
 				else
 					System.out.print(" + ");

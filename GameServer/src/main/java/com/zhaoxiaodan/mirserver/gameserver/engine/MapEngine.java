@@ -1,11 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
-import com.zhaoxiaodan.mirserver.db.entities.Config;
-import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
-import com.zhaoxiaodan.mirserver.network.Protocol;
-import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +30,12 @@ public class MapEngine {
 	private static Map<String, MapInfo> mapList    = null;
 	private static MapPoint             startPoint = null;
 
+	public static class Tile {
+
+		public boolean canWalk;
+		public final Map<Integer, BaseObject> objects = new ConcurrentHashMap<>();
+	}
+
 	public static class MapInfo {
 
 		public short width;
@@ -53,12 +55,25 @@ public class MapEngine {
 		/**
 		 * 服务器只关心当前格子是否能走
 		 */
-		public boolean[][] tileCanWalkFlags;
+		public Tile[][] tiles;
 		//空间换时间, 方便取地图上可以行走的随机点
 		public List<Integer> allCanWalkTileXY = new ArrayList<>();
 
-		public final Map<Integer, BaseObject> objects = new ConcurrentHashMap<>();
-		public final Map<Integer, Player>     players = new ConcurrentHashMap<>();
+		public void putObject(BaseObject object){
+			if(object.currMapPoint.x >= this.width ||
+					object.currMapPoint.y >= this.height)
+				return;
+
+			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.put(object.inGameId,object);
+		}
+
+		public void removeObject(BaseObject object){
+			if(object.currMapPoint.x >= this.width ||
+					object.currMapPoint.y >= this.height)
+				return;
+
+			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.remove(object.inGameId);
+		}
 
 		public void loadMapFile() throws Exception {
 
@@ -78,7 +93,7 @@ public class MapEngine {
 				height = NumUtil.readShort(buf, 2, true);
 				mapTitle = new String(buf, 4, 16);
 				logger.debug("读取文件地图:{} , width:{}, height:{}, title:{}", filename, width, height, mapTitle);
-				tileCanWalkFlags = new boolean[width][height];
+				tiles = new Tile[width][height];
 
 
 				for (short x = 0; x < width; x++) {
@@ -88,7 +103,9 @@ public class MapEngine {
 						short floorImg = NumUtil.readShort(buf, 0, true);
 						//最高位是1 则不能站人
 						boolean canWalk = !((floorImg & 0x8000) == 0x8000);
-						tileCanWalkFlags[x][y] = canWalk;
+						Tile    tile    = new Tile();
+						tile.canWalk = canWalk;
+						tiles[x][y] = tile;
 
 						if (canWalk)
 							allCanWalkTileXY.add(NumUtil.makeLong(x, y));
@@ -111,133 +128,22 @@ public class MapEngine {
 		if (mapPoint.x < 0 || mapPoint.x >= mapInfo.width || mapPoint.y < 0 || mapPoint.y >= mapInfo.height)
 			return false;
 
-		return mapInfo.tileCanWalkFlags[mapPoint.x][mapPoint.y];
+		return mapInfo.tiles[mapPoint.x][mapPoint.y].canWalk;
 	}
 
-	/**
-	 * 放置除玩家以外的对象
-	 *
-	 * @param object
-	 * @param mapPoint
-	 */
-	public static void enter(BaseObject object, MapPoint mapPoint) {
-		MapInfo mapInfo = mapList.get(mapPoint.mapId);
-		if (mapInfo == null) {
-			logger.error("{} 进入地图, 但是地图 {} 的信息不存在!", object.name, mapPoint.mapId);
-			return;
-		}
-
-		object.currMapPoint = mapPoint;
-		broadcast(object.currMapPoint, new ServerPacket.Turn(object));
-		mapInfo.objects.put(object.inGameId, object);
-	}
-
-	/**
-	 * 玩家进入地图, 但是坐标根据地图情况随机安排
-	 *
-	 * @param player
-	 * @param mapId
-	 */
-	public static void enter(Player player, String mapId) {
-		MapInfo mapInfo = mapList.get(mapId);
-
-		int      r        = new Random().nextInt(mapInfo.allCanWalkTileXY.size());
-		int     v = mapInfo.allCanWalkTileXY.get(r);
-		MapPoint mapPoint = new MapPoint();
-		mapPoint.mapId = mapId;
-		mapPoint.x = NumUtil.getLowWord(v);
-		mapPoint.y = NumUtil.getHighWord(v);
-
-		enter(player,mapPoint);
-
-	}
-
-	/**
-	 * 往家进入地图
-	 *
-	 * @param player
-	 * @param mapPoint
-	 */
-	public static void enter(Player player, MapPoint mapPoint) {
-
-		MapInfo mapInfo = mapList.get(mapPoint.mapId);
-		if (mapInfo == null)
-			return;
-
-		if(!canWalk(mapPoint)) {
-			enter(player, mapPoint.mapId);
-			return;
-		}
-
-		if(!player.currMapPoint.mapId.equals(mapPoint.mapId))
-			leave(player);
-
-		player.currMapPoint = mapPoint;
-
-		// 清除物品
-		player.session.sendPacket(new ServerPacket(Protocol.SM_CLEAROBJECTS));
-
-		// 新图信息发给玩家
-		player.session.sendPacket(new ServerPacket.ChangeMap(player.inGameId, mapPoint.x, mapPoint.y, (short) 0, player.currMapPoint.mapId));
-		player.session.sendPacket(new ServerPacket.MapDescription(-1, mapInfo.mapDescription));
-
-		// 是否安全区
-		player.session.sendPacket(new ServerPacket(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
-
-		// 广播进入地图
-		broadcast(mapPoint, new ServerPacket.Turn(player));
-
-		//发送地图上的其他玩家
-		for (Player p : mapInfo.players.values()) {
-			player.session.sendPacket(new ServerPacket.Turn(p));
-		}
-
-		//地图上的object 发给玩家
-		for (BaseObject objInMap : mapInfo.objects.values()) {
-			player.session.sendPacket(new ServerPacket.Turn(objInMap));
-		}
-
-		mapInfo.players.put(player.inGameId, player);
-	}
-
-	/**
-	 * 离开原来的地图
-	 *
-	 * @param object
-	 */
-	public static void leave(BaseObject object) {
-		//删掉原来在的地图
-		MapInfo currMapInfo;
-		if (object.currMapPoint.mapId != null && (currMapInfo = mapList.get(object.currMapPoint.mapId)) != null) {
-			if (object instanceof Player)
-				currMapInfo.players.remove(object.inGameId);
-			else
-				currMapInfo.objects.remove(object.inGameId);
-
-			broadcast(object.currMapPoint,new ServerPacket(object.inGameId,Protocol.SM_DISAPPEAR));
-		}
-	}
-
-	/**
-	 * 广播消息给当前地图的玩家
-	 *
-	 * @param mapPoint
-	 * @param serverPacket
-	 */
-	public static void broadcast(MapPoint mapPoint, ServerPacket serverPacket) {
-		MapInfo mapInfo = mapList.get(mapPoint.mapId);
-		if (mapInfo == null)
-			return;
-
-		for (Player player : mapInfo.players.values()) {
-			if(Math.abs(mapPoint.x - player.currMapPoint.x) <= Config.MESSAGE_BROADCAST_DISTANCE + 10
-				&& Math.abs(mapPoint.y - player.currMapPoint.y) <= Config.MESSAGE_BROADCAST_DISTANCE + 10)
-			{
-				player.session.sendPacket(serverPacket);
+	public static List<BaseObject> getObjects(MapInfo mapInfo, int startX, int width, int startY, int height) {
+		List<BaseObject> objects = new ArrayList<>();
+		int endX = startX + width >= mapInfo.width ? mapInfo.width:startX+width;
+		int endY = startY + height >= mapInfo.height ? mapInfo.height:startY+height;
+		for (int x = startX; x < endX; x++){
+			for(int y = startY; y<endY;y++){
+				objects.addAll(mapInfo.tiles[x][y].objects.values());
 			}
-
 		}
+
+		return objects;
 	}
+
 
 	public static synchronized void reload() throws Exception {
 		Map<String, MapInfo> maps = new HashMap<>();

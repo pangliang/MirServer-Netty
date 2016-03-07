@@ -25,7 +25,7 @@ public class MerchantEngine {
 
 		if (MerchantEngine.inGameIdIndexMap != null && MerchantEngine.inGameIdIndexMap.size() > 0) {
 			for (Merchant merchant : MerchantEngine.inGameIdIndexMap.values()) {
-				MapEngine.leave(merchant);
+				merchant.leaveMap();
 			}
 		}
 
@@ -36,7 +36,7 @@ public class MerchantEngine {
 		MerchantEngine.inGameIdIndexMap = loadNpcs;
 
 		for (Merchant merchat : loadNpcs.values()) {
-			MapEngine.enter(merchat, merchat.currMapPoint);
+			merchat.enterMap( merchat.currMapPoint);
 		}
 	}
 
