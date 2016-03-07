@@ -11,10 +11,9 @@ void test(Player player, List<String> args){
     player.session.sendPacket(MessageEngine.createMessage(player.inGameId, Arrays.toString(args.toArray())));
 }
 
-
 void move(Player player, List<String> args){
-    if (args.size() > 1){
-        MapPoint moveTo = MapPoint();
+    if (args.size() >= 3){
+        MapPoint moveTo = new MapPoint();
         moveTo.mapId = args[0];
         moveTo.x = Short.parseShort(args[1]);
         moveTo.y = Short.parseShort(args[2]);
