@@ -16,6 +16,8 @@ public class Config {
 	public static String GAME_GOLD_NAME = "游戏金币";
 	public static String GAME_POINT_NAME = "游戏点数";
 
+	public static int MESSAGE_BROADCAST_DISTANCE = 12;
+
 	@Entity
 	@Table(name = "Config")
 	public static class ConfigEntity{

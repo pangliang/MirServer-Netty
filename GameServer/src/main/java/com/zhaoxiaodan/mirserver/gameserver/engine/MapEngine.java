@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
+import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
@@ -229,7 +230,12 @@ public class MapEngine {
 			return;
 
 		for (Player player : mapInfo.players.values()) {
-			player.session.sendPacket(serverPacket);
+			if(Math.abs(mapPoint.x - player.currMapPoint.x) <= Config.MESSAGE_BROADCAST_DISTANCE + 10
+				&& Math.abs(mapPoint.y - player.currMapPoint.y) <= Config.MESSAGE_BROADCAST_DISTANCE + 10)
+			{
+				player.session.sendPacket(serverPacket);
+			}
+
 		}
 	}
 
