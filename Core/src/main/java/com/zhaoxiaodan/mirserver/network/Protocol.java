@@ -142,7 +142,7 @@ public enum Protocol {
 	SM_TAKEON_FAIL(616,null,null),
 	SM_TAKEOFF_OK(619,null,null),
 	SM_TAKEOFF_FAIL(620,null,null),
-	SM_SENDUSEITEMS(621,null,null),
+	SM_SENDUSEITEMS(621,"SendUseItems",new int[0]),
 	SM_WEIGHTCHANGED(622,null,null),
 	SM_CLEAROBJECTS(633,null,null),
 	SM_CHANGEMAP(634,null,null),

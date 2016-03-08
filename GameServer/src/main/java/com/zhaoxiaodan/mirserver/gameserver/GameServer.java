@@ -68,6 +68,7 @@ public class GameServer {
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//编码
+//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new ServerPacketBit6Encoder(),
 //									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new ServerPacketEncoder(),

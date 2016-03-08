@@ -37,6 +37,8 @@ public class TakeOnOffItemHandler extends PlayerHandler {
 
 		player.session.sendPacket(new ServerPacket(player.getFeature(), Protocol.SM_TAKEOFF_OK, player.getFeatureEx(),(short)0,(short)0));
 
+		player.session.sendPacket(new ServerPacket.FeatureChanged(player));
+
 		session.sendPacket(new ServerPacket.AddItem(player.inGameId, wearingItem));
 		return ;
 	}
@@ -56,6 +58,8 @@ public class TakeOnOffItemHandler extends PlayerHandler {
 			wearingItem.wearingPosition = null;
 			wearingItem.isWearing = false;
 			session.db.update(wearingItem);
+
+			player.items.put(wearingItem.id,wearingItem);
 
 			session.sendPacket(new ServerPacket.AddItem(player.inGameId, wearingItem));
 		}

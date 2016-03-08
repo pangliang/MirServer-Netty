@@ -5,13 +5,17 @@ import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.types.*;
+import com.zhaoxiaodan.mirserver.network.Bit6Coder;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
+import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ServerPacket extends Packet {
 
@@ -929,6 +933,37 @@ public class ServerPacket extends Packet {
 				this.msg = parts[1].trim();
 			} else {
 				this.msg = parts[0].trim();
+			}
+		}
+	}
+
+	public static final class SendUseItems extends ServerPacket {
+
+		public Map<WearPosition,PlayerItem> wearingItems;
+
+		public SendUseItems() {}
+
+		public SendUseItems(Map<WearPosition,PlayerItem> wearingItems) {
+			super(Protocol.SM_SENDUSEITEMS);
+			this.wearingItems = wearingItems;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			if(this.wearingItems == null)
+				return ;
+			for(PlayerItem item: this.wearingItems.values()){
+				out.writeByte(item.wearingPosition.id + '0');
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
+
+				ByteBuf tmp = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
+				item.newVersionWritePacket(tmp);
+				byte[] datas = new byte[tmp.readableBytes()];
+				tmp.readBytes(datas);
+				out.writeBytes(Bit6Coder.encoder6BitBuf(datas));
+
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
 			}
 		}
 	}

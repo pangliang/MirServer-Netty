@@ -48,7 +48,7 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 
 		player.enterMap(player.currMapPoint);
 
-		player.session.sendPacket(new ServerPacket.FeatureChanged(player));
+		player.session.sendPacket(new ServerPacket.SendUseItems(player.wearingItems));
 		player.session.sendPacket(new ServerPacket.UserName(player.inGameId, (short) player.nameColor.c, player.name));
 
 		session.sendPacket(new ServerPacket.GameGoldName(player.gameGold, player.gamePoint, Config.GAME_GOLD_NAME, Config.GAME_POINT_NAME));

@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.mockclient;
 
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
+import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ServerPacketBit6Decoder;
@@ -38,7 +39,7 @@ public class PacketProxy {
 	static final String PROXY_HOST = "192.168.0.166";
 	static final int    PROXY_PORT = 7000;
 
-	static final String HOST = "222.187.225.55";
+	static final String HOST = "61.147.247.106";
 	static final int    PORT = 7000;
 
 	static ChannelHandlerContext clientChannel = null;
@@ -61,9 +62,9 @@ public class PacketProxy {
 											//这里是服务器的连接端
 											//来自服务器的封包, 解码成Packet
 											new DelimiterBasedFrameDecoder(4096, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
-//											new MyLoggingHandler(MyLoggingHandler.Type.Read),
+											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new ServerPacketBit6Decoder(),
-//											new MyLoggingHandler(MyLoggingHandler.Type.Read),
+											new MyLoggingHandler(MyLoggingHandler.Type.Read),
 											new ServerPacketDecoder(),
 
 											//来自客户端的封包, 发给服务器

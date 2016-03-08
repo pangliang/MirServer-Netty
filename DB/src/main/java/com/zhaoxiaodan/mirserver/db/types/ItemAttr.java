@@ -47,7 +47,7 @@ public class ItemAttr implements Parcelable{
 		oldVersion(out);
 	}
 
-	private void newVersion(ByteBuf out){
+	public void newVersion(ByteBuf out){
 		byte[] nameBytes = name.getBytes();
 		out.writeByte(nameBytes.length);
 		out.writeBytes(nameBytes);

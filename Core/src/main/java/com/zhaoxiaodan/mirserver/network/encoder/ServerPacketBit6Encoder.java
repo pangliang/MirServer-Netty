@@ -26,12 +26,17 @@ public class ServerPacketBit6Encoder extends MessageToMessageEncoder<ByteBuf> {
 			buf.writeBytes(in);
 		}else{
 
+			Protocol protocol = Protocol.getServerProtocol(in.getShort(4));
+
 			byte[] header = new byte[Packet.DEFAULT_HEADER_SIZE];
 			in.readBytes(header);
 			buf.writeBytes(Bit6Coder.encoder6BitBuf(header));
 
-			Protocol protocol = Protocol.getServerProtocol(in.getByte(4));
-			if (protocol != null && protocol.lenghtOfSections != null) {
+			if (protocol != null && protocol.lenghtOfSections != null && protocol.lenghtOfSections.length == 0) {
+				byte[] bodyBytes = new byte[in.readableBytes()];
+				in.readBytes(bodyBytes);
+				buf.writeBytes(bodyBytes);
+			}else if (protocol != null && protocol.lenghtOfSections != null) {
 				for (int lenght : protocol.lenghtOfSections) {
 					if (in.readableBytes() > lenght) {
 						byte[] bodyBytes = new byte[lenght];
@@ -41,10 +46,12 @@ public class ServerPacketBit6Encoder extends MessageToMessageEncoder<ByteBuf> {
 						break;
 					}
 				}
+			}else{
+				byte[] body = new byte[in.readableBytes()];
+				in.readBytes(body);
+				buf.writeBytes(Bit6Coder.encoder6BitBuf(body));
 			}
-			byte[] body = new byte[in.readableBytes()];
-			in.readBytes(body);
-			buf.writeBytes(Bit6Coder.encoder6BitBuf(body));
+
 		}
 
 

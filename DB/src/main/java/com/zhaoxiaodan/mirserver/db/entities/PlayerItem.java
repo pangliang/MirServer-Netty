@@ -38,4 +38,11 @@ public class PlayerItem implements Parcelable{
 		out.writeShort(dura);
 		out.writeShort(attr.duraMax);
 	}
+
+	public void newVersionWritePacket(ByteBuf out){
+		attr.newVersion(out);
+		out.writeInt(id);
+		out.writeShort(dura);
+		out.writeShort(attr.duraMax);
+	}
 }

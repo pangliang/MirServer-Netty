@@ -16,7 +16,7 @@ public class Config {
 	public static String GAME_GOLD_NAME = "游戏金币";
 	public static String GAME_POINT_NAME = "游戏点数";
 
-	public static int DEFAULT_VIEW_DISTANCE = 7;
+	public static int DEFAULT_VIEW_DISTANCE = 5;
 
 	@Entity
 	@Table(name = "Config")

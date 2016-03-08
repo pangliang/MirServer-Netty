@@ -216,7 +216,7 @@ public class MapEngine {
 					break;
 				case DOWNLEFT:
 					objects.addAll(getEdgeObjects(point, Direction.DOWN, distance, width, depth));
-					objects.addAll(getEdgeObjects(point, Direction.RIGHT, distance, width, depth));
+					objects.addAll(getEdgeObjects(point, Direction.LEFT, distance, width, depth));
 					break;
 				case LEFT:
 					objects.addAll(this.getObjects(
