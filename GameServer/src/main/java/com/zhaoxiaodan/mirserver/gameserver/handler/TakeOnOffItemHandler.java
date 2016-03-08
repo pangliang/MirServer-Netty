@@ -35,7 +35,7 @@ public class TakeOnOffItemHandler extends PlayerHandler {
 
 		player.items.put(wearingItem.id,wearingItem);
 
-		player.session.sendPacket(new ServerPacket(-1, Protocol.SM_TAKEOFF_OK));
+		player.session.sendPacket(new ServerPacket(player.getFeature(), Protocol.SM_TAKEOFF_OK, player.getFeatureEx(),(short)0,(short)0));
 
 		session.sendPacket(new ServerPacket.AddItem(player.inGameId, wearingItem));
 		return ;
