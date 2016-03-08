@@ -3,6 +3,7 @@ package com.zhaoxiaodan.mirserver.db.entities;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.types.*;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.MessageEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.Session;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
@@ -140,6 +141,21 @@ public class Player extends BaseObject {
 		super.turn(direction);
 		session.sendPacket(new ServerPacket.Turn(this));
 		session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Good));
+	}
+
+	@Override
+	public void move(Direction direction, short distance) {
+		super.move(direction, distance);
+
+		for(BaseObject object: objectsInView.values()){
+			session.sendPacket(MessageEngine.createMessage(
+					this.inGameId,
+					object.name
+							+" 距离:"
+							+(object.currMapPoint.x-this.currMapPoint.x)
+							+","
+							+(object.currMapPoint.y-this.currMapPoint.y)));
+		}
 	}
 
 	public boolean checkAndIncActionTime(int interval) {

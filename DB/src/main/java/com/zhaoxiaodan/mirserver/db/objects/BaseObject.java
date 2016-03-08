@@ -58,8 +58,8 @@ public abstract class BaseObject {
 		objectsInView.put(object.inGameId, object);
 	}
 
-	public void lose(BaseObject object){
-		if(object == this)
+	public void lose(BaseObject object) {
+		if (object == this)
 			return;
 		objectsInView.remove(object.inGameId);
 	}
@@ -78,30 +78,36 @@ public abstract class BaseObject {
 	 */
 	public void broadcast(ServerPacket serverPacket) {
 		for (BaseObject object : this.objectsInView.values()) {
-			if (object instanceof Player) {
+			if (object != this && object instanceof Player) {
 				((Player) object).session.sendPacket(serverPacket);
 			}
 		}
 	}
 
-	public void  walk(Direction direction){
-		this.move(direction,(short)1);
-		broadcast(new ServerPacket.Action(Protocol.SM_WALK,this));
+	public void walk(Direction direction) {
+		this.move(direction, (short) 1);
+		broadcast(new ServerPacket.Action(Protocol.SM_WALK, this));
 	}
 
-	public void  run(Direction direction){
-		this.move(direction,(short)2);
-		broadcast(new ServerPacket.Action(Protocol.SM_RUN,this));
+	public void run(Direction direction) {
+		this.move(direction, (short) 2);
+		broadcast(new ServerPacket.Action(Protocol.SM_RUN, this));
 	}
 
-	public void turn(Direction direction){
+	public void turn(Direction direction) {
 		this.direction = direction;
 		broadcast(new ServerPacket.Turn(this));
 	}
 
 	public void move(Direction direction, short distance) {
 		this.direction = direction;
-		MapEngine.MapInfo mapInfo  = MapEngine.getMapInfo(currMapPoint.mapId);
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(currMapPoint.mapId);
+
+		MapPoint fromPoint = this.currMapPoint.clone();
+		MapPoint toPoint   = this.currMapPoint.clone();
+		toPoint.move(direction, distance);
+
+		mapInfo.objectMove(this, fromPoint);
 
 		// 移动之后新进入视野的对象
 		List<BaseObject> newSeeObjects = new ArrayList<>();
@@ -110,170 +116,187 @@ public abstract class BaseObject {
 
 		switch (direction) {
 			case UP:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE,
-						distance));
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				currMapPoint.y -= distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE + (distance - 1)
+				));
 				break;
 			case UPRIGHT:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE + (distance - 1),
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				currMapPoint.x += distance;
 				currMapPoint.y -= distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
 						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
-						distance,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE + (distance - 1)
+				));
+				newSeeObjects.addAll(mapInfo.getObjects(
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				break;
 			case RIGHT:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE + (distance - 1),
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				currMapPoint.x += distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
 						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
-						distance,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				break;
 			case DOWNRIGHT:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE + (distance - 1)
+				));
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE + (distance - 1),
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				currMapPoint.x += distance;
 				currMapPoint.y += distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
 						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
+				newSeeObjects.addAll(mapInfo.getObjects(
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				break;
 			case DOWN:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE + (distance - 1)
+				));
 				currMapPoint.y += distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				break;
 			case DOWNLEFT:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
 						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
-						distance,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE + (distance - 1)
+				));
+				disappearObjects.addAll(mapInfo.getObjects(
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE - (distance -1),
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				currMapPoint.x -= distance;
 				currMapPoint.y += distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE + (distance -1),
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				break;
 			case LEFT:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE - (distance -1),
 						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
-						distance,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				currMapPoint.x -= distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE + (distance -1),
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				break;
 			case UPLEFT:
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
+				disappearObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
-						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				disappearObjects.addAll(MapEngine.getObjects(mapInfo,
 						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE - (distance - 1),
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
+				disappearObjects.addAll(mapInfo.getObjects(
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE - (distance -1),
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				currMapPoint.x -= distance;
 				currMapPoint.y -= distance;
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2,
+						this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						distance)
-				);
-				newSeeObjects.addAll(MapEngine.getObjects(mapInfo,
+						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE + (distance - 1)
+				));
+				newSeeObjects.addAll(mapInfo.getObjects(
 						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-						distance,
+						this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE + (distance -1),
 						this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-						Config.DEFAULT_VIEW_DISTANCE * 2));
+						this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE
+				));
 				break;
 		}
 
-		for(BaseObject object: newSeeObjects){
+		for (BaseObject object : newSeeObjects) {
 			this.see(object);
 			object.see(this);
+		}
+
+		for (BaseObject object : disappearObjects) {
+			this.lose(object);
+			object.lose(this);
 		}
 	}
 
@@ -301,7 +324,7 @@ public abstract class BaseObject {
 		if (mapInfo == null)
 			return;
 
-		if (!MapEngine.canWalk(mapPoint)) {
+		if (!mapInfo.canWalk(mapPoint)) {
 			enterMap(mapPoint.mapId);
 			return;
 		}
@@ -314,11 +337,11 @@ public abstract class BaseObject {
 		mapInfo.putObject(this);
 
 		//找到视野中的物品
-		List<BaseObject> objectsInView = MapEngine.getObjects(mapInfo,
+		List<BaseObject> objectsInView = mapInfo.getObjects(
 				this.currMapPoint.x - Config.DEFAULT_VIEW_DISTANCE,
-				Config.DEFAULT_VIEW_DISTANCE * 2,
+				this.currMapPoint.x + Config.DEFAULT_VIEW_DISTANCE,
 				this.currMapPoint.y - Config.DEFAULT_VIEW_DISTANCE,
-				Config.DEFAULT_VIEW_DISTANCE * 2);
+				this.currMapPoint.y + Config.DEFAULT_VIEW_DISTANCE);
 		for (BaseObject baseObject : objectsInView) {
 			//我看见你
 			this.see(baseObject);

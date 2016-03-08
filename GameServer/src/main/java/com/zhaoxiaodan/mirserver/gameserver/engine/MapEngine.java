@@ -59,20 +59,56 @@ public class MapEngine {
 		//空间换时间, 方便取地图上可以行走的随机点
 		public List<Integer> allCanWalkTileXY = new ArrayList<>();
 
-		public void putObject(BaseObject object){
-			if(object.currMapPoint.x >= this.width ||
+		public void putObject(BaseObject object) {
+			if (object.currMapPoint.x >= this.width ||
 					object.currMapPoint.y >= this.height)
 				return;
 
-			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.put(object.inGameId,object);
+			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.put(object.inGameId, object);
 		}
 
-		public void removeObject(BaseObject object){
-			if(object.currMapPoint.x >= this.width ||
+		public void removeObject(BaseObject object) {
+			if (object.currMapPoint.x >= this.width ||
 					object.currMapPoint.y >= this.height)
 				return;
 
 			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.remove(object.inGameId);
+		}
+
+		public void objectMove(BaseObject object, MapPoint fromPoint) {
+			if (object.currMapPoint.x >= this.width ||
+					object.currMapPoint.y >= this.height)
+				return;
+
+			this.tiles[fromPoint.x][fromPoint.y].objects.remove(object.inGameId);
+			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.put(object.inGameId, object);
+		}
+
+		public boolean canWalk(MapPoint mapPoint) {
+
+			if (mapPoint.x < 0 || mapPoint.x >= this.width || mapPoint.y < 0 || mapPoint.y >= this.height)
+				return false;
+
+			return tiles[mapPoint.x][mapPoint.y].canWalk;
+		}
+
+		public List<BaseObject> getObjects(int startX, int endX, int startY, int endY) {
+			List<BaseObject> objects = new ArrayList<>();
+			if(startX > endX || startY > endY){
+				logger.error("start > end ,{},{},{},{}",startX, endX, startY, endY);
+			}
+			startX = startX < 0 ? 0 : startX;
+			startY = startY < 0 ? 0 : startY;
+			endX = endX > this.width ? this.width : endX;
+			endY = endY > this.height ? this.height : endY;
+
+			for (int x = startX; x <= endX; x++) {
+				for (int y = startY; y <= endY; y++) {
+					objects.addAll(this.tiles[x][y].objects.values());
+				}
+			}
+
+			return objects;
 		}
 
 		public void loadMapFile() throws Exception {
@@ -119,31 +155,6 @@ public class MapEngine {
 
 		}
 	}
-
-	public static boolean canWalk(MapPoint mapPoint) {
-		MapInfo mapInfo = mapList.get(mapPoint.mapId);
-		if (null == mapInfo)
-			return false;
-
-		if (mapPoint.x < 0 || mapPoint.x >= mapInfo.width || mapPoint.y < 0 || mapPoint.y >= mapInfo.height)
-			return false;
-
-		return mapInfo.tiles[mapPoint.x][mapPoint.y].canWalk;
-	}
-
-	public static List<BaseObject> getObjects(MapInfo mapInfo, int startX, int width, int startY, int height) {
-		List<BaseObject> objects = new ArrayList<>();
-		int endX = startX + width >= mapInfo.width ? mapInfo.width:startX+width;
-		int endY = startY + height >= mapInfo.height ? mapInfo.height:startY+height;
-		for (int x = startX; x < endX; x++){
-			for(int y = startY; y<endY;y++){
-				objects.addAll(mapInfo.tiles[x][y].objects.values());
-			}
-		}
-
-		return objects;
-	}
-
 
 	public static synchronized void reload() throws Exception {
 		Map<String, MapInfo> maps = new HashMap<>();
