@@ -192,7 +192,7 @@ public abstract class BaseObject {
 		return NumUtil.makeLong(NumUtil.makeWord(race.id, (byte) 0), appr);
 	}
 
-	public int getFeatureEx() {
+	public short getFeatureEx() {
 		return 0;
 	}
 

@@ -40,6 +40,7 @@ Map<String,Integer> getInitItems(Player c){
 
     items.put("金创药(小)包",5);
     items.put("八荒",1);
+    items.put("木剑",1);
     if (c.job != Job.Warrior){
         items.put("魔法药(小)包",3);
     }

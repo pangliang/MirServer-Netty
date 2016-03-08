@@ -3,14 +3,16 @@ package com.zhaoxiaodan.mirserver.db.entities;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.types.*;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
-import com.zhaoxiaodan.mirserver.gameserver.engine.MessageEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.Session;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Player extends BaseObject {
@@ -61,8 +63,14 @@ public class Player extends BaseObject {
 	public int gamePoint;
 
 	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Where(clause="isWearing=false")
 	@MapKey(name = "id")
-	public List<PlayerItem> items;
+	public Map<Integer,PlayerItem> items = new HashMap<>();;
+
+	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Where(clause="isWearing=true")
+	@MapKey(name = "wearingPosition")
+	public Map<WearPosition,PlayerItem> wearingItems = new HashMap<>();
 
 	/**
 	 * 最后动作时间, 用来防止加速
@@ -87,6 +95,22 @@ public class Player extends BaseObject {
 		if(object == this)
 			return;
 		session.sendPacket(new ServerPacket(object.inGameId, Protocol.SM_DISAPPEAR));
+	}
+
+	@Override
+	public int getFeature() {
+		int dressShape = 0;
+		int weaponShape = 0;
+		int hairShape = 0;
+		PlayerItem item;
+		if((item = this.wearingItems.get(WearPosition.Dress)) != null)
+			dressShape = item.attr.shape * 2;
+		if((item = this.wearingItems.get(WearPosition.Weapon)) != null)
+			weaponShape = item.attr.shape * 2;
+
+		hairShape = this.hair * 2;
+
+		return NumUtil.makeLong(NumUtil.makeWord(Race.Player.id,(byte)weaponShape), NumUtil.makeWord((byte)hairShape, (byte)dressShape));
 	}
 
 	@Override

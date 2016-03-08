@@ -57,8 +57,8 @@ public enum Protocol {
 
 	CM_DROPITEM(1000,null,null),
 	CM_PICKUP(1001,null,null),
-	CM_TAKEONITEM(1003,null,null),
-	CM_TAKEOFFITEM(1004,null,null),
+	CM_TAKEONITEM(1003,"TakeOnOffItem",null),
+	CM_TAKEOFFITEM(1004,"TakeOnOffItem",null),
 	CM_BUTCH(1007,null,null),
 	CM_MAGICKEYCHANGE(1008,null,null),
 	CM_LOGINNOTICEOK(1018,"LoginNoticeOk",null),

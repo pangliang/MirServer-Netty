@@ -10,7 +10,7 @@ public class QueryBagItemsHandler extends PlayerHandler {
 
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
-		for (PlayerItem item : player.items) {
+		for (PlayerItem item : player.items.values()) {
 			session.sendPacket(new ServerPacket.AddItem(player.inGameId, item));
 		}
 	}

@@ -4,6 +4,7 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.db.types.Gender;
 import com.zhaoxiaodan.mirserver.db.types.Job;
+import com.zhaoxiaodan.mirserver.db.types.WearPosition;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import io.netty.buffer.ByteBuf;
 
@@ -404,6 +405,23 @@ public class ClientPacket extends Packet {
 			super.writePacket(out);
 
 			out.writeBytes(msg.getBytes());
+		}
+	}
+
+	public static final class TakeOnOffItem extends ClientPacket {
+
+		public int          playerItemId;
+		public String       itemName;
+		public WearPosition wearPosition;
+
+		public TakeOnOffItem() {}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			this.playerItemId = this.recog;
+			this.wearPosition = WearPosition.get(this.p1);
+			this.itemName = in.toString(Charset.defaultCharset()).trim();
 		}
 	}
 }

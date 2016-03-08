@@ -35,7 +35,7 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 				playerItem.attr = stdItem.attr;
 
 				session.db.save(playerItem);
-				player.items.add(playerItem);
+				player.items.put(playerItem.id,playerItem);
 			}
 		}
 

@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
 import com.zhaoxiaodan.mirserver.db.types.ItemAttr;
+import com.zhaoxiaodan.mirserver.db.types.WearPosition;
 import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 
@@ -20,6 +21,10 @@ public class PlayerItem implements Parcelable{
 	public ItemAttr attr;
 
 	public short dura;
+
+	public boolean isWearing;
+
+	public WearPosition wearingPosition ;
 
 	@Override
 	public void readPacket(ByteBuf in) throws WrongFormatException {
