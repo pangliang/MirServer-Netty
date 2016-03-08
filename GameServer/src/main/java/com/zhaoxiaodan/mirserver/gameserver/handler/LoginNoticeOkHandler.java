@@ -33,6 +33,7 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 				PlayerItem playerItem = new PlayerItem();
 				playerItem.player = player;
 				playerItem.attr = stdItem.attr;
+				playerItem.dura = stdItem.attr.duraMax;
 
 				session.db.save(playerItem);
 				player.items.put(playerItem.id,playerItem);

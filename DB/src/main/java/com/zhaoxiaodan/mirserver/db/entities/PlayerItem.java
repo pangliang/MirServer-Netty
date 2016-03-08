@@ -20,7 +20,7 @@ public class PlayerItem implements Parcelable{
 	@Embedded
 	public ItemAttr attr;
 
-	public short dura;
+	public int dura;
 
 	public boolean isWearing;
 

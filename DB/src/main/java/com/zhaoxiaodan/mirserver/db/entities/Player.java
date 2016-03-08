@@ -110,6 +110,10 @@ public class Player extends BaseObject {
 
 		hairShape = this.hair * 2;
 
+		dressShape+=this.gender.ordinal();
+		weaponShape+=this.gender.ordinal();
+		hairShape+=this.gender.ordinal();
+
 		return NumUtil.makeLong(NumUtil.makeWord(Race.Player.id,(byte)weaponShape), NumUtil.makeWord((byte)hairShape, (byte)dressShape));
 	}
 
