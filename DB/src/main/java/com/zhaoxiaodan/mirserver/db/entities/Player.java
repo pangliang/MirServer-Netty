@@ -107,57 +107,6 @@ public class Player extends BaseObject {
 		super.enterMap(mapPoint);
 	}
 
-	@Override
-	public void walk(Direction direction) {
-		if(!this.checkAndIncActionTime(Config.PLAYER_ACTION_INTERVAL_TIME)){
-			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Fail));
-			return;
-		}
-
-		super.walk(direction);
-
-		session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Good));
-	}
-
-	@Override
-	public void run(Direction direction) {
-		if(!this.checkAndIncActionTime(Config.PLAYER_ACTION_INTERVAL_TIME)){
-			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Fail));
-			return;
-		}
-
-		super.run(direction);
-
-		session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Good));
-	}
-
-	@Override
-	public void turn(Direction direction) {
-		if(!this.checkAndIncActionTime(Config.PLAYER_ACTION_INTERVAL_TIME)){
-			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Fail));
-			return;
-		}
-
-		super.turn(direction);
-		session.sendPacket(new ServerPacket.Turn(this));
-		session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Good));
-	}
-
-	@Override
-	public void move(Direction direction, short distance) {
-		super.move(direction, distance);
-
-		for(BaseObject object: objectsInView.values()){
-			session.sendPacket(MessageEngine.createMessage(
-					this.inGameId,
-					object.name
-							+" 距离:"
-							+(object.currMapPoint.x-this.currMapPoint.x)
-							+","
-							+(object.currMapPoint.y-this.currMapPoint.y)));
-		}
-	}
-
 	public boolean checkAndIncActionTime(int interval) {
 		long now = NumUtil.getTickCount();
 		if (now - lastActionTime < interval) {

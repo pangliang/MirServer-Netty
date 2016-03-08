@@ -107,7 +107,7 @@ public abstract class BaseObject {
 		MapPoint toPoint   = this.currMapPoint.clone();
 		toPoint.move(direction, distance);
 
-		mapInfo.objectMove(this, fromPoint);
+		mapInfo.objectMove(this, fromPoint, toPoint);
 
 		// 移动之后新进入视野的对象
 		List<BaseObject> newSeeObjects = new ArrayList<>();

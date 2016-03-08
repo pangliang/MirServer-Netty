@@ -1,10 +1,12 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
+import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
-public class MoveActionHandler extends PlayerHandler {
+public class ActionHandler extends PlayerHandler {
 
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
@@ -13,6 +15,12 @@ public class MoveActionHandler extends PlayerHandler {
 
 		Direction direction = Direction.values()[packet.p2];
 
+		if(!player.checkAndIncActionTime(Config.PLAYER_ACTION_INTERVAL_TIME)){
+			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Fail));
+			return;
+		}
+
+		boolean isSucc = false;
 		switch (packet.protocol){
 			case CM_WALK:
 				player.walk(direction);
@@ -26,5 +34,10 @@ public class MoveActionHandler extends PlayerHandler {
 			default:
 				break;
 		}
+
+		if(isSucc)
+			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Good));
+		else
+			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Fail));
 	}
 }

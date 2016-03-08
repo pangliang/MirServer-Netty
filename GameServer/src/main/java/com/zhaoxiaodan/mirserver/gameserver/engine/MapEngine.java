@@ -71,17 +71,18 @@ public class MapEngine {
 			if (object.currMapPoint.x >= this.width ||
 					object.currMapPoint.y >= this.height)
 				return;
-
+			if(!this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.containsKey(object.inGameId))
+				logger.error("当前tile不存在object:id:{},x:{},y:{}", object.inGameId,object.currMapPoint.x,object.currMapPoint.y);
 			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.remove(object.inGameId);
 		}
 
-		public void objectMove(BaseObject object, MapPoint fromPoint) {
+		public void objectMove(BaseObject object, MapPoint from, MapPoint to) {
 			if (object.currMapPoint.x >= this.width ||
 					object.currMapPoint.y >= this.height)
 				return;
 
-			this.tiles[fromPoint.x][fromPoint.y].objects.remove(object.inGameId);
-			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.put(object.inGameId, object);
+			this.tiles[from.x][from.y].objects.remove(object.inGameId);
+			this.tiles[to.x][to.y].objects.put(object.inGameId, object);
 		}
 
 		public boolean canWalk(MapPoint mapPoint) {
