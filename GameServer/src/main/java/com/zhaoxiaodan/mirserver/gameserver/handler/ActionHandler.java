@@ -30,7 +30,6 @@ public class ActionHandler extends PlayerHandler {
 				break;
 			case CM_TURN:
 				isSucc = player.turn(direction);
-				session.sendPacket(new ServerPacket.Turn(player));
 				break;
 			default:
 				isSucc = true;

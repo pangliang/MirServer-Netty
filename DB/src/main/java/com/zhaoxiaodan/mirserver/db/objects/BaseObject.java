@@ -118,20 +118,33 @@ public abstract class BaseObject {
 		toPoint.move(direction, distance);
 		mapInfo.objectMove(this, fromPoint, toPoint);
 
-		List<BaseObject> disappearObjects = mapInfo.getEdgeObjects(fromPoint,direction.reverse(),Config.DEFAULT_VIEW_DISTANCE,Config.DEFAULT_VIEW_DISTANCE,distance);
-		List<BaseObject> newSeeObjects = mapInfo.getEdgeObjects(toPoint,direction,Config.DEFAULT_VIEW_DISTANCE,Config.DEFAULT_VIEW_DISTANCE,distance);
+		//TODO 这个地方有优化的空间, 没必要整个屏幕扫描, 扫描边缘就可以了
+		List<BaseObject> objectsInView = mapInfo.getObjects(
+				toPoint.x - Config.DEFAULT_VIEW_DISTANCE,
+				toPoint.x + Config.DEFAULT_VIEW_DISTANCE,
+				toPoint.y - Config.DEFAULT_VIEW_DISTANCE,
+				toPoint.y + Config.DEFAULT_VIEW_DISTANCE
+		);
 
-		for (BaseObject object : newSeeObjects) {
-			this.see(object);
-			object.see(this);
+		for(BaseObject object : objectsInView){
+			// 新发现的
+			if(!this.objectsInView.containsKey(object.inGameId)){
+				this.see(object);
+				object.see(this);
+			}
 		}
 
-		for (BaseObject object : disappearObjects) {
-			this.lose(object);
-			object.lose(this);
+		for(BaseObject object: this.objectsInView.values()){
+			if( (!object.currMapPoint.mapId.equals(toPoint.mapId))
+					|| Math.abs(object.currMapPoint.x - toPoint.x) > Config.DEFAULT_VIEW_DISTANCE
+					|| Math.abs(object.currMapPoint.y - toPoint.y) > Config.DEFAULT_VIEW_DISTANCE
+					){
+				this.lose(object);
+				object.lose(this);
+			}
 		}
 
-		this.currMapPoint.move(direction,distance);
+		this.currMapPoint = toPoint;
 
 		return true;
 	}
