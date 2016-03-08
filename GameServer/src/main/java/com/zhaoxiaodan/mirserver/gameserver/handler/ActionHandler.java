@@ -23,15 +23,16 @@ public class ActionHandler extends PlayerHandler {
 		boolean isSucc = false;
 		switch (packet.protocol){
 			case CM_WALK:
-				player.walk(direction);
+				isSucc = player.walk(direction);
 				break;
 			case CM_RUN:
-				player.run(direction);
+				isSucc = player.run(direction);
 				break;
 			case CM_TURN:
-				player.turn(direction);
+				isSucc = player.turn(direction);
 				break;
 			default:
+				isSucc = true;
 				break;
 		}
 

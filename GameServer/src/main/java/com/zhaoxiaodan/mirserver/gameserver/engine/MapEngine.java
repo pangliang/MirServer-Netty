@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
@@ -71,8 +72,8 @@ public class MapEngine {
 			if (object.currMapPoint.x >= this.width ||
 					object.currMapPoint.y >= this.height)
 				return;
-			if(!this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.containsKey(object.inGameId))
-				logger.error("当前tile不存在object:id:{},x:{},y:{}", object.inGameId,object.currMapPoint.x,object.currMapPoint.y);
+			if (!this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.containsKey(object.inGameId))
+				logger.error("当前tile不存在object:id:{},x:{},y:{}", object.inGameId, object.currMapPoint.x, object.currMapPoint.y);
 			this.tiles[object.currMapPoint.x][object.currMapPoint.y].objects.remove(object.inGameId);
 		}
 
@@ -95,8 +96,8 @@ public class MapEngine {
 
 		public List<BaseObject> getObjects(int startX, int endX, int startY, int endY) {
 			List<BaseObject> objects = new ArrayList<>();
-			if(startX > endX || startY > endY){
-				logger.error("start > end ,{},{},{},{}",startX, endX, startY, endY);
+			if (startX > endX || startY > endY) {
+				logger.error("start > end ,{},{},{},{}", startX, endX, startY, endY);
 			}
 			startX = startX < 0 ? 0 : startX;
 			startY = startY < 0 ? 0 : startY;
@@ -107,6 +108,128 @@ public class MapEngine {
 				for (int y = startY; y <= endY; y++) {
 					objects.addAll(this.tiles[x][y].objects.values());
 				}
+			}
+
+			return objects;
+		}
+
+		public List<BaseObject> getObjectsOnLine(MapPoint point, Direction direction, int distance, int len) {
+			List<BaseObject> objects = new ArrayList<>();
+			int              diffX   = 0;
+			int              diffY   = 0;
+			switch (direction) {
+				case UP:
+					diffX = 0;
+					diffY = -1;
+					break;
+				case UPRIGHT:
+					diffX = 1;
+					diffY = -1;
+					break;
+				case RIGHT:
+					diffX = 1;
+					diffY = 0;
+					break;
+				case DOWNRIGHT:
+					diffX = 1;
+					diffY = 1;
+					break;
+				case DOWN:
+					diffX = 0;
+					diffY = 1;
+					break;
+				case DOWNLEFT:
+					diffX = -1;
+					diffY = 1;
+					break;
+				case LEFT:
+					diffX = -1;
+					diffY = 0;
+					break;
+				case UPLEFT:
+					diffX = -1;
+					diffY = -1;
+					break;
+			}
+
+			int x = point.x + distance * diffX;
+			int y = point.y + distance * diffY;
+
+			for (int i = 0; i < len; i++) {
+				if (x < 0 || x >= width || y < 0 || y >= height)
+					break;
+				objects.addAll(this.tiles[x][y].objects.values());
+
+				x+=diffX;
+				y+=diffY;
+			}
+
+			return objects;
+		}
+
+		/**
+		 * 获取一个以point为中点, direction 方向上 距离为distance 的 宽度为width 的横排 格子上的对象
+		 *
+		 * @param point
+		 * @param direction
+		 * @param distance
+		 * @param width
+		 * @param depth
+		 *
+		 * @return
+		 */
+		public List<BaseObject> getEdgeObjects(MapPoint point, Direction direction, int distance, int width, int depth) {
+			List<BaseObject> objects = new ArrayList<>();
+
+			switch (direction) {
+				case UP:
+					objects.addAll(this.getObjects(
+							point.x - width / 2,
+							point.x + width / 2,
+							point.y - distance,
+							point.y - distance + (depth - 1)
+					));
+					break;
+				case UPRIGHT:
+					objects.addAll(getEdgeObjects(point, Direction.UP, distance, width, depth));
+					objects.addAll(getEdgeObjects(point, Direction.RIGHT, distance, width, depth));
+					break;
+				case RIGHT:
+					objects.addAll(this.getObjects(
+							point.x + distance - (depth - 1),
+							point.x + distance,
+							point.y - width / 2,
+							point.y + width / 2
+					));
+					break;
+				case DOWNRIGHT:
+					objects.addAll(getEdgeObjects(point, Direction.DOWN, distance, width, depth));
+					objects.addAll(getEdgeObjects(point, Direction.RIGHT, distance, width, depth));
+					break;
+				case DOWN:
+					objects.addAll(this.getObjects(
+							point.x - width / 2,
+							point.x + width / 2,
+							point.y + distance - (depth - 1),
+							point.y + distance
+					));
+					break;
+				case DOWNLEFT:
+					objects.addAll(getEdgeObjects(point, Direction.DOWN, distance, width, depth));
+					objects.addAll(getEdgeObjects(point, Direction.RIGHT, distance, width, depth));
+					break;
+				case LEFT:
+					objects.addAll(this.getObjects(
+							point.x - distance,
+							point.x - distance + (depth - 1),
+							point.y - width / 2,
+							point.y + width / 2
+					));
+					break;
+				case UPLEFT:
+					objects.addAll(getEdgeObjects(point, Direction.UP, distance, width, depth));
+					objects.addAll(getEdgeObjects(point, Direction.LEFT, distance, width, depth));
+					break;
 			}
 
 			return objects;
