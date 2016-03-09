@@ -175,11 +175,6 @@ public abstract class BaseObject {
 		if (mapInfo == null)
 			return;
 
-		if (!mapInfo.canWalk(mapPoint)) {
-			enterMap(mapPoint.mapId);
-			return;
-		}
-
 		if (!this.currMapPoint.mapId.equals(mapPoint.mapId))
 			leaveMap();
 
