@@ -8,8 +8,14 @@ import groovy.lang.GroovyObject;
 
 public class Merchant extends BaseObject {
 
+	public String name;
 	public String       scriptName;
 	public GroovyObject scriptInstance;
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
 
 	@Override
 	public int getFeature() {

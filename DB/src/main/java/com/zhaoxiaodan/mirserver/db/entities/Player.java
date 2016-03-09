@@ -25,6 +25,7 @@ public class Player extends BaseObject {
 	@JoinColumn(name = "userId")
 	public  User user;
 
+	public String name;
 	/**
 	 * 头发
 	 */
@@ -77,6 +78,11 @@ public class Player extends BaseObject {
 
 	@Transient
 	public Session session;
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
 
 	@Override
 	public boolean see(BaseObject object) {

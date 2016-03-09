@@ -5,24 +5,25 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.types.Color;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
-import com.zhaoxiaodan.mirserver.db.types.Race;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Transient;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-@MappedSuperclass
 public abstract class BaseObject {
 
 	public final int inGameId = NumUtil.newAtomicId();
 
-	public String name;
+	public abstract String getName();
 	public Color nameColor = Color.White;
 	public byte light;
 

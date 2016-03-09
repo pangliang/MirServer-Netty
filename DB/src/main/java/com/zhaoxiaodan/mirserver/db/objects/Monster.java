@@ -14,6 +14,11 @@ public class Monster extends BaseObject {
 	public long lastWalkTime;
 
 	@Override
+	public String getName() {
+		return stdMonster.name;
+	}
+
+	@Override
 	public boolean see(BaseObject object) {
 
 		// 怪物只管看到的Player

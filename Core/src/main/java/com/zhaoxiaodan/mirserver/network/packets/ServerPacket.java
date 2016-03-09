@@ -785,7 +785,7 @@ public class ServerPacket extends Packet {
 					object.getFeature(),
 					object.getStatus(),
 					object.light,
-					object.name,
+					object.getName(),
 					object.nameColor.c);
 		}
 
