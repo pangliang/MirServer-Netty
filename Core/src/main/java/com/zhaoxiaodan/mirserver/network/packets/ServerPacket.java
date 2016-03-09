@@ -757,7 +757,7 @@ public class ServerPacket extends Packet {
 
 		public int       id;
 		public Direction direction;
-		public String    name;
+		public String    objName;
 		public int       nameColor;
 		public int       feature;
 		public int       status;
@@ -769,7 +769,7 @@ public class ServerPacket extends Packet {
 			super(Protocol.SM_TURN, x, y);
 			this.id = id;
 			this.direction = direction;
-			this.name = name;
+			this.objName = name;
 			this.recog = id;
 			this.p3 = NumUtil.makeWord((byte) direction.ordinal(), light);
 			this.feature = feature;
@@ -794,7 +794,7 @@ public class ServerPacket extends Packet {
 			super.writePacket(out);
 			out.writeInt(feature);
 			out.writeInt(status);
-			out.writeBytes(name.getBytes(Charset.defaultCharset()));
+			out.writeBytes(objName.getBytes(Charset.defaultCharset()));
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(Integer.toString(nameColor).getBytes());
 		}
@@ -808,7 +808,7 @@ public class ServerPacket extends Packet {
 			status = in.readInt();
 			String   content = in.toString(Charset.defaultCharset());
 			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
-			name = parts[0];
+			objName = parts[0];
 			nameColor = parts.length > 1 ? Integer.parseInt(parts[1]) : Color.White.c;
 		}
 	}

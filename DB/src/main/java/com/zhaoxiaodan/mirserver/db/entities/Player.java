@@ -17,9 +17,6 @@ import java.util.Map;
 @Entity
 public class Player extends BaseObject {
 
-	public Player() {
-		race = Race.Player;
-	}
 
 	@Id
 	@GeneratedValue
@@ -82,11 +79,13 @@ public class Player extends BaseObject {
 	public Session session;
 
 	@Override
-	public void see(BaseObject object) {
-		super.see(object);
-		if (object == this)
-			return;
-		session.sendPacket(new ServerPacket.Turn(object));
+	public boolean see(BaseObject object) {
+		boolean rs;
+		if(rs = super.see(object)){
+			session.sendPacket(new ServerPacket.Turn(object));
+		}
+
+		return rs;
 	}
 
 	@Override
@@ -115,6 +114,16 @@ public class Player extends BaseObject {
 		hairShape+=this.gender.ordinal();
 
 		return NumUtil.makeLong(NumUtil.makeWord(Race.Player.id,(byte)weaponShape), NumUtil.makeWord((byte)hairShape, (byte)dressShape));
+	}
+
+	@Override
+	public short getFeatureEx() {
+		return 0;
+	}
+
+	@Override
+	public int getStatus() {
+		return 0;
 	}
 
 	@Override

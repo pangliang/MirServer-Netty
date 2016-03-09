@@ -15,10 +15,12 @@
         <property name="hibernate.connection.autocommit">true</property>
         <property name="hibernate.id.new_generator_mappings">TABLE</property>
 
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdMonster"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdItem"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.User"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.ServerInfo"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.Player"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.PlayerItem"/>
+
     </session-factory>
 </hibernate-configuration>

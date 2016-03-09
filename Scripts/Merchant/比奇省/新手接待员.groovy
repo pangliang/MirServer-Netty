@@ -1,6 +1,5 @@
 import com.zhaoxiaodan.mirserver.db.entities.Player
 import com.zhaoxiaodan.mirserver.db.objects.Merchant
-import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine
 
 public void main(Merchant merchant, Player player){
     String msg =  "欢迎来到 {哈哈呵呵/SCOLOR=253}\\ \\ \\" +
@@ -11,5 +10,5 @@ public void main(Merchant merchant, Player player){
 }
 
 public void 传送到新手练级地图(Merchant merchant, Player player){
-    MapEngine.enter(player,"G003");
+    player.enterMap("G003");
 }

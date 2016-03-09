@@ -24,13 +24,6 @@ public abstract class BaseObject {
 
 	public String name;
 	public Color nameColor = Color.White;
-
-	public Race  race = Race.Animal;
-	public short appr = 0;
-
-	/**
-	 * 亮度
-	 */
 	public byte light;
 
 	@AttributeOverrides({
@@ -51,10 +44,23 @@ public abstract class BaseObject {
 	@Transient
 	public Map<Integer, BaseObject> objectsInView = new ConcurrentHashMap<>();
 
-	public void see(BaseObject object) {
+	/**
+	 * 发现目标, 新目标返回true
+	 *
+	 * @param object
+	 *
+	 * @return
+	 */
+	public boolean see(BaseObject object) {
 		if (object == this)
-			return;
-		objectsInView.put(object.inGameId, object);
+			return false;
+
+		if (!this.objectsInView.containsKey(object.inGameId)) {
+			objectsInView.put(object.inGameId, object);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void lose(BaseObject object) {
@@ -111,10 +117,10 @@ public abstract class BaseObject {
 
 		MapPoint fromPoint = this.currMapPoint.clone();
 
-		if(mapInfo.getObjectsOnLine(fromPoint,direction,1,distance).size() > 0)
+		if (mapInfo.getObjectsOnLine(fromPoint, direction, 1, distance).size() > 0)
 			return false;
 
-		MapPoint toPoint   = this.currMapPoint.clone();
+		MapPoint toPoint = this.currMapPoint.clone();
 		toPoint.move(direction, distance);
 		mapInfo.objectMove(this, fromPoint, toPoint);
 
@@ -126,19 +132,16 @@ public abstract class BaseObject {
 				toPoint.y + Config.DEFAULT_VIEW_DISTANCE
 		);
 
-		for(BaseObject object : objectsInView){
-			// 新发现的
-			if(!this.objectsInView.containsKey(object.inGameId)){
-				this.see(object);
-				object.see(this);
-			}
+		for (BaseObject object : objectsInView) {
+			this.see(object);
+			object.see(this);
 		}
 
-		for(BaseObject object: this.objectsInView.values()){
-			if( (!object.currMapPoint.mapId.equals(toPoint.mapId))
+		for (BaseObject object : this.objectsInView.values()) {
+			if ((!object.currMapPoint.mapId.equals(toPoint.mapId))
 					|| Math.abs(object.currMapPoint.x - toPoint.x) > Config.DEFAULT_VIEW_DISTANCE
 					|| Math.abs(object.currMapPoint.y - toPoint.y) > Config.DEFAULT_VIEW_DISTANCE
-					){
+					) {
 				this.lose(object);
 				object.lose(this);
 			}
@@ -148,7 +151,6 @@ public abstract class BaseObject {
 
 		return true;
 	}
-
 
 
 	/**
@@ -196,17 +198,11 @@ public abstract class BaseObject {
 		}
 	}
 
-	public int getFeature() {
-		return NumUtil.makeLong(NumUtil.makeWord(race.id, (byte) 0), appr);
-	}
+	public abstract int getFeature();
 
-	public short getFeatureEx() {
-		return 0;
-	}
+	public abstract short getFeatureEx();
 
-	public int getStatus() {
-		return 0;
-	}
+	public abstract int getStatus();
 
 	/**
 	 * 每一秒钟引擎会触发一下, 让它获得执行机会, 处理一些自身的变化
