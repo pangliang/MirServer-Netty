@@ -381,8 +381,8 @@ public class ServerPacket extends Packet {
 
 		public Logon(Player player) {
 			this(player.inGameId,
-					player.currMapPoint.x,
-					player.currMapPoint.y,
+					player.homeMapPoint.x,
+					player.homeMapPoint.y,
 					(byte) player.direction.ordinal(),
 					player.light,
 					player.getFeature(),

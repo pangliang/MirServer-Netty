@@ -46,7 +46,7 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 		// 玩家属性, 必须发, 不然血量是0 就闪退
 		player.session.sendPacket(new ServerPacket.PlayerAbility(player.gold, player.gameGold, player.job, player.ability));
 
-		player.enterMap(player.currMapPoint);
+		player.enterMap(player.homeMapPoint);
 
 		player.session.sendPacket(new ServerPacket.SendUseItems(player.wearingItems));
 		player.session.sendPacket(new ServerPacket.UserName(player.inGameId, (short) player.nameColor.c, player.name));

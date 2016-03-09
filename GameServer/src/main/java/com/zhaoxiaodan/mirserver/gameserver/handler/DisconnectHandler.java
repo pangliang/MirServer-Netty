@@ -17,6 +17,7 @@ public class DisconnectHandler extends Handler {
 
 			session.db.begin();
 			try{
+				player.homeMapPoint = player.currMapPoint; //todo 暂时把当前坐标放到回城坐标, 方便测试, 测试时上线就去到原坐标
 				session.db.update(player);
 				session.db.commit();
 			}catch (Exception e){
