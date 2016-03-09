@@ -15,37 +15,39 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 
 public class MonsterEngine {
-	private static final Logger logger = LogManager.getLogger();
+
+	private static final Logger logger             = LogManager.getLogger();
 	private static final String MONSTER_GEN_CONFIG = "Envir/MonsterGen.cfg";
 	private static final String MONSTER_SCRIPT_DIR = "Scripts/Monster";
 
-	private static Map<String, StdMonster> stdMonsterNames  = new HashMap<>();
-	private static List<RefreshGroup> refreshGroups = new ArrayList<>();
+	private static Map<String, StdMonster> stdMonsterNames = new HashMap<>();
+	private static List<RefreshGroup>      refreshGroups   = new ArrayList<>();
 
-	private static class RefreshGroup{
-		public int refreshInterval;
-		public long lastRefreshTime;
+	private static class RefreshGroup {
+
+		public int      refreshInterval;
+		public long     lastRefreshTime;
 		public MapPoint mapPoint;
-		public String monsterName;
-		public int scope;
-		public int amount;
+		public String   monsterName;
+		public int      scope;
+		public int      amount;
 
 		protected List<Monster> monsters = new ArrayList<>();
 	}
 
 	private static boolean running = false;
 
-	public synchronized static void start(){
-		if(running)
-			return ;
+	public synchronized static void start() {
+		if (running)
+			return;
 		running = true;
-		new Thread(){
+		new Thread() {
 			@Override
 			public void run() {
-				while(running){
+				while (running) {
 					try {
 						onTick();
-						Thread.sleep(50);
+						Thread.sleep(200);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -55,10 +57,10 @@ public class MonsterEngine {
 	}
 
 
-	private static void onTick(){
-		for(RefreshGroup group: refreshGroups){
+	private static void onTick() {
+		for (RefreshGroup group : refreshGroups) {
 			long now = NumUtil.getTickCount();
-			if(now > group.lastRefreshTime + group.refreshInterval){
+			if (now > group.lastRefreshTime + group.refreshInterval) {
 				group.lastRefreshTime = now;
 				try {
 					refresh(group);
@@ -67,10 +69,10 @@ public class MonsterEngine {
 				}
 			}
 
-			for(Monster monster : group.monsters){
-				if(monster.objectsInView.size() > 0){
+			for (Monster monster : group.monsters) {
+				if (monster.objectsInView.size() > 0) {
 					try {
-						monster.scriptInstance.invokeMethod("onTick",monster);
+						monster.getScriptInstance().invokeMethod("onTick", monster);
 					} catch (Exception e) {
 						logger.error("monster onTime error", e);
 					}
@@ -86,12 +88,12 @@ public class MonsterEngine {
 	public synchronized static void reload() throws Exception {
 		reloadStdMonster();
 		reloadMonsterGenConfig();
-		for(RefreshGroup group: refreshGroups){
+		for (RefreshGroup group : refreshGroups) {
 			refresh(group);
 		}
 	}
 
-	private static void reloadStdMonster() throws Exception{
+	private static void reloadStdMonster() throws Exception {
 		List<StdMonster>        monsters     = new DB().begin().query(StdMonster.class);
 		Map<String, StdMonster> monsterNames = new HashMap<>();
 		for (StdMonster monster : monsters) {
@@ -101,10 +103,10 @@ public class MonsterEngine {
 		MonsterEngine.stdMonsterNames = monsterNames;
 	}
 
-	private static void reloadMonsterGenConfig() throws Exception{
+	private static void reloadMonsterGenConfig() throws Exception {
 
-		for(RefreshGroup group: refreshGroups){
-			for(Monster monster:group.monsters)
+		for (RefreshGroup group : refreshGroups) {
+			for (Monster monster : group.monsters)
 				MonsterEngine.remove(monster);
 		}
 
@@ -126,24 +128,24 @@ public class MonsterEngine {
 		refreshGroups = groups;
 	}
 
-	private static void refresh(RefreshGroup group) throws Exception{
+	private static void refresh(RefreshGroup group) throws Exception {
 		logger.debug("刷怪,{}", JSON.toJSONString(group));
-		for(Monster monster:group.monsters)
+		for (Monster monster : group.monsters)
 			MonsterEngine.remove(monster);
 
 		group.monsters = new ArrayList<>();
 
 		Random random = new Random();
-		for(int i = 0;i<group.amount;i++){
+		for (int i = 0; i < group.amount; i++) {
 			Monster monster;
-			if(group.mapPoint.x == 0 && group.mapPoint.y == 0){
+			if (group.mapPoint.x == 0 && group.mapPoint.y == 0) {
 				monster = createMonster(group.monsterName);
 				monster.enterMap(group.mapPoint.mapId);
-			}else {
+			} else {
 				MapPoint mapPoint = new MapPoint();
 				mapPoint.mapId = group.mapPoint.mapId;
-				mapPoint.x = (short) (group.mapPoint.x - (group.scope/2) + random.nextInt(group.scope));
-				mapPoint.y = (short) (group.mapPoint.y - (group.scope/2) + random.nextInt(group.scope));
+				mapPoint.x = (short) (group.mapPoint.x - (group.scope / 2) + random.nextInt(group.scope));
+				mapPoint.y = (short) (group.mapPoint.y - (group.scope / 2) + random.nextInt(group.scope));
 
 				monster = createMonster(group.monsterName);
 				monster.enterMap(mapPoint);
@@ -153,21 +155,21 @@ public class MonsterEngine {
 		}
 	}
 
-	private static void remove(Monster monster){
+	private static void remove(Monster monster) {
 		monster.leaveMap();
 	}
 
 	public static Monster createMonster(String monsterName) throws Exception {
-		GroovyScriptEngine engine     = new GroovyScriptEngine(MONSTER_SCRIPT_DIR);
-		Monster            monster    = new Monster();
-		StdMonster         stdMonster = stdMonsterNames.get(monsterName);
+		GroovyScriptEngine engine = new GroovyScriptEngine(MONSTER_SCRIPT_DIR);
+
+		StdMonster stdMonster = stdMonsterNames.get(monsterName);
 		if (null != stdMonster) {
-			monster.hp = stdMonster.hp;
-			monster.stdMonster = stdMonster;
-			monster.scriptInstance = (GroovyObject) engine.loadScriptByName(stdMonster.scriptName + ".groovy").newInstance();
-		}else{
+			GroovyObject scriptInstance = (GroovyObject) engine.loadScriptByName(stdMonster.scriptName + ".groovy").newInstance();
+			Monster      monster        = new Monster(stdMonster, scriptInstance);
+			return monster;
+		} else {
 			throw new Exception("StdMonster 不存在 : " + monsterName);
 		}
-		return monster;
+
 	}
 }

@@ -19,29 +19,16 @@ public abstract class BaseObject {
 
 	public final int inGameId = NumUtil.newAtomicId();
 
-	public abstract String getName();
+	public  short  hp;
+	public  short  maxHp;
 	public Color nameColor = Color.White;
 	public byte light;
-
-	/**
-	 * 当前地图位置
-	 */
-	public MapPoint currMapPoint = new MapPoint();
-
-	/**
-	 * 方向, 8个方向
-	 */
-	public Direction direction = Direction.DOWN;
-
+	public MapPoint                 currMapPoint  = new MapPoint();
+	public Direction                direction     = Direction.DOWN;
 	public Map<Integer, BaseObject> objectsInView = new ConcurrentHashMap<>();
 
-	/**
-	 * 发现目标, 新目标返回true
-	 *
-	 * @param object
-	 *
-	 * @return
-	 */
+	public abstract String getName();
+
 	public boolean see(BaseObject object) {
 		if (object == this)
 			return false;
@@ -64,14 +51,11 @@ public abstract class BaseObject {
 		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
 		mapInfo.removeObject(this);
 
-		broadcast(new ServerPacket(this.inGameId, Protocol.SM_DISAPPEAR));
+		for (BaseObject object : this.objectsInView.values()) {
+			object.lose(this);
+		}
 	}
 
-	/**
-	 * 广播自己的消息给视野内的人
-	 *
-	 * @param serverPacket
-	 */
 	public void broadcast(ServerPacket serverPacket) {
 		for (BaseObject object : this.objectsInView.values()) {
 			if (object != this && object instanceof Player) {
@@ -129,7 +113,8 @@ public abstract class BaseObject {
 		}
 
 		for (BaseObject object : this.objectsInView.values()) {
-			if ((!object.currMapPoint.mapId.equals(toPoint.mapId))
+			if (object.currMapPoint == null
+					|| (!toPoint.mapId.equals(object.currMapPoint.mapId))
 					|| Math.abs(object.currMapPoint.x - toPoint.x) > Config.DEFAULT_VIEW_DISTANCE
 					|| Math.abs(object.currMapPoint.y - toPoint.y) > Config.DEFAULT_VIEW_DISTANCE
 					) {
@@ -189,18 +174,38 @@ public abstract class BaseObject {
 		}
 	}
 
+	public boolean hit(Direction direction) {
+
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
+		for (BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1)) {
+			object.damage(this, getPower());
+		}
+
+		broadcast(new ServerPacket(this.inGameId, Protocol.SM_HIT, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
+		return true;
+	}
+
+	public void damage(BaseObject source, short power) {
+		this.hp = (short) (this.hp - power);
+		if (this.hp <= 0) {
+			broadcast(new ServerPacket(this.inGameId, Protocol.SM_DEATH, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
+		} else {
+			ServerPacket packet = new ServerPacket.Struck(this.inGameId, this.hp, this.maxHp, power);
+			broadcast(packet);
+		}
+	}
+
 	public abstract int getFeature();
 
 	public abstract short getFeatureEx();
 
 	public abstract int getStatus();
 
+	public abstract short getPower();
+
 	/**
 	 * 每一秒钟引擎会触发一下, 让它获得执行机会, 处理一些自身的变化
 	 * 比如Npc自己变色, 玩家在经验房里增加经验, 中毒掉血等
 	 */
 	public abstract void onTick();
-
-	public abstract void damage(BaseObject source, short power);
-
 }

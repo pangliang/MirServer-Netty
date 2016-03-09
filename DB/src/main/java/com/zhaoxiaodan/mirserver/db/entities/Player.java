@@ -134,6 +134,11 @@ public class Player extends BaseObject {
 	}
 
 	@Override
+	public short getPower() {
+		return 100;
+	}
+
+	@Override
 	public void enterMap(MapPoint mapPoint) {
 
 
@@ -152,16 +157,6 @@ public class Player extends BaseObject {
 		super.enterMap(mapPoint);
 	}
 
-	public boolean hit(Direction direction){
-
-		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
-		for(BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint,direction,1,1)){
-			object.damage(this, (short)10);
-		}
-
-		broadcast(new ServerPacket(this.inGameId,Protocol.SM_HIT,this.currMapPoint.x,this.currMapPoint.y,(short)direction.ordinal()));
-		return true;
-	}
 
 	public boolean checkAndIncActionTime(int interval) {
 		long now = NumUtil.getTickCount();
@@ -176,15 +171,4 @@ public class Player extends BaseObject {
 	public void onTick() {
 
 	}
-
-	@Override
-	public void damage(BaseObject source, short power) {
-
-
-		// 人物受攻击没有 啊啊啊 的动作
-		ServerPacket packet = new ServerPacket(this.inGameId, Protocol.SM_HEALTHSPELLCHANGED,(short)this.ability.HP,(short)this.ability.MaxHP,power);
-		broadcast(packet);
-	}
-
-
 }

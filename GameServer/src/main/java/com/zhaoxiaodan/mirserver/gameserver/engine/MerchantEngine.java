@@ -51,10 +51,10 @@ public class MerchantEngine {
 			merchant.currMapPoint.mapId = (String) tokenizer.nextElement();
 			merchant.currMapPoint.x = Short.parseShort((String) tokenizer.nextElement());
 			merchant.currMapPoint.y = Short.parseShort((String) tokenizer.nextElement());
-			merchant.scriptName = tokenizer.nextElement() + ".groovy";
+			String scriptName = tokenizer.nextElement() + ".groovy";
 
-			logger.debug("加载NPC {} 的脚本 {}", merchant.name, merchant.scriptName);
-			Class groovyClass = engine.loadScriptByName(merchant.scriptName);
+			logger.debug("加载NPC {} 的脚本 {}", merchant.name, scriptName);
+			Class groovyClass = engine.loadScriptByName(scriptName);
 			merchant.scriptInstance = (GroovyObject) groovyClass.newInstance();
 
 			loadNpcs.put(merchant.inGameId, merchant);

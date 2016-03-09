@@ -8,13 +8,12 @@ import groovy.lang.GroovyObject;
 
 public class Merchant extends BaseObject {
 
-	public String name;
-	public String       scriptName;
 	public GroovyObject scriptInstance;
+	public String name;
 
 	@Override
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	@Override
@@ -33,12 +32,12 @@ public class Merchant extends BaseObject {
 	}
 
 	@Override
-	public void onTick() {
-
+	public short getPower() {
+		return 0;
 	}
 
 	@Override
-	public void damage(BaseObject source, short power) {
+	public void onTick() {
 
 	}
 
@@ -47,6 +46,6 @@ public class Merchant extends BaseObject {
 	}
 
 	public void sayTo(String msg,Player player){
-		player.session.sendPacket(new ServerPacket.MerchantSay(this.inGameId,msg,this.name));
+		player.session.sendPacket(new ServerPacket.MerchantSay(this.inGameId,msg,this.getName()));
 	}
 }

@@ -2,28 +2,20 @@ package com.zhaoxiaodan.mirserver.db.objects;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
-import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import groovy.lang.GroovyObject;
 
 public class Monster extends BaseObject {
 
-	public GroovyObject scriptInstance;
+	private GroovyObject scriptInstance;
 
-	public StdMonster stdMonster;
+	private StdMonster stdMonster;
 
-	public long lastWalkTime;
-
-	public short hp;
-
-	public void damage(BaseObject source ,short power){
-		this.hp = (short) (this.hp - power);
-		ServerPacket packet = new ServerPacket.Struck(this.inGameId,this.hp,this.getMaxHp(),100);
-		broadcast(packet);
-	}
-
-	public short getMaxHp(){
-		return stdMonster.hp;
+	public Monster(StdMonster stdMonster, GroovyObject scriptInstance){
+		this.stdMonster = stdMonster;
+		this.hp = stdMonster.hp;
+		this.maxHp = stdMonster.hp;
+		this.scriptInstance = scriptInstance;
 	}
 
 	@Override
@@ -57,7 +49,16 @@ public class Monster extends BaseObject {
 	}
 
 	@Override
+	public short getPower() {
+		return (short) stdMonster.dc;
+	}
+
+	@Override
 	public void onTick() {
 
+	}
+
+	public GroovyObject getScriptInstance() {
+		return scriptInstance;
 	}
 }
