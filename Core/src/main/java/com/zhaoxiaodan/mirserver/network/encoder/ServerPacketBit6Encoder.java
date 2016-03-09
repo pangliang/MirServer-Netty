@@ -46,11 +46,12 @@ public class ServerPacketBit6Encoder extends MessageToMessageEncoder<ByteBuf> {
 						break;
 					}
 				}
-			}else{
-				byte[] body = new byte[in.readableBytes()];
-				in.readBytes(body);
-				buf.writeBytes(Bit6Coder.encoder6BitBuf(body));
 			}
+
+			// 剩下的
+			byte[] body = new byte[in.readableBytes()];
+			in.readBytes(body);
+			buf.writeBytes(Bit6Coder.encoder6BitBuf(body));
 
 		}
 
