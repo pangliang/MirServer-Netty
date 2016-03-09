@@ -968,5 +968,33 @@ public class ServerPacket extends Packet {
 		}
 	}
 
+	public static final class Struck extends ServerPacket {
+
+		public int inGameId;
+		public short hp;
+		public short maxHp;
+		public int damage;
+
+		public Struck() {}
+
+		public Struck(int inGameId, short hp, short maxHp, int damage) {
+			super(Protocol.SM_STRUCK);
+			this.inGameId = inGameId;
+			this.hp = hp;
+			this.maxHp = maxHp;
+			this.damage = damage;
+
+			this.recog = inGameId;
+			this.p1 = hp;
+			this.p2 = maxHp;
+			this.p3 = (short)damage;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+		}
+	}
+
 
 }

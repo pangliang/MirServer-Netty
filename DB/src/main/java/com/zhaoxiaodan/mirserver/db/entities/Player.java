@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.db.objects.Monster;
 import com.zhaoxiaodan.mirserver.db.types.*;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -151,6 +152,17 @@ public class Player extends BaseObject {
 		super.enterMap(mapPoint);
 	}
 
+	public boolean hit(Direction direction){
+
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
+		for(BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint,direction,1,1)){
+			object.damage(this, (short)10);
+		}
+
+		broadcast(new ServerPacket(this.inGameId,Protocol.SM_HIT,this.currMapPoint.x,this.currMapPoint.y,(short)direction.ordinal()));
+		return true;
+	}
+
 	public boolean checkAndIncActionTime(int interval) {
 		long now = NumUtil.getTickCount();
 		if (now - lastActionTime < interval) {
@@ -164,5 +176,15 @@ public class Player extends BaseObject {
 	public void onTick() {
 
 	}
+
+	@Override
+	public void damage(BaseObject source, short power) {
+
+
+		// 人物受攻击没有 啊啊啊 的动作
+		ServerPacket packet = new ServerPacket(this.inGameId, Protocol.SM_HEALTHSPELLCHANGED,(short)this.ability.HP,(short)this.ability.MaxHP,power);
+		broadcast(packet);
+	}
+
 
 }

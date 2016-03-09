@@ -10,10 +10,6 @@ import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Transient;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -27,11 +23,6 @@ public abstract class BaseObject {
 	public Color nameColor = Color.White;
 	public byte light;
 
-	@AttributeOverrides({
-			@AttributeOverride(name = "mapId", column = @Column(name = "currMapName")),
-			@AttributeOverride(name = "x", column = @Column(name = "currX")),
-			@AttributeOverride(name = "y", column = @Column(name = "currY"))
-	})
 	/**
 	 * 当前地图位置
 	 */
@@ -42,7 +33,6 @@ public abstract class BaseObject {
 	 */
 	public Direction direction = Direction.DOWN;
 
-	@Transient
 	public Map<Integer, BaseObject> objectsInView = new ConcurrentHashMap<>();
 
 	/**
@@ -210,5 +200,7 @@ public abstract class BaseObject {
 	 * 比如Npc自己变色, 玩家在经验房里增加经验, 中毒掉血等
 	 */
 	public abstract void onTick();
+
+	public abstract void damage(BaseObject source, short power);
 
 }

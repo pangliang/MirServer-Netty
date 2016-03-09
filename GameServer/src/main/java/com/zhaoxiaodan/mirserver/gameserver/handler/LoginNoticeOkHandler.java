@@ -23,7 +23,7 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 			if(player.ability.Level < 1)
 				player.ability.Level = 1;
 
-			player.currMapPoint = MapEngine.getStartPoint();
+			player.homeMapPoint = MapEngine.getStartPoint();
 
 			session.db.update(player);
 

@@ -2,10 +2,12 @@ package com.zhaoxiaodan.mirserver.network.packets;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.db.types.Gender;
 import com.zhaoxiaodan.mirserver.db.types.Job;
 import com.zhaoxiaodan.mirserver.db.types.WearPosition;
 import com.zhaoxiaodan.mirserver.network.Protocol;
+import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -422,6 +424,23 @@ public class ClientPacket extends Packet {
 			this.playerItemId = this.recog;
 			this.wearPosition = WearPosition.get(this.p1);
 			this.itemName = in.toString(Charset.defaultCharset()).trim();
+		}
+	}
+
+	public static final class Action extends ClientPacket {
+
+		public short x;
+		public short y;
+		public Direction direction;
+
+		public Action() {}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			direction = Direction.values()[p2];
+			x = NumUtil.getLowWord(recog);
+			y = NumUtil.getHighWord(recog);
 		}
 	}
 }

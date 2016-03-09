@@ -162,6 +162,7 @@ public class MonsterEngine {
 		Monster            monster    = new Monster();
 		StdMonster         stdMonster = stdMonsterNames.get(monsterName);
 		if (null != stdMonster) {
+			monster.hp = stdMonster.hp;
 			monster.stdMonster = stdMonster;
 			monster.scriptInstance = (GroovyObject) engine.loadScriptByName(stdMonster.scriptName + ".groovy").newInstance();
 		}else{

@@ -37,6 +37,11 @@ public class Merchant extends BaseObject {
 
 	}
 
+	@Override
+	public void damage(BaseObject source, short power) {
+
+	}
+
 	public void onClick(int inGameId, Player player) {
 		scriptInstance.invokeMethod("main", new Object[]{this, player});
 	}
