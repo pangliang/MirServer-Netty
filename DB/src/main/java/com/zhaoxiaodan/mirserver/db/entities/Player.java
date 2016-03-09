@@ -120,13 +120,14 @@ public class Player extends BaseObject {
 	@Override
 	public void enterMap(MapPoint mapPoint) {
 
+
 		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(mapPoint.mapId);
 
 		// 清除物品
 		session.sendPacket(new ServerPacket(Protocol.SM_CLEAROBJECTS));
 
 		// 新图信息发给玩家
-		session.sendPacket(new ServerPacket.ChangeMap(this.inGameId, mapPoint.x, mapPoint.y, (short) 0, this.currMapPoint.mapId));
+		session.sendPacket(new ServerPacket.ChangeMap(this.inGameId, mapPoint.x, mapPoint.y, (short) 0, mapPoint.mapId));
 		session.sendPacket(new ServerPacket.MapDescription(-1, mapInfo.mapDescription));
 
 		// 是否安全区
