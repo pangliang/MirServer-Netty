@@ -43,9 +43,8 @@ public class MonsterEngine {
 			@Override
 			public void run() {
 				while(running){
-					onTick();
-
 					try {
+						onTick();
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
