@@ -2,10 +2,19 @@ import com.zhaoxiaodan.mirserver.db.DB;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImportDB {
 
 	DB db;
+
+	public Map<String,String> tables = new HashMap<String,String>(){
+		{
+//			put("STDITEM", "数据文件/物品数据库.csv");
+			put("STDMONSTER", "数据文件/怪物数据库.csv");
+		}
+	};
 
 	/**
 	 * 因为Hibernate创建的表的字段顺序问题, 利用反射导入原DBC数据库导出的文件
@@ -16,10 +25,16 @@ public class ImportDB {
 		try {
 			DB.init();
 			db = new DB();
-			db.begin();
-			doImport("STDITEM", "数据文件/物品数据库.csv");
-			System.out.println("导入物品数据库成功 !!!");
-			db.commit();
+
+			for(String tableName : tables.keySet()){
+				String dataFile = tables.get(tableName);
+				db.begin();
+				doImport(tableName, dataFile);
+				System.out.println("导入 "+dataFile+" 成功 !!!");
+				db.commit();
+			}
+
+
 		} catch (Exception e) {
 			db.rollback();
 			e.printStackTrace();
@@ -45,7 +60,7 @@ public class ImportDB {
 			line = line.trim();
 			String[] parts = line.split(",");
 			if (parts.length < fields.length)
-				throw new Exception("数据文件列数太少, 改行为:" + line);
+				throw new Exception("数据文件列数太少 :" + line);
 			for (int i = 0; i < fields.length; i++) {
 				sb.append(fields[i]).append("='").append(parts[i]).append("',");
 			}
