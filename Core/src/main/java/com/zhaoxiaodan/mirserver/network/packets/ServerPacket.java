@@ -753,7 +753,7 @@ public class ServerPacket extends Packet {
 		}
 	}
 
-	public static final class Turn extends XYPacket {
+	public static class Turn extends XYPacket {
 
 		public int       id;
 		public Direction direction;
@@ -810,6 +810,38 @@ public class ServerPacket extends Packet {
 			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
 			objName = parts[0];
 			nameColor = parts.length > 1 ? Integer.parseInt(parts[1]) : Color.White.c;
+		}
+	}
+
+	public static final class Skeleton extends Turn{
+
+		public Skeleton(BaseObject object) {
+			super(object.inGameId,
+					object.direction,
+					object.currMapPoint.x,
+					object.currMapPoint.y,
+					object.getFeature(),
+					object.getStatus(),
+					object.light,
+					object.getName(),
+					object.nameColor.c);
+			this.protocol = Protocol.SM_SKELETON;
+		}
+	}
+
+	public static final class Death extends Turn{
+
+		public Death(BaseObject object) {
+			super(object.inGameId,
+					object.direction,
+					object.currMapPoint.x,
+					object.currMapPoint.y,
+					object.getFeature(),
+					object.getStatus(),
+					object.light,
+					object.getName(),
+					object.nameColor.c);
+			this.protocol = Protocol.SM_DEATH;
 		}
 	}
 

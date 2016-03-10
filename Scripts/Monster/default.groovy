@@ -3,6 +3,10 @@ import com.zhaoxiaodan.mirserver.db.types.Direction
 import com.zhaoxiaodan.mirserver.utils.NumUtil
 
 void onTick(Monster monster){
+
+    if(!monster.isAlive)
+        return ;
+
     long now =  NumUtil.getTickCount();
     Random random = new Random();
 

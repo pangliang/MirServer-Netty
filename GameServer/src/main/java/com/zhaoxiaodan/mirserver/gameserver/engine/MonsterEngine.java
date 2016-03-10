@@ -84,6 +84,12 @@ public class MonsterEngine {
 
 	}
 
+	public synchronized static void refresh(String mapId) throws Exception{
+		for(RefreshGroup group : refreshGroups){
+			if(group.mapPoint.mapId.equals(mapId))
+				refresh(group);
+		}
+	}
 
 	public synchronized static void reload() throws Exception {
 		reloadStdMonster();

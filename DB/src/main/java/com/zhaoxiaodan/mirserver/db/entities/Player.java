@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
+import com.zhaoxiaodan.mirserver.db.objects.AnimalObject;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.objects.Monster;
 import com.zhaoxiaodan.mirserver.db.types.*;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-public class Player extends BaseObject {
+public class Player extends AnimalObject {
 
 
 	@Id
@@ -85,11 +86,54 @@ public class Player extends BaseObject {
 		return this.name;
 	}
 
+	public void checkAbility(){
+		session.sendPacket(new ServerPacket.PlayerAbility(this.gold,this.gameGold,this.job,this.ability));
+	}
+
+	public void checkLevelUp(){
+		if(this.ability.Exp >= this.ability.MaxExp){
+			this.ability.Exp = this.ability.Exp - this.ability.MaxExp;
+			this.ability.Level += 1;
+			session.sendPacket(new ServerPacket(this.ability.Exp,Protocol.SM_LEVELUP,this.ability.Level,(short)0,(short)0));
+			checkLevelUp(); //可能会升很多级
+		}
+	}
+
+	public void winExp(int exp){
+		this.ability.Exp += exp;
+		session.sendPacket(new ServerPacket(this.ability.Exp,Protocol.SM_WINEXP,NumUtil.getLowWord(exp),NumUtil.getHighWord(exp),(short)0));
+		checkLevelUp();
+		checkAbility();
+	}
+
+	public void kill(Monster monster){
+		winExp(monster.stdMonster.exp * 10);
+	}
+
+	@Override
+	public boolean hit(Direction direction) {
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
+		for (BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1)) {
+			if(!(object instanceof Monster))
+				continue;
+			Monster monster = (Monster)object;
+			if(monster.damage(this, getPower())){
+				kill(monster);
+			}
+		}
+		return super.hit(direction);
+	}
+
 	@Override
 	public boolean see(BaseObject object) {
 		boolean rs;
 		if(rs = super.see(object)){
-			session.sendPacket(new ServerPacket.Turn(object));
+			if(object instanceof AnimalObject && !((AnimalObject)object).isAlive)
+			{
+				session.sendPacket(new ServerPacket.Death(object));
+			}else{
+				session.sendPacket(new ServerPacket.Turn(object));
+			}
 		}
 
 		return rs;
@@ -101,6 +145,10 @@ public class Player extends BaseObject {
 		if(object == this)
 			return;
 		session.sendPacket(new ServerPacket(object.inGameId, Protocol.SM_DISAPPEAR));
+	}
+
+	public void receive(ServerPacket packet) {
+		session.sendPacket(packet);
 	}
 
 	@Override

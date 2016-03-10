@@ -32,11 +32,6 @@ public class Merchant extends BaseObject {
 	}
 
 	@Override
-	public short getPower() {
-		return 0;
-	}
-
-	@Override
 	public void onTick() {
 
 	}
@@ -46,6 +41,13 @@ public class Merchant extends BaseObject {
 	}
 
 	public void sayTo(String msg,Player player){
-		player.session.sendPacket(new ServerPacket.MerchantSay(this.inGameId,msg,this.getName()));
+		player.receive(new ServerPacket.MerchantSay(this.inGameId,msg,this.getName()));
+	}
+
+	@Override
+	public boolean see(BaseObject object) {
+		if(!(object instanceof  Player))
+			return false;
+		return super.see(object);
 	}
 }

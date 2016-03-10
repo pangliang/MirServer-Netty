@@ -2,20 +2,38 @@ package com.zhaoxiaodan.mirserver.db.objects;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
+import com.zhaoxiaodan.mirserver.db.types.Direction;
+import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import groovy.lang.GroovyObject;
 
-public class Monster extends BaseObject {
+public class Monster extends AnimalObject {
 
-	private GroovyObject scriptInstance;
+	private final GroovyObject scriptInstance;
 
-	private StdMonster stdMonster;
+	public final StdMonster stdMonster;
 
 	public Monster(StdMonster stdMonster, GroovyObject scriptInstance){
 		this.stdMonster = stdMonster;
 		this.hp = stdMonster.hp;
 		this.maxHp = stdMonster.hp;
 		this.scriptInstance = scriptInstance;
+	}
+
+	@Override
+	public void beKilled() {
+		super.beKilled();
+	}
+
+	@Override
+	public boolean hit(Direction direction) {
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
+		for (BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1)) {
+			if(object instanceof Player)
+				((Player)object).damage(this, getPower());
+		}
+
+		return super.hit(direction);
 	}
 
 	@Override
