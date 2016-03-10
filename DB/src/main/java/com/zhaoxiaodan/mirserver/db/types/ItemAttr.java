@@ -7,10 +7,11 @@ import io.netty.buffer.ByteBuf;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class ItemAttr implements Parcelable{
+public class ItemAttr implements Parcelable,Cloneable {
+
 	public String name;
 	public byte   stdMode;
-	public short   shape;
+	public short  shape;
 	public byte   weight;
 	public byte   anicount;
 	public byte   source;
@@ -20,7 +21,7 @@ public class ItemAttr implements Parcelable{
 	/**
 	 * 耐久度, 客户端显示 int(duraMax/1000) 的值
 	 */
-	public int  duraMax;
+	public int    duraMax;
 	public short  reserved1;
 	public short  ac;
 	public short  ac2;
@@ -43,11 +44,19 @@ public class ItemAttr implements Parcelable{
 
 	}
 
-	public void writePacket(ByteBuf out){
+	public ItemAttr clone(){
+		try {
+			return (ItemAttr) super.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+	public void writePacket(ByteBuf out) {
 		oldVersion(out);
 	}
 
-	public void newVersion(ByteBuf out){
+	public void newVersion(ByteBuf out) {
 		byte[] nameBytes = name.getBytes();
 		out.writeByte(nameBytes.length);
 		out.writeBytes(nameBytes);
@@ -66,11 +75,11 @@ public class ItemAttr implements Parcelable{
 
 		out.writeShort(reserved1);
 
-		out.writeInt(NumUtil.makeLong(ac,ac2));
-		out.writeInt(NumUtil.makeLong(mac,mac2));
-		out.writeInt(NumUtil.makeLong(dc,dc2));
-		out.writeInt(NumUtil.makeLong(mc,mc2));
-		out.writeInt(NumUtil.makeLong(sc,sc2));
+		out.writeInt(NumUtil.makeLong(ac, ac2));
+		out.writeInt(NumUtil.makeLong(mac, mac2));
+		out.writeInt(NumUtil.makeLong(dc, dc2));
+		out.writeInt(NumUtil.makeLong(mc, mc2));
+		out.writeInt(NumUtil.makeLong(sc, sc2));
 
 		out.writeByte(need);
 		out.writeByte(needLevel);
@@ -79,7 +88,7 @@ public class ItemAttr implements Parcelable{
 		out.writeInt(stock);
 	}
 
-	private void oldVersion(ByteBuf out){
+	private void oldVersion(ByteBuf out) {
 		byte[] nameBytes = name.getBytes();
 		out.writeByte(nameBytes.length);
 		out.writeBytes(nameBytes);
@@ -96,11 +105,11 @@ public class ItemAttr implements Parcelable{
 		out.writeShort(looks);
 		out.writeShort(duraMax);
 
-		out.writeShort(NumUtil.makeWord((byte)ac,(byte)ac2));
-		out.writeShort(NumUtil.makeWord((byte)mac,(byte)mac2));
-		out.writeShort(NumUtil.makeWord((byte)dc,(byte)dc2));
-		out.writeShort(NumUtil.makeWord((byte)mc,(byte)mc2));
-		out.writeShort(NumUtil.makeWord((byte)sc,(byte)sc2));
+		out.writeShort(NumUtil.makeWord((byte) ac, (byte) ac2));
+		out.writeShort(NumUtil.makeWord((byte) mac, (byte) mac2));
+		out.writeShort(NumUtil.makeWord((byte) dc, (byte) dc2));
+		out.writeShort(NumUtil.makeWord((byte) mc, (byte) mc2));
+		out.writeShort(NumUtil.makeWord((byte) sc, (byte) sc2));
 		out.writeByte(need);
 		out.writeByte(needLevel);
 		out.writeShort(0);

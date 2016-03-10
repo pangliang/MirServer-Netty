@@ -17,6 +17,10 @@ public class PlayerItem implements Parcelable{
 	@JoinColumn(name = "playerId")
 	public Player player;
 
+	@OneToOne
+	@JoinColumn(name = "stdItemId")
+	public StdItem stdItem;
+
 	@Embedded
 	public ItemAttr attr;
 
@@ -25,6 +29,15 @@ public class PlayerItem implements Parcelable{
 	public boolean isWearing;
 
 	public WearPosition wearingPosition ;
+
+	public PlayerItem(StdItem stdItem, Player player){
+		this.attr = stdItem.attr.clone();
+		this.dura = stdItem.attr.duraMax;
+		this.stdItem = stdItem;
+		this.player = player;
+	}
+
+	public PlayerItem() {}
 
 	@Override
 	public void readPacket(ByteBuf in) throws WrongFormatException {

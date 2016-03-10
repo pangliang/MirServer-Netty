@@ -3,18 +3,18 @@ package com.zhaoxiaodan.mirserver.db.types;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class MapPoint {
+public class MapPoint implements Cloneable{
 	public String mapId = "0";
 	public short x;
 	public short y;
 
 	@Override
 	public MapPoint clone() {
-		MapPoint mapPoint = new MapPoint();
-		mapPoint.mapId = this.mapId;
-		mapPoint.x = this.x;
-		mapPoint.y = this.y;
-		return mapPoint;
+		try {
+			return (MapPoint) super.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
 	}
 
 	public void move(Direction direction, short distance){

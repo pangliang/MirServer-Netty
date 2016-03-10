@@ -4,11 +4,10 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.types.Race;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
-import groovy.lang.GroovyObject;
 
 public class Merchant extends BaseObject {
 
-	public GroovyObject scriptInstance;
+	public String scriptName;
 	public String name;
 
 	@Override
@@ -36,17 +35,13 @@ public class Merchant extends BaseObject {
 
 	}
 
-	public void onClick(int inGameId, Player player) {
-		scriptInstance.invokeMethod("main", new Object[]{this, player});
-	}
-
-	public void sayTo(String msg,Player player){
-		player.receive(new ServerPacket.MerchantSay(this.inGameId,msg,this.getName()));
+	public void sayTo(String msg, Player player) {
+		player.receive(new ServerPacket.MerchantSay(this.inGameId, msg, this.getName()));
 	}
 
 	@Override
 	public boolean see(BaseObject object) {
-		if(!(object instanceof  Player))
+		if (!(object instanceof Player))
 			return false;
 		return super.see(object);
 	}

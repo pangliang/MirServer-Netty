@@ -38,8 +38,8 @@ public class GameServer {
 
 		// db init
 		DB.init();
+		CmdEngine.init();
 		MapEngine.reload();
-		ScriptEngine.reload();
 		ItemEngine.reload();
 		MerchantEngine.reload();
 		MonsterEngine.reload();

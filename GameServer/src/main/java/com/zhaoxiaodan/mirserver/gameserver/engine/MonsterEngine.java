@@ -7,8 +7,6 @@ import com.zhaoxiaodan.mirserver.db.objects.Monster;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
-import groovy.lang.GroovyObject;
-import groovy.util.GroovyScriptEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +16,6 @@ public class MonsterEngine {
 
 	private static final Logger logger             = LogManager.getLogger();
 	private static final String MONSTER_GEN_CONFIG = "Envir/MonsterGen.cfg";
-	private static final String MONSTER_SCRIPT_DIR = "Scripts/Monster";
 
 	private static Map<String, StdMonster> stdMonsterNames = new HashMap<>();
 	private static List<RefreshGroup>      refreshGroups   = new ArrayList<>();
@@ -72,7 +69,7 @@ public class MonsterEngine {
 			for (Monster monster : group.monsters) {
 				if (monster.objectsInView.size() > 0) {
 					try {
-						monster.getScriptInstance().invokeMethod("onTick", monster);
+						ScriptEngine.exce(monster.stdMonster.scriptName, "onTick", monster);
 					} catch (Exception e) {
 						logger.error("monster onTime error", e);
 					}
@@ -84,9 +81,9 @@ public class MonsterEngine {
 
 	}
 
-	public synchronized static void refresh(String mapId) throws Exception{
-		for(RefreshGroup group : refreshGroups){
-			if(group.mapPoint.mapId.equals(mapId))
+	public synchronized static void refresh(String mapId) throws Exception {
+		for (RefreshGroup group : refreshGroups) {
+			if (group.mapPoint.mapId.equals(mapId))
 				refresh(group);
 		}
 	}
@@ -166,12 +163,10 @@ public class MonsterEngine {
 	}
 
 	public static Monster createMonster(String monsterName) throws Exception {
-		GroovyScriptEngine engine = new GroovyScriptEngine(MONSTER_SCRIPT_DIR);
-
 		StdMonster stdMonster = stdMonsterNames.get(monsterName);
 		if (null != stdMonster) {
-			GroovyObject scriptInstance = (GroovyObject) engine.loadScriptByName(stdMonster.scriptName + ".groovy").newInstance();
-			Monster      monster        = new Monster(stdMonster, scriptInstance);
+			ScriptEngine.loadScript(stdMonster.scriptName);
+			Monster monster = new Monster(stdMonster);
 			return monster;
 		} else {
 			throw new Exception("StdMonster 不存在 : " + monsterName);

@@ -1,10 +1,9 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
+import com.alibaba.fastjson.JSON;
 import com.zhaoxiaodan.mirserver.db.objects.Merchant;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
-import groovy.lang.GroovyObject;
-import groovy.util.GroovyScriptEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,10 +15,8 @@ public class MerchantEngine {
 
 	private static final Logger logger          = LogManager.getLogger();
 	private static final String NPC_CONFIG_FILE = "Envir/Merchant.cfg";
-	private static final String NPC_SCRIPT_DIR  = "Scripts/Merchant";
 
 	private static Map<Integer, Merchant> inGameIdIndexMap;
-
 
 	public static synchronized void reload() throws Exception {
 
@@ -41,7 +38,6 @@ public class MerchantEngine {
 	}
 
 	private static void loadConfig(Map<Integer, Merchant> loadNpcs) throws Exception {
-		GroovyScriptEngine engine = new GroovyScriptEngine(NPC_SCRIPT_DIR);
 
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(NPC_CONFIG_FILE, 2)) {
 
@@ -51,13 +47,12 @@ public class MerchantEngine {
 			merchant.currMapPoint.mapId = (String) tokenizer.nextElement();
 			merchant.currMapPoint.x = Short.parseShort((String) tokenizer.nextElement());
 			merchant.currMapPoint.y = Short.parseShort((String) tokenizer.nextElement());
-			String scriptName = tokenizer.nextElement() + ".groovy";
-
-			logger.debug("加载NPC {} 的脚本 {}", merchant.name, scriptName);
-			Class groovyClass = engine.loadScriptByName(scriptName);
-			merchant.scriptInstance = (GroovyObject) groovyClass.newInstance();
-
+			merchant.scriptName = (String) tokenizer.nextElement();
 			loadNpcs.put(merchant.inGameId, merchant);
+
+			ScriptEngine.loadScript(merchant.scriptName);
+
+			logger.debug("加载Npc : {}" , JSON.toJSONString(merchant));
 		}
 	}
 

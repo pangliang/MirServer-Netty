@@ -5,19 +5,15 @@ import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
-import groovy.lang.GroovyObject;
 
 public class Monster extends AnimalObject {
 
-	private final GroovyObject scriptInstance;
-
 	public final StdMonster stdMonster;
 
-	public Monster(StdMonster stdMonster, GroovyObject scriptInstance){
+	public Monster(StdMonster stdMonster){
 		this.stdMonster = stdMonster;
 		this.hp = stdMonster.hp;
 		this.maxHp = stdMonster.hp;
-		this.scriptInstance = scriptInstance;
 	}
 
 	@Override
@@ -74,9 +70,5 @@ public class Monster extends AnimalObject {
 	@Override
 	public void onTick() {
 
-	}
-
-	public GroovyObject getScriptInstance() {
-		return scriptInstance;
 	}
 }

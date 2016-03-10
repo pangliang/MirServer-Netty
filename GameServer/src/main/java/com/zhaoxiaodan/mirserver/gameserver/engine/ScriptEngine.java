@@ -10,36 +10,49 @@ import java.util.Map;
 
 public class ScriptEngine {
 
-	private static Logger logger = LogManager.getLogger();
-	private static final String DEFUALT_SCRIPT_DIR = "Scripts";
+	private static       Logger logger                = LogManager.getLogger();
+	private static final String DEFUALT_SCRIPT_DIR    = "Scripts";
+	private static final String DEFUALT_SCRIPT_SUFFIX = ".groovy";
 
-	private static Map<Module, GroovyObject> modules     = new HashMap<>();
+	private static Map<String, GroovyObject> scriptInstance = new HashMap<>();
 
 	public enum Module {
 		Player("PlayerScript.groovy"),
 		Cmd("Cmd.groovy");
 
 		String scriptName;
+
 		Module(String scriptName) {
 			this.scriptName = scriptName;
 		}
 	}
 
 	public static synchronized void reload() throws Exception {
-		GroovyScriptEngine engine = new GroovyScriptEngine(DEFUALT_SCRIPT_DIR);
-		for (Module module : Module.values()) {
-			logger.debug("load script {}", module.scriptName);
-			Class groovyClass = engine.loadScriptByName(module.scriptName);
-			GroovyObject instance = (GroovyObject) groovyClass.newInstance();
-			modules.put(module,instance);
+		for (String scriptName : scriptInstance.keySet()) {
+			loadScript(scriptName);
 		}
 	}
 
-	public static Object exce(Module module,String fn,Object...args) throws Exception{
-		if(!modules.containsKey(module))
-			throw new Exception("脚本模块 "+module.name()+" 不存在");
+	public static synchronized void loadScript(String scriptName) throws Exception {
+		if (!scriptInstance.containsKey(scriptName))
+			return;
 
-		return modules.get(module).invokeMethod(fn,args);
+		logger.debug("加载脚本: {}", scriptName);
+		GroovyScriptEngine engine      = new GroovyScriptEngine(DEFUALT_SCRIPT_DIR);
+		Class              groovyClass = engine.loadScriptByName(scriptName + DEFUALT_SCRIPT_SUFFIX);
+		GroovyObject       instance    = (GroovyObject) groovyClass.newInstance();
+		scriptInstance.put(scriptName, instance);
+	}
+
+	public static Object exce(String scriptName, String fn, Object... args) {
+		if (!scriptInstance.containsKey(scriptName))
+			logger.error("脚本模块 {} 不存在", scriptName);
+		try {
+			return scriptInstance.get(scriptName).invokeMethod(fn, args);
+		} catch (Exception e) {
+			logger.error("脚本执行异常: {}", scriptName, e);
+			return null;
+		}
 	}
 
 }

@@ -166,7 +166,7 @@ public class ServerPacket extends Packet {
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.hair).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
-				out.writeBytes(Integer.toString(cha.ability.Level).getBytes());
+				out.writeBytes(Integer.toString(cha.currentAbility().Level).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.gender.ordinal()).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
@@ -189,7 +189,7 @@ public class ServerPacket extends Packet {
 					cha.name = parts[i + 0];
 					cha.job = Job.values()[Byte.parseByte(parts[i + 1])];
 					cha.hair = Byte.parseByte(parts[i + 2]);
-					cha.ability.Level = Short.parseShort(parts[i + 3]);
+					cha.currentAbility().Level = Short.parseShort(parts[i + 3]);
 					cha.gender = Gender.values()[Byte.parseByte(parts[i + 4])];
 
 					playerList.add(cha);
@@ -576,24 +576,19 @@ public class ServerPacket extends Packet {
 
 		public PlayerAbility() {}
 
-		public PlayerAbility(int gold, int gameGold, Job job, Ability tAbility) {
+		public PlayerAbility(Player player) {
 			super(Protocol.SM_ABILITY);
-			this.tAbility = tAbility;
-			this.recog = gold;
-			this.p1 = NumUtil.makeWord((byte) job.ordinal(), (byte) 99);
-			this.p2 = NumUtil.getLowWord(gameGold);
-			this.p3 = NumUtil.getHighWord(gameGold);
+			this.tAbility = player.currentAbility();
+			this.recog = player.gold;
+			this.p1 = NumUtil.makeWord((byte) player.job.ordinal(), (byte) 99);
+			this.p2 = NumUtil.getLowWord(player.gameGold);
+			this.p3 = NumUtil.getHighWord(player.gameGold);
 		}
 
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 			tAbility.writePacket(out);
-		}
-
-		@Override
-		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
-			super.readPacket(in);
 		}
 	}
 

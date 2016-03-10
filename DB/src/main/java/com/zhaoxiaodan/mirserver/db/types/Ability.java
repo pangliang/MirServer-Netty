@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Ability implements Parcelable{
+public class Ability implements Parcelable, Cloneable{
 	public short Level; //0x198  //0x34  0x00
 	public int   AC; //0x19A  //0x36  0x02
 	public int   MAC; //0x19C  //0x38  0x04
@@ -55,5 +55,13 @@ public class Ability implements Parcelable{
 		out.writeShort(MaxWearWeight);
 		out.writeShort(HandWeight);
 		out.writeShort(MaxHandWeight);
+	}
+
+	public Ability clone(){
+		try {
+			return (Ability) super.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
 	}
 }

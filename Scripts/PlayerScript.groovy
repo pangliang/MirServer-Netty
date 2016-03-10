@@ -5,21 +5,24 @@ import com.zhaoxiaodan.mirserver.db.types.MapPoint
 import com.zhaoxiaodan.mirserver.utils.NumUtil
 
 void onCreate(Player c) {
-    c.ability.Level = 1;
-    c.ability.HP = 100;
-    c.ability.MaxHP = 200;
-    c.ability.MP = 10;
-    c.ability.MaxMP = 10;
-    c.ability.MaxExp = 200;
-    c.ability.AC = NumUtil.makeLong(1,1000);;
-    c.ability.MAC = NumUtil.makeLong(2,20);;
-    c.ability.DC = NumUtil.makeLong(3000,20000);
-    c.ability.MC = NumUtil.makeLong(4,5);
-    c.ability.MaxExp = getMaxExp(c.ability.Level + 1);
+    c.levelUp(1);
+    c.baseAbility.HP = 100;
+    c.baseAbility.MaxHP = 100;
+    c.baseAbility.MP = 10;
+    c.baseAbility.MaxMP = 10;
+    c.baseAbility.AC = NumUtil.makeLong(1,1);;
+    c.baseAbility.MAC = NumUtil.makeLong(1,1);;
+    c.baseAbility.DC = NumUtil.makeLong(1,1);
+    c.baseAbility.MC = NumUtil.makeLong(1,1);
+    c.baseAbility.MaxExp = getMaxExp(c.baseAbility.Level + 1);
 //        c.currMapPoint = getStartPoint();        //设置出生点
     c.gold = 10000;
     c.gameGold = 1234;
     c.gamePoint = 5678;
+}
+
+void onLevelUp(Player c){
+    c.baseAbility.MaxExp = getMaxExp(c.baseAbility.Level + 1);
 }
 
 int getMaxExp(int nextLevel) {

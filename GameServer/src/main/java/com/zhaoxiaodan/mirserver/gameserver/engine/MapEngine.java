@@ -184,9 +184,8 @@ public class MapEngine {
 				width = NumUtil.readShort(buf, 0, true);
 				height = NumUtil.readShort(buf, 2, true);
 				mapTitle = new String(buf, 4, 16);
-				logger.debug("读取文件地图:{} , width:{}, height:{}, title:{}", filename, width, height, mapTitle);
+				logger.debug("读取地图mapId {}: {}, width:{}, height:{}", mapId, filename, width, height);
 				tiles = new Tile[width][height];
-
 
 				for (short x = 0; x < width; x++) {
 					for (short y = 0; y < height; y++) {

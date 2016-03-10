@@ -3,6 +3,7 @@ package com.zhaoxiaodan.mirserver.gameserver.handler;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.objects.Merchant;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MerchantEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 
 public class MerchantHandler extends PlayerHandler {
@@ -25,7 +26,7 @@ public class MerchantHandler extends PlayerHandler {
 			functionName = request.msg.substring(1);
 		}
 
-		merchant.scriptInstance.invokeMethod(functionName,new Object[]{merchant,player});
+		ScriptEngine.exce(merchant.scriptName,functionName,merchant,player);
 
 	}
 }
