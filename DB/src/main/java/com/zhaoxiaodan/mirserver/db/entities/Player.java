@@ -79,12 +79,16 @@ public class Player extends AnimalObject {
 	@Where(clause = "isWearing=false")
 	@MapKey(name = "id")
 	public Map<Integer, PlayerItem> items = new HashMap<>();
-	;
+
 
 	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@Where(clause = "isWearing=true")
 	@MapKey(name = "wearingPosition")
 	public Map<WearPosition, PlayerItem> wearingItems = new HashMap<>();
+
+	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@MapKey(name = "id")
+	public Map<Integer, PlayerMagic> magics = new HashMap<>();
 
 	/**
 	 * 最后动作时间, 用来防止加速
@@ -98,6 +102,31 @@ public class Player extends AnimalObject {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+
+	public void learnMagic(StdMagic stdMagic) {
+		for (PlayerMagic playerMagic : magics.values()) {
+			if (playerMagic.stdMagic.id == stdMagic.id)
+				return;
+		}
+
+		PlayerMagic playerMagic = new PlayerMagic();
+		playerMagic.player = this;
+		playerMagic.stdMagic = stdMagic;
+		session.db.save(playerMagic);
+
+		this.magics.put(playerMagic.id, playerMagic);
+		session.sendPacket(new ServerPacket.AddMagic(playerMagic));
+	}
+
+	public void deleteMagic(int magicId) {
+		if (!this.magics.containsKey(magicId))
+			return;
+
+		PlayerMagic playerMagic = this.magics.remove(magicId);
+		session.db.delete(playerMagic);
+
+		session.sendPacket(new ServerPacket(playerMagic.id,Protocol.SM_DELMAGIC,(short)0,(short)0,(short)0));
 	}
 
 	public boolean takeOn(PlayerItem itemToWear, WearPosition wearPosition) {
@@ -198,8 +227,8 @@ public class Player extends AnimalObject {
 	}
 
 	public void kill(AnimalObject animalObject) {
-		if(animalObject instanceof Monster)
-			winExp(((Monster)animalObject).stdMonster.exp);
+		if (animalObject instanceof Monster)
+			winExp(((Monster) animalObject).stdMonster.exp);
 	}
 
 	@Override
@@ -279,7 +308,7 @@ public class Player extends AnimalObject {
 
 	@Override
 	public int getDefend() {
-		return NumUtil.randomRang(currentAbility().AC,currentAbility().AC2);
+		return NumUtil.randomRang(currentAbility().AC, currentAbility().AC2);
 	}
 
 	@Override

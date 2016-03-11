@@ -22,6 +22,7 @@
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.ServerInfo"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.Player"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.PlayerItem"/>
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.PlayerMagic"/>
 
     </session-factory>
 </hibernate-configuration>

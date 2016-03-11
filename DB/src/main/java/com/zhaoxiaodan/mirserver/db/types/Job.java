@@ -12,5 +12,9 @@ public enum Job {
 	/**
 	 * 道士
 	 */
-	Taoist
+	Taoist,
+	/**
+	 * 英雄
+	 */
+	Hero
 }

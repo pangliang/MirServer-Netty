@@ -7,7 +7,9 @@ import io.netty.buffer.ByteBuf;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class ItemAttr implements Parcelable,Cloneable {
+public class ItemAttr implements Parcelable, Cloneable {
+
+	public static final int NAME_BYTE_SIZE = 14;
 
 	public String name;
 	public byte   stdMode;
@@ -44,7 +46,7 @@ public class ItemAttr implements Parcelable,Cloneable {
 
 	}
 
-	public ItemAttr clone(){
+	public ItemAttr clone() {
 		try {
 			return (ItemAttr) super.clone();
 		} catch (CloneNotSupportedException e) {
@@ -59,9 +61,9 @@ public class ItemAttr implements Parcelable,Cloneable {
 	public void newVersion(ByteBuf out) {
 		byte[] nameBytes = name.getBytes();
 		out.writeByte(nameBytes.length);
-		out.writeBytes(nameBytes);
+		out.writeBytes(nameBytes, 0, nameBytes.length > NAME_BYTE_SIZE ? NAME_BYTE_SIZE : nameBytes.length);
 
-		out.writeBytes(new byte[14 - nameBytes.length]);
+		out.writeBytes(new byte[NAME_BYTE_SIZE - nameBytes.length]);
 
 		out.writeByte(stdMode);
 		out.writeByte(shape);

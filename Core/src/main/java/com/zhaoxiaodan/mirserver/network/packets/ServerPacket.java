@@ -2,6 +2,7 @@ package com.zhaoxiaodan.mirserver.network.packets;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
+import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.types.*;
@@ -1020,6 +1021,25 @@ public class ServerPacket extends Packet {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
+		}
+	}
+
+	public static final class AddMagic extends ServerPacket {
+
+		public PlayerMagic playerMagic;
+
+		public AddMagic() {}
+
+		public AddMagic(PlayerMagic playerMagic) {
+			super(Protocol.SM_ADDMAGIC);
+			this.playerMagic = playerMagic;
+			this.p3 = 1;
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			playerMagic.writePacket(out);
 		}
 	}
 

@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class ItemEngine {
 
-	private static Map<Integer, StdItem> itemIds   = new HashMap<>();
 	private static Map<String, StdItem>  itemNames = new HashMap<>();
 
 	public synchronized static void reload() throws Exception {
@@ -25,12 +24,7 @@ public class ItemEngine {
 			ScriptEngine.loadScript(item.scriptName);
 		}
 
-		ItemEngine.itemIds = itemIds;
 		ItemEngine.itemNames = itemNames;
-	}
-
-	public static StdItem getStdItemById(int id) {
-		return itemIds.get(id);
 	}
 
 	public static StdItem getStdItemByName(String name) {
