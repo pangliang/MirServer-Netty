@@ -5,7 +5,6 @@ import groovy.util.GroovyScriptEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +17,6 @@ public class ScriptEngine {
 	private static Map<String, GroovyObject> scriptInstance = new ConcurrentHashMap<>();
 
 	public static synchronized void reload() throws Exception {
-		Iterator<String> iterator = scriptInstance.keySet().iterator();
 		for(String scriptName : scriptInstance.keySet()){
 			loadScript(scriptName, true);
 		}

@@ -17,6 +17,7 @@
 
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdMonster"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdItem"/>
+        <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdMagic"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.User"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.ServerInfo"/>
         <mapping class="com.zhaoxiaodan.mirserver.db.entities.Player"/>

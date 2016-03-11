@@ -12,7 +12,8 @@ public class ImportDB {
 	public Map<String,String> tables = new HashMap<String,String>(){
 		{
 //			put("STDITEM", "数据文件/物品数据库.csv");
-			put("STDMONSTER", "数据文件/怪物数据库.csv");
+//			put("STDMONSTER", "数据文件/怪物数据库.csv");
+			put("STDMAGIC", "数据文件/技能数据库.csv");
 		}
 	};
 
