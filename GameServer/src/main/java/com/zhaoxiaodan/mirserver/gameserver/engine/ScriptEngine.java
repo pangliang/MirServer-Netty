@@ -5,8 +5,9 @@ import groovy.util.GroovyScriptEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScriptEngine {
 
@@ -14,27 +15,19 @@ public class ScriptEngine {
 	private static final String DEFUALT_SCRIPT_DIR    = "Scripts";
 	private static final String DEFUALT_SCRIPT_SUFFIX = ".groovy";
 
-	private static Map<String, GroovyObject> scriptInstance = new HashMap<>();
-
-	public enum Module {
-		Player("PlayerScript.groovy"),
-		Cmd("Cmd.groovy");
-
-		String scriptName;
-
-		Module(String scriptName) {
-			this.scriptName = scriptName;
-		}
-	}
+	private static Map<String, GroovyObject> scriptInstance = new ConcurrentHashMap<>();
 
 	public static synchronized void reload() throws Exception {
-		for (String scriptName : scriptInstance.keySet()) {
+		Iterator<String> iterator = scriptInstance.keySet().iterator();
+		while (iterator.hasNext()){
+			String scriptName = iterator.next();
+			iterator.remove();
 			loadScript(scriptName);
 		}
 	}
 
 	public static synchronized void loadScript(String scriptName) throws Exception {
-		if (!scriptInstance.containsKey(scriptName))
+		if (scriptInstance.containsKey(scriptName))
 			return;
 
 		logger.debug("加载脚本: {}", scriptName);
@@ -45,8 +38,10 @@ public class ScriptEngine {
 	}
 
 	public static Object exce(String scriptName, String fn, Object... args) {
-		if (!scriptInstance.containsKey(scriptName))
+		if (!scriptInstance.containsKey(scriptName)) {
 			logger.error("脚本模块 {} 不存在", scriptName);
+			return null;
+		}
 		try {
 			return scriptInstance.get(scriptName).invokeMethod(fn, args);
 		} catch (Exception e) {

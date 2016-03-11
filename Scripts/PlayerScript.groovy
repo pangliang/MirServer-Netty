@@ -2,26 +2,32 @@ import com.zhaoxiaodan.mirserver.db.entities.Player
 import com.zhaoxiaodan.mirserver.db.types.Gender
 import com.zhaoxiaodan.mirserver.db.types.Job
 import com.zhaoxiaodan.mirserver.db.types.MapPoint
+import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine
 import com.zhaoxiaodan.mirserver.utils.NumUtil
 
 void onCreate(Player c) {
+    setBaseAbility(c);
+    giveItems(c);
+}
+
+void setBaseAbility(Player c){
     c.levelUp(1);
     c.baseAbility.HP = 100;
     c.baseAbility.MaxHP = 100;
     c.baseAbility.MP = 10;
     c.baseAbility.MaxMP = 10;
-    c.baseAbility.AC = NumUtil.makeLong(1,1);;
-    c.baseAbility.MAC = NumUtil.makeLong(1,1);;
-    c.baseAbility.DC = NumUtil.makeLong(1,1);
-    c.baseAbility.MC = NumUtil.makeLong(1,1);
+    c.baseAbility.AC = NumUtil.makeLong(1, 1); ;
+    c.baseAbility.MAC = NumUtil.makeLong(1, 1); ;
+    c.baseAbility.DC = NumUtil.makeLong(1, 1);
+    c.baseAbility.MC = NumUtil.makeLong(1, 1);
     c.baseAbility.MaxExp = getMaxExp(c.baseAbility.Level + 1);
-//        c.currMapPoint = getStartPoint();        //设置出生点
+//        c.homeMapPoint = getStartPoint();        //设置出生点
     c.gold = 10000;
     c.gameGold = 1234;
     c.gamePoint = 5678;
 }
 
-void onLevelUp(Player c){
+void onLevelUp(Player c) {
     c.baseAbility.MaxExp = getMaxExp(c.baseAbility.Level + 1);
 }
 
@@ -38,21 +44,19 @@ MapPoint getStartPoint() {
     return startPoint;
 }
 
-Map<String,Integer> getInitItems(Player c){
-    Map<String,Integer> items = new HashMap<>()
+void giveItems(Player c) {
 
-    items.put("金创药(小)包",5);
-    items.put("八荒",1);
-    items.put("木剑",1);
-    if (c.job != Job.Warrior){
-        items.put("魔法药(小)包",3);
+    c.takeNewItem(ItemEngine.getStdItemByName("金创药(小)包"));
+    if (c.job == Job.Warrior) {
+        c.takeNewItem(ItemEngine.getStdItemByName("裁决之杖"));
+        c.takeNewItem(ItemEngine.getStdItemByName("圣战头盔"));
+        c.takeNewItem(ItemEngine.getStdItemByName("圣战项链"));
+        c.takeNewItem(ItemEngine.getStdItemByName("圣战手镯"));
+        c.takeNewItem(ItemEngine.getStdItemByName("圣战戒指"));
     }
-
-    if (c.gender == Gender.MALE){
-        items.put("布衣(男)",1);
-    }else{
-        items.put("布衣(女)",1);
+    if (c.gender == Gender.MALE) {
+        c.takeNewItem(ItemEngine.getStdItemByName("天魔神甲"));
+    } else {
+        c.takeNewItem(ItemEngine.getStdItemByName("圣战宝甲"));
     }
-
-    return items;
 }

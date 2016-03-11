@@ -176,11 +176,12 @@ public class Player extends AnimalObject {
 	}
 
 	public void levelUp(int up){
-		this.baseAbility.Level += 1;
+		this.baseAbility.Level += up;
 		ScriptEngine.exce(SCRIPT_NAME, "onLevelUp", this);
 		session.sendPacket(new ServerPacket(this.baseAbility.Exp, Protocol.SM_LEVELUP, this.baseAbility.Level, (short) 0, (short) 0));
 
 		checkAbility();
+		session.sendPacket(new ServerPacket.PlayerAbility(this));
 	}
 
 	private void checkLevelUp() {

@@ -37,7 +37,8 @@ public class Main {
 
 		String line;
 		try {
-			while((line=in.readLine().trim())!=null){
+			while((line=in.readLine())!=null){
+				line = line.trim();
 				if("s".equals(line)){
 					ScriptEngine.reload();
 					MerchantEngine.reload();

@@ -108,11 +108,6 @@ public class MonsterEngine {
 
 	private static void reloadMonsterGenConfig() throws Exception {
 
-		for (RefreshGroup group : refreshGroups) {
-			for (Monster monster : group.monsters)
-				MonsterEngine.remove(monster);
-		}
-
 		List<RefreshGroup> groups = new ArrayList<>();
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(MONSTER_GEN_CONFIG, 7)) {
 			RefreshGroup group = new RefreshGroup();
