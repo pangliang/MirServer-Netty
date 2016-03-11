@@ -1,7 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.gameserver.engine.*;
+import com.zhaoxiaodan.mirserver.gameserver.engine.Engine;
 import com.zhaoxiaodan.mirserver.gameserver.handler.GameLoginHandler;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
@@ -38,14 +38,7 @@ public class GameServer {
 
 		// db init
 		DB.init();
-		CmdEngine.init();
-		MessageEngine.reload();
-		MapEngine.reload();
-		MagicEngine.reload();
-		ItemEngine.reload();
-		MerchantEngine.reload();
-		MonsterEngine.reload();
-		MonsterEngine.start();
+		Engine.init();
 
 		EventLoopGroup bossGroup   = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();

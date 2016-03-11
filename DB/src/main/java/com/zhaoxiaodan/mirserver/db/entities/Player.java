@@ -104,6 +104,7 @@ public class Player extends AnimalObject {
 		return this.name;
 	}
 
+	//todo 不适用原来的MagicId, 外挂认不出学会的技能
 	public void learnMagic(StdMagic stdMagic) {
 		for (PlayerMagic playerMagic : magics.values()) {
 			if (playerMagic.stdMagic.id == stdMagic.id)

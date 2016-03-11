@@ -1,8 +1,5 @@
 package com.zhaoxiaodan.mirserver;
 
-import com.zhaoxiaodan.mirserver.gameserver.engine.MerchantEngine;
-import com.zhaoxiaodan.mirserver.gameserver.engine.MonsterEngine;
-import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.gameserver.GameServer;
 import com.zhaoxiaodan.mirserver.loginserver.LoginServer;
 import org.apache.logging.log4j.LogManager;
@@ -34,21 +31,5 @@ public class Main {
 		}.start();
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-		String line;
-		try {
-			while((line=in.readLine())!=null){
-				line = line.trim();
-				if("s".equals(line)){
-					ScriptEngine.reload();
-					MerchantEngine.reload();
-					MonsterEngine.reload();
-				}
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-
-
 	}
 }
