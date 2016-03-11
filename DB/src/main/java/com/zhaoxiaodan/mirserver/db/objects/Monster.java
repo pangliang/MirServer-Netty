@@ -4,6 +4,7 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
 public class Monster extends AnimalObject {
@@ -17,8 +18,11 @@ public class Monster extends AnimalObject {
 	}
 
 	@Override
-	public void beKilled() {
-		super.beKilled();
+	public void damage(AnimalObject source, int power) {
+		super.damage(source, power);
+
+		if(source instanceof Player)
+			ScriptEngine.exce(this.stdMonster.scriptName,"onDamage",this, (Player)source, power);
 	}
 
 	@Override
@@ -70,6 +74,11 @@ public class Monster extends AnimalObject {
 	@Override
 	public int getDefend() {
 		return stdMonster.ac;
+	}
+
+	@Override
+	public void kill(AnimalObject animalObject) {
+
 	}
 
 	@Override

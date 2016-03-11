@@ -12,8 +12,8 @@ import java.util.List;
 
 public abstract class AnimalObject extends BaseObject {
 
-	public  int  hp;
-	public  int  maxHp;
+	public int hp;
+	public int maxHp;
 	public boolean isAlive = true;
 
 	public boolean hit(Direction direction) {
@@ -22,9 +22,9 @@ public abstract class AnimalObject extends BaseObject {
 		return true;
 	}
 
-	public boolean damage(BaseObject source, int power) {
-		if(!isAlive || this.hp <= 0)
-			return false;
+	public void damage(AnimalObject source, int power) {
+		if (!isAlive || this.hp <= 0)
+			return;
 
 		int defend = getDefend();
 		int damage = power - defend;
@@ -33,14 +33,15 @@ public abstract class AnimalObject extends BaseObject {
 		this.hp = (this.hp - damage);
 		if (this.hp <= 0) {
 			this.beKilled();
-			return true;
+			source.kill(this);
+			return;
 		} else {
 			broadcast(new ServerPacket.Struck(this.inGameId, this.hp, this.maxHp, damage));
-			return false;
+			return;
 		}
 	}
 
-	public void beKilled(){
+	public void beKilled() {
 		this.isAlive = false;
 		broadcast(new ServerPacket(this.inGameId, Protocol.SM_DEATH, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
 	}
@@ -69,8 +70,8 @@ public abstract class AnimalObject extends BaseObject {
 
 	public void broadcast(ServerPacket serverPacket) {
 		for (BaseObject object : this.objectsInView.values()) {
-			if(object instanceof Player)
-				((Player)object).receive(serverPacket);
+			if (object instanceof Player)
+				((Player) object).receive(serverPacket);
 		}
 	}
 
@@ -119,5 +120,8 @@ public abstract class AnimalObject extends BaseObject {
 
 
 	public abstract int getPower();
+
 	public abstract int getDefend();
+
+	public abstract void kill(AnimalObject animalObject);
 }

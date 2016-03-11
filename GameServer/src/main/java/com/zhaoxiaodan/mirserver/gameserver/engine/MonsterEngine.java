@@ -17,8 +17,8 @@ public class MonsterEngine {
 	private static final Logger logger             = LogManager.getLogger();
 	private static final String MONSTER_GEN_CONFIG = "Envir/MonsterGen.cfg";
 
-	private static Map<String, StdMonster> stdMonsterNames = new HashMap<>();
-	private static List<RefreshGroup>      refreshGroups   = new ArrayList<>();
+	private static Map<String, StdMonster> stdMonsterNames;
+	private static List<RefreshGroup>      refreshGroups;
 
 	private static class RefreshGroup {
 
@@ -107,6 +107,16 @@ public class MonsterEngine {
 	}
 
 	private static void reloadMonsterGenConfig() throws Exception {
+
+		if (refreshGroups != null) {
+			for (RefreshGroup group : refreshGroups) {
+				for (Monster monster : group.monsters)
+					MonsterEngine.remove(monster);
+			}
+
+			refreshGroups.clear();
+		}
+
 
 		List<RefreshGroup> groups = new ArrayList<>();
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(MONSTER_GEN_CONFIG, 7)) {

@@ -197,8 +197,9 @@ public class Player extends AnimalObject {
 		checkAbility();
 	}
 
-	public void kill(Monster monster) {
-		winExp(monster.stdMonster.exp);
+	public void kill(AnimalObject animalObject) {
+		if(animalObject instanceof Monster)
+			winExp(((Monster)animalObject).stdMonster.exp);
 	}
 
 	@Override
@@ -208,9 +209,7 @@ public class Player extends AnimalObject {
 			if (!(object instanceof Monster))
 				continue;
 			Monster monster = (Monster) object;
-			if (monster.damage(this, getPower())) {
-				kill(monster);
-			}
+			monster.damage(this, getPower());
 		}
 		return super.hit(direction);
 	}

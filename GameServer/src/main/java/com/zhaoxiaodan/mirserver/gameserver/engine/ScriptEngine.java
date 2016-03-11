@@ -19,15 +19,17 @@ public class ScriptEngine {
 
 	public static synchronized void reload() throws Exception {
 		Iterator<String> iterator = scriptInstance.keySet().iterator();
-		while (iterator.hasNext()){
-			String scriptName = iterator.next();
-			iterator.remove();
-			loadScript(scriptName);
+		for(String scriptName : scriptInstance.keySet()){
+			loadScript(scriptName, true);
 		}
 	}
 
-	public static synchronized void loadScript(String scriptName) throws Exception {
-		if (scriptInstance.containsKey(scriptName))
+	public static synchronized void loadScript(String scriptName) throws Exception{
+		loadScript(scriptName, false);
+	}
+
+	public static synchronized void loadScript(String scriptName, boolean flush) throws Exception {
+		if (!flush && scriptInstance.containsKey(scriptName))
 			return;
 
 		logger.debug("加载脚本: {}", scriptName);
