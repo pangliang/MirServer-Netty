@@ -31,7 +31,7 @@ public class GameServer {
 	private int port;
 
 	public GameServer(int port) {
-		this.port = port == 0? DEFAULT_GAME_SERVER_PORT : port;
+		this.port = port == 0 ? DEFAULT_GAME_SERVER_PORT : port;
 	}
 
 	public void run() throws Exception {
@@ -39,6 +39,7 @@ public class GameServer {
 		// db init
 		DB.init();
 		CmdEngine.init();
+		MessageEngine.reload();
 		MapEngine.reload();
 		MagicEngine.reload();
 		ItemEngine.reload();
