@@ -1,6 +1,5 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
-import com.alibaba.fastjson.JSON;
 import com.zhaoxiaodan.mirserver.db.objects.AnimalObject;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.objects.Monster;
@@ -101,8 +100,8 @@ public class Player extends AnimalObject {
 		return this.name;
 	}
 
-	public boolean takeOn(PlayerItem itemToWear, WearPosition wearPosition){
-		if(itemToWear.player != this){
+	public boolean takeOn(PlayerItem itemToWear, WearPosition wearPosition) {
+		if (itemToWear.player != this) {
 			itemToWear.player = this;
 		}
 
@@ -110,18 +109,18 @@ public class Player extends AnimalObject {
 
 		// 原来位置穿有装备
 		PlayerItem wearingItem = wearingItems.get(wearPosition);
-		if(null != wearingItem){
+		if (null != wearingItem) {
 			wearingItems.remove(wearingItem.wearingPosition);
 			wearingItem.wearingPosition = null;
 			wearingItem.isWearing = false;
 			session.db.update(wearingItem);
 
-			items.put(wearingItem.id,wearingItem);
+			items.put(wearingItem.id, wearingItem);
 
 			session.sendPacket(new ServerPacket.AddItem(inGameId, wearingItem));
 		}
 
-		wearingItems.put(wearPosition,itemToWear);
+		wearingItems.put(wearPosition, itemToWear);
 
 		itemToWear.wearingPosition = wearPosition;
 		itemToWear.isWearing = true;
@@ -133,10 +132,9 @@ public class Player extends AnimalObject {
 		return true;
 	}
 
-	public boolean takeOff(WearPosition wearPosition){
+	public boolean takeOff(WearPosition wearPosition) {
 		PlayerItem wearingItem = wearingItems.remove(wearPosition);
-		if(wearingItem == null)
-		{
+		if (wearingItem == null) {
 			return false;
 		}
 
@@ -144,7 +142,7 @@ public class Player extends AnimalObject {
 		wearingItem.wearingPosition = null;
 		session.db.update(wearingItem);
 
-		items.put(wearingItem.id,wearingItem);
+		items.put(wearingItem.id, wearingItem);
 		session.sendPacket(new ServerPacket.AddItem(inGameId, wearingItem));
 
 		checkAbility();
@@ -152,7 +150,7 @@ public class Player extends AnimalObject {
 		return true;
 	}
 
-	public void takeNewItem(StdItem stdItem){
+	public void takeNewItem(StdItem stdItem) {
 		PlayerItem playerItem = new PlayerItem(stdItem, this);
 		session.db.save(playerItem);
 		items.put(playerItem.id, playerItem);
@@ -175,7 +173,7 @@ public class Player extends AnimalObject {
 		this.currentAbility = ability;
 	}
 
-	public void levelUp(int up){
+	public void levelUp(int up) {
 		this.baseAbility.Level += up;
 		ScriptEngine.exce(SCRIPT_NAME, "onLevelUp", this);
 		session.sendPacket(new ServerPacket(this.baseAbility.Exp, Protocol.SM_LEVELUP, this.baseAbility.Level, (short) 0, (short) 0));
@@ -274,8 +272,15 @@ public class Player extends AnimalObject {
 	}
 
 	@Override
-	public short getPower() {
-		return 100;
+	public int getPower() {
+		int power = NumUtil.randomRang(currentAbility().DC, currentAbility().DC2);
+
+		return power;
+	}
+
+	@Override
+	public int getDefend() {
+		return NumUtil.randomRang(currentAbility().AC,currentAbility().AC2);
 	}
 
 	@Override

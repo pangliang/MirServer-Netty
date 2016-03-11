@@ -12,8 +12,8 @@ import java.util.List;
 
 public abstract class AnimalObject extends BaseObject {
 
-	public  short  hp;
-	public  short  maxHp;
+	public  int  hp;
+	public  int  maxHp;
 	public boolean isAlive = true;
 
 	public boolean hit(Direction direction) {
@@ -22,16 +22,20 @@ public abstract class AnimalObject extends BaseObject {
 		return true;
 	}
 
-	public boolean damage(BaseObject source, short power) {
+	public boolean damage(BaseObject source, int power) {
 		if(!isAlive || this.hp <= 0)
 			return false;
 
-		this.hp = (short) (this.hp - power);
+		int defend = getDefend();
+		int damage = power - defend;
+		damage = damage > 0 ? damage : 1;
+
+		this.hp = (this.hp - damage);
 		if (this.hp <= 0) {
 			this.beKilled();
 			return true;
 		} else {
-			broadcast(new ServerPacket.Struck(this.inGameId, this.hp, this.maxHp, power));
+			broadcast(new ServerPacket.Struck(this.inGameId, this.hp, this.maxHp, damage));
 			return false;
 		}
 	}
@@ -114,5 +118,6 @@ public abstract class AnimalObject extends BaseObject {
 	}
 
 
-	public abstract short getPower();
+	public abstract int getPower();
+	public abstract int getDefend();
 }

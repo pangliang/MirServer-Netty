@@ -17,7 +17,7 @@ public class StdMonster {
 	public boolean undead;
 	public byte coolEye;
 	public int exp;
-	public short hp;
+	public int hp;
 	public int mp;
 	public int ac;
 	public int mac;

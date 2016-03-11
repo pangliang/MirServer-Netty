@@ -998,13 +998,13 @@ public class ServerPacket extends Packet {
 	public static final class Struck extends ServerPacket {
 
 		public int inGameId;
-		public short hp;
-		public short maxHp;
+		public int hp;
+		public int maxHp;
 		public int damage;
 
 		public Struck() {}
 
-		public Struck(int inGameId, short hp, short maxHp, int damage) {
+		public Struck(int inGameId, int hp, int maxHp, int damage) {
 			super(Protocol.SM_STRUCK);
 			this.inGameId = inGameId;
 			this.hp = hp;
@@ -1012,8 +1012,8 @@ public class ServerPacket extends Packet {
 			this.damage = damage;
 
 			this.recog = inGameId;
-			this.p1 = hp;
-			this.p2 = maxHp;
+			this.p1 = (short)hp;
+			this.p2 = (short)maxHp;
 			this.p3 = (short)damage;
 		}
 

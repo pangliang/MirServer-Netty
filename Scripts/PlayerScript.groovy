@@ -3,28 +3,39 @@ import com.zhaoxiaodan.mirserver.db.types.Gender
 import com.zhaoxiaodan.mirserver.db.types.Job
 import com.zhaoxiaodan.mirserver.db.types.MapPoint
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine
-import com.zhaoxiaodan.mirserver.utils.NumUtil
 
 void onCreate(Player c) {
     setBaseAbility(c);
     giveItems(c);
 }
 
-void setBaseAbility(Player c){
+void setBaseAbility(Player c) {
     c.levelUp(1);
+
     c.baseAbility.HP = 100;
     c.baseAbility.MaxHP = 100;
     c.baseAbility.MP = 10;
     c.baseAbility.MaxMP = 10;
-    c.baseAbility.AC = NumUtil.makeLong(1, 1); ;
-    c.baseAbility.MAC = NumUtil.makeLong(1, 1); ;
-    c.baseAbility.DC = NumUtil.makeLong(1, 1);
-    c.baseAbility.MC = NumUtil.makeLong(1, 1);
+
+    c.baseAbility.AC = 1;
+    c.baseAbility.AC2 = 1;
+    c.baseAbility.MAC = 1;
+    c.baseAbility.MAC2 = 1;
+    c.baseAbility.DC = 1;
+    c.baseAbility.DC2 = 1;
+    c.baseAbility.MC = 1;
+    c.baseAbility.MC2 = 1;
+    c.baseAbility.SC = 1;
+    c.baseAbility.SC2 = 1;
+
     c.baseAbility.MaxExp = getMaxExp(c.baseAbility.Level + 1);
-//        c.homeMapPoint = getStartPoint();        //设置出生点
+
+
     c.gold = 10000;
     c.gameGold = 1234;
     c.gamePoint = 5678;
+
+    c.homeMapPoint = getStartPoint();        //设置出生点
 }
 
 void onLevelUp(Player c) {
@@ -38,8 +49,8 @@ int getMaxExp(int nextLevel) {
 MapPoint getStartPoint() {
     MapPoint startPoint = new MapPoint();
     startPoint.mapId = "0";
-    startPoint.x = 289;
-    startPoint.y = 618;
+    startPoint.x = 273;
+    startPoint.y = 590;
 
     return startPoint;
 }

@@ -1,18 +1,24 @@
 import com.zhaoxiaodan.mirserver.db.entities.PlayerItem
 import com.zhaoxiaodan.mirserver.db.types.Ability
-import com.zhaoxiaodan.mirserver.utils.NumUtil
 
 void checkAbility(Ability ability, PlayerItem playerItem) {
 
-    if(5 == playerItem.attr.stdMode || 6 == playerItem.attr.stdMode){
+    if (5 == playerItem.attr.stdMode || 6 == playerItem.attr.stdMode) {
         // 武器
-        ability.DC += NumUtil.makeLong(playerItem.attr.dc, playerItem.attr.dc2);
-    }else{
-        ability.AC += NumUtil.makeLong(playerItem.attr.ac, playerItem.attr.ac2);
-        ability.MAC += NumUtil.makeLong(playerItem.attr.mac, playerItem.attr.mac2);
-        ability.DC += NumUtil.makeLong(playerItem.attr.dc, playerItem.attr.dc2);
-        ability.MC += NumUtil.makeLong(playerItem.attr.mc, playerItem.attr.mc2);
-        ability.SC += NumUtil.makeLong(playerItem.attr.sc, playerItem.attr.sc2);
+        ability.DC += playerItem.attr.DC;
+        ability.DC2 += playerItem.attr.DC2;
+    } else {
+
+        ability.AC += playerItem.attr.AC;
+        ability.AC2 += playerItem.attr.AC2;
+        ability.MAC += playerItem.attr.MAC;
+        ability.MAC2 += playerItem.attr.MAC2;
+        ability.DC += playerItem.attr.DC;
+        ability.DC2 += playerItem.attr.DC2;
+        ability.MC += playerItem.attr.MC;
+        ability.MC2 += playerItem.attr.MC2;
+        ability.SC += playerItem.attr.SC;
+        ability.SC2 += playerItem.attr.SC2;
     }
 
 

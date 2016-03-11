@@ -10,7 +10,7 @@ public class Monster extends AnimalObject {
 
 	public final StdMonster stdMonster;
 
-	public Monster(StdMonster stdMonster){
+	public Monster(StdMonster stdMonster) {
 		this.stdMonster = stdMonster;
 		this.hp = stdMonster.hp;
 		this.maxHp = stdMonster.hp;
@@ -25,8 +25,8 @@ public class Monster extends AnimalObject {
 	public boolean hit(Direction direction) {
 		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
 		for (BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1)) {
-			if(object instanceof Player)
-				((Player)object).damage(this, getPower());
+			if (object instanceof Player)
+				((Player) object).damage(this, getPower());
 		}
 
 		return super.hit(direction);
@@ -41,7 +41,7 @@ public class Monster extends AnimalObject {
 	public boolean see(BaseObject object) {
 
 		// 怪物只管看到的Player
-		if(!(object instanceof Player))
+		if (!(object instanceof Player))
 			return false;
 
 		return super.see(object);
@@ -49,7 +49,7 @@ public class Monster extends AnimalObject {
 
 	@Override
 	public int getFeature() {
-		return NumUtil.makeLong(NumUtil.makeWord(stdMonster.raceImg,(byte)0), stdMonster.appr);
+		return NumUtil.makeLong(NumUtil.makeWord(stdMonster.raceImg, (byte) 0), stdMonster.appr);
 	}
 
 	@Override
@@ -63,8 +63,13 @@ public class Monster extends AnimalObject {
 	}
 
 	@Override
-	public short getPower() {
-		return (short) stdMonster.dc;
+	public int getPower() {
+		return NumUtil.randomRang(stdMonster.dc, stdMonster.dcMax);
+	}
+
+	@Override
+	public int getDefend() {
+		return stdMonster.ac;
 	}
 
 	@Override

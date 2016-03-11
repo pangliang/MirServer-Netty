@@ -23,16 +23,16 @@ public class ItemAttr implements Parcelable,Cloneable {
 	 */
 	public int    duraMax;
 	public short  reserved1;
-	public short  ac;
-	public short  ac2;
-	public short  mac;
-	public short  mac2;
-	public short  dc;
-	public short  dc2;
-	public short  mc;
-	public short  mc2;
-	public short  sc;
-	public short  sc2;
+	public short  AC;
+	public short  AC2;
+	public short  MAC;
+	public short  MAC2;
+	public short  DC;
+	public short  DC2;
+	public short  MC;
+	public short  MC2;
+	public short  SC;
+	public short  SC2;
 	public int    need;
 	public int    needLevel;
 	public int    price;
@@ -75,11 +75,11 @@ public class ItemAttr implements Parcelable,Cloneable {
 
 		out.writeShort(reserved1);
 
-		out.writeInt(NumUtil.makeLong(ac, ac2));
-		out.writeInt(NumUtil.makeLong(mac, mac2));
-		out.writeInt(NumUtil.makeLong(dc, dc2));
-		out.writeInt(NumUtil.makeLong(mc, mc2));
-		out.writeInt(NumUtil.makeLong(sc, sc2));
+		out.writeInt(NumUtil.makeLong(AC, AC2));
+		out.writeInt(NumUtil.makeLong(MAC, MAC2));
+		out.writeInt(NumUtil.makeLong(DC, DC2));
+		out.writeInt(NumUtil.makeLong(MC, MC2));
+		out.writeInt(NumUtil.makeLong(SC, SC2));
 
 		out.writeByte(need);
 		out.writeByte(needLevel);
@@ -105,11 +105,11 @@ public class ItemAttr implements Parcelable,Cloneable {
 		out.writeShort(looks);
 		out.writeShort(duraMax);
 
-		out.writeShort(NumUtil.makeWord((byte) ac, (byte) ac2));
-		out.writeShort(NumUtil.makeWord((byte) mac, (byte) mac2));
-		out.writeShort(NumUtil.makeWord((byte) dc, (byte) dc2));
-		out.writeShort(NumUtil.makeWord((byte) mc, (byte) mc2));
-		out.writeShort(NumUtil.makeWord((byte) sc, (byte) sc2));
+		out.writeShort(NumUtil.makeWord((byte) AC, (byte) AC2));
+		out.writeShort(NumUtil.makeWord((byte) MAC, (byte) MAC2));
+		out.writeShort(NumUtil.makeWord((byte) DC, (byte) DC2));
+		out.writeShort(NumUtil.makeWord((byte) MC, (byte) MC2));
+		out.writeShort(NumUtil.makeWord((byte) SC, (byte) SC2));
 		out.writeByte(need);
 		out.writeByte(needLevel);
 		out.writeShort(0);
