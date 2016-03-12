@@ -37,7 +37,7 @@ public class StdMagic implements Parcelable {
 
 	@Override
 	public void writePacket(ByteBuf out) {
-
+		out.writeShort(id);
 		byte[] nameBytes = name.getBytes();
 		out.writeByte(nameBytes.length);
 		out.writeBytes(nameBytes, 0, nameBytes.length > NAME_BYTE_SIZE ? NAME_BYTE_SIZE : nameBytes.length);

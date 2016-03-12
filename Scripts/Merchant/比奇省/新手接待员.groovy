@@ -1,5 +1,4 @@
 import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic
 import com.zhaoxiaodan.mirserver.db.objects.Merchant
 import com.zhaoxiaodan.mirserver.gameserver.engine.Engine
 import com.zhaoxiaodan.mirserver.gameserver.engine.MagicEngine
@@ -33,8 +32,6 @@ public void 学习技能(Merchant merchant, Player player) {
 }
 
 public void 遗忘所有技能(Merchant merchant, Player player) {
-    for (PlayerMagic playerMagic : player.magics.values()) {
-        player.deleteMagic(playerMagic.id);
-    }
+    player.deleteAllMagic();
 }
 

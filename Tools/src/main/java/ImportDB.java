@@ -13,7 +13,7 @@ public class ImportDB {
 		{
 //			put("STDITEM", "数据文件/物品数据库.csv");
 //			put("STDMONSTER", "数据文件/怪物数据库.csv");
-			put("STDMAGIC", "数据文件/技能数据库.csv");
+			put("STDMAGIC", "数据文件/MIR2_PUBLIC_STDMAGIC.csv");
 		}
 	};
 

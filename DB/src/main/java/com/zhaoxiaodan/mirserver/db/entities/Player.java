@@ -15,6 +15,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @Entity
@@ -87,7 +88,7 @@ public class Player extends AnimalObject {
 	public Map<WearPosition, PlayerItem> wearingItems = new HashMap<>();
 
 	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	@MapKey(name = "id")
+	@MapKeyJoinColumn(name = "stdMagic.id")
 	public Map<Integer, PlayerMagic> magics = new HashMap<>();
 
 	/**
@@ -106,18 +107,27 @@ public class Player extends AnimalObject {
 
 	//todo 不适用原来的MagicId, 外挂认不出学会的技能
 	public void learnMagic(StdMagic stdMagic) {
-		for (PlayerMagic playerMagic : magics.values()) {
-			if (playerMagic.stdMagic.id == stdMagic.id)
-				return;
-		}
+		if (stdMagic == null || magics.containsKey(stdMagic.id))
+			return;
 
 		PlayerMagic playerMagic = new PlayerMagic();
 		playerMagic.player = this;
 		playerMagic.stdMagic = stdMagic;
 		session.db.save(playerMagic);
 
-		this.magics.put(playerMagic.id, playerMagic);
+		this.magics.put(stdMagic.id, playerMagic);
 		session.sendPacket(new ServerPacket.AddMagic(playerMagic));
+	}
+
+	public void deleteAllMagic(){
+		Iterator<PlayerMagic> it = magics.values().iterator();
+		while(it.hasNext()){
+			PlayerMagic playerMagic = it.next();
+			it.remove();
+
+			session.db.delete(playerMagic);
+			session.sendPacket(new ServerPacket(playerMagic.stdMagic.id, Protocol.SM_DELMAGIC, (short) 0, (short) 0, (short) 0));
+		}
 	}
 
 	public void deleteMagic(int magicId) {
@@ -127,7 +137,7 @@ public class Player extends AnimalObject {
 		PlayerMagic playerMagic = this.magics.remove(magicId);
 		session.db.delete(playerMagic);
 
-		session.sendPacket(new ServerPacket(playerMagic.id,Protocol.SM_DELMAGIC,(short)0,(short)0,(short)0));
+		session.sendPacket(new ServerPacket(playerMagic.stdMagic.id, Protocol.SM_DELMAGIC, (short) 0, (short) 0, (short) 0));
 	}
 
 	public boolean takeOn(PlayerItem itemToWear, WearPosition wearPosition) {
