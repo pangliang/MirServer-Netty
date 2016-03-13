@@ -14,9 +14,8 @@ import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
 public class Player extends AnimalObject {
@@ -81,15 +80,17 @@ public class Player extends AnimalObject {
 	@MapKey(name = "id")
 	public Map<Integer, PlayerItem> items = new HashMap<>();
 
-
 	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@Where(clause = "isWearing=true")
 	@MapKey(name = "wearingPosition")
 	public Map<WearPosition, PlayerItem> wearingItems = new HashMap<>();
 
 	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	@MapKeyJoinColumn(name = "stdMagic.id")
+	@MapKeyJoinColumn(name = "stdMagic.id", nullable = false)
 	public Map<Integer, PlayerMagic> magics = new HashMap<>();
+
+	@Transient
+	public Map<Integer, PlayerMagic> buffers = new ConcurrentHashMap<>();
 
 	/**
 	 * 最后动作时间, 用来防止加速
@@ -105,7 +106,42 @@ public class Player extends AnimalObject {
 		return this.name;
 	}
 
-	//todo 不适用原来的MagicId, 外挂认不出学会的技能
+	@Override
+	public boolean hit(Direction direction) {
+		broadcast(new ServerPacket(this.inGameId, Protocol.SM_HIT, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
+		return this.hit(direction, 0);
+	}
+
+	public boolean hit(Direction direction, int magicId) {
+
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
+		int               power   = getPower();
+		List<BaseObject>  targets = mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1);
+
+		PlayerMagic playerMagic = buffers.get(magicId);
+		if(playerMagic != null){
+			power += (Integer) ScriptEngine.exce(playerMagic.stdMagic.scriptName, "useBuffer", this, playerMagic, power, targets);
+		}
+
+		for (BaseObject object : targets) {
+			if (!(object instanceof Monster))
+				continue;
+			Monster monster = (Monster) object;
+			monster.damage(this, power);
+		}
+		return true;
+	}
+
+	public boolean spell(int magicId) {
+		if (!magics.containsKey(magicId))
+			return false;
+
+		PlayerMagic playerMagic = magics.get(magicId);
+		ScriptEngine.exce(playerMagic.stdMagic.scriptName, "spell", this, playerMagic);
+
+		return true;
+	}
+
 	public void learnMagic(StdMagic stdMagic) {
 		if (stdMagic == null || magics.containsKey(stdMagic.id))
 			return;
@@ -119,9 +155,9 @@ public class Player extends AnimalObject {
 		session.sendPacket(new ServerPacket.AddMagic(playerMagic));
 	}
 
-	public void deleteAllMagic(){
+	public void deleteAllMagic() {
 		Iterator<PlayerMagic> it = magics.values().iterator();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			PlayerMagic playerMagic = it.next();
 			it.remove();
 
@@ -243,18 +279,6 @@ public class Player extends AnimalObject {
 	}
 
 	@Override
-	public boolean hit(Direction direction) {
-		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
-		for (BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1)) {
-			if (!(object instanceof Monster))
-				continue;
-			Monster monster = (Monster) object;
-			monster.damage(this, getPower());
-		}
-		return super.hit(direction);
-	}
-
-	@Override
 	public boolean see(BaseObject object) {
 		boolean rs;
 		if (rs = super.see(object)) {
@@ -338,6 +362,14 @@ public class Player extends AnimalObject {
 		session.sendPacket(new ServerPacket(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
 
 		super.enterMap(mapPoint);
+	}
+
+	public void sendSysMsg(String msg) {
+		sendSysMsg(msg, Color.Black, Color.White);
+	}
+
+	public void sendSysMsg(String msg, Color ftCorol, Color bgColor) {
+		session.sendPacket(new ServerPacket.SysMessage(this.inGameId, msg, ftCorol, bgColor));
 	}
 
 

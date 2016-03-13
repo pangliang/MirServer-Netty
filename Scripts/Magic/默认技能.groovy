@@ -1,27 +1,44 @@
 import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.objects.Monster
-import com.zhaoxiaodan.mirserver.db.types.Direction
+import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic
+import com.zhaoxiaodan.mirserver.db.objects.BaseObject
 import com.zhaoxiaodan.mirserver.utils.NumUtil
 
-void onTick(Monster monster) {
+//todo 原版逻辑混乱 ? "使用技能" 和 战士的 "打开技能" 重叠
+class 默认技能 {
+    public void spell(Player player, PlayerMagic playerMagic) {
+        if (isBuffer()) {
+            onBufferOnOff(player, playerMagic);
+            return;
+        }
+    }
 
-    if (!monster.isAlive)
-        return;
-
-    long now = NumUtil.getTickCount();
-    Random random = new Random();
-
-    monster.metaClass.lastWalkTime = 0;
-
-    if (now > monster.lastWalkTime + 3000) {
-        monster.lastWalkTime = now + random.nextInt(1000);
-
-        monster.direction = Direction.values()[random.nextInt(Direction.values().length)];
-        monster.walk(monster.direction);
+    public int useBuffer(Player player, PlayerMagic playerMagic, int power, List<BaseObject> targets) {
 
     }
-}
 
-void onDamage(Monster monster, Player player, int damage) {
+    // 打开关闭技能
+    public boolean onBufferOnOff(Player player, PlayerMagic playerMagic) {
 
+        player.metaClass.lastUseMagicTimes = [:];
+
+        if (player.buffers.containsKey(playerMagic.stdMagic.id)) {
+            player.buffers.remove(playerMagic.stdMagic.id);
+            return false;
+        } else {
+            long now = NumUtil.getTickCount();
+            if (player.lastUseMagicTimes[playerMagic.stdMagic.id] == null || now > player.lastUseMagicTimes[playerMagic.stdMagic.id] + playerMagic.stdMagic.delay) {
+                player.lastUseMagicTimes[playerMagic.stdMagic.id] = now;
+
+                player.buffers.put(playerMagic.stdMagic.id, playerMagic);
+                return true;
+            } else {
+                player.sendSysMsg(playerMagic.stdMagic.name + "正忙!!");
+                return false;
+            }
+        }
+    }
+
+    public boolean isBuffer() {
+        return false;
+    }
 }

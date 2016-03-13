@@ -55,7 +55,7 @@ public class StdMagic implements Parcelable {
 		out.writeInt(10000);
 		out.writeInt(3);
 		out.writeInt(4);
-		out.writeInt(5);
+		out.writeInt(55);
 
 		out.writeByte(2);
 

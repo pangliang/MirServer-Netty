@@ -429,8 +429,8 @@ public class ClientPacket extends Packet {
 
 	public static final class Action extends ClientPacket {
 
-		public short x;
-		public short y;
+		public short     x;
+		public short     y;
 		public Direction direction;
 
 		public Action() {}
@@ -441,6 +441,36 @@ public class ClientPacket extends Packet {
 			direction = Direction.values()[p2];
 			x = NumUtil.getLowWord(recog);
 			y = NumUtil.getHighWord(recog);
+		}
+	}
+
+	public static final class Spell extends ClientPacket {
+
+		public int       magicId;
+		public Direction direction;
+
+		public Spell() {}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			direction = Direction.values()[recog];
+			magicId = p2;
+		}
+	}
+
+	public static final class MagicKeyChange extends ClientPacket {
+
+		public int   magicId;
+		public short key;
+
+		public MagicKeyChange() {}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			magicId = recog;
+			key = p1;
 		}
 	}
 }

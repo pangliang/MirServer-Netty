@@ -607,19 +607,24 @@ public class ServerPacket extends Packet {
 			}
 		}
 
-		public Result result;
+		public String content;
 		public long   tickCount;
 
 		public ActionStatus() {}
 
 		public ActionStatus(Result result) {
-			this.result = result;
+			this.content = result.content;
+			this.tickCount = NumUtil.getTickCount();
+		}
+
+		public ActionStatus(String content) {
+			this.content = content;
 			this.tickCount = NumUtil.getTickCount();
 		}
 
 		@Override
 		public void writePacket(ByteBuf out) {
-			out.writeBytes(result.content.getBytes());
+			out.writeBytes(content.getBytes());
 			out.writeByte(CONTENT_SEPARATOR_CHAR);
 			out.writeBytes(Long.toString(this.tickCount).getBytes());
 		}
@@ -629,13 +634,8 @@ public class ServerPacket extends Packet {
 			String   content = in.toString(1, in.readableBytes() - 2, Charset.defaultCharset()).trim();
 			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
 			if (parts.length > 1) {
-				for (Result result : Result.values()) {
-					if (result.content.equals(parts[0])) {
-						this.result = result;
-						this.tickCount = Long.parseLong(parts[1]);
-						return;
-					}
-				}
+				this.content = parts[0];
+				this.tickCount = Long.parseLong(parts[1]);
 			}
 			throw new WrongFormatException("content not match !! content:" + content);
 		}

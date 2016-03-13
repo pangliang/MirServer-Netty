@@ -4,6 +4,7 @@ public class Engine {
 
 	public static synchronized void init() throws Exception {
 		CmdEngine.init();
+		ScriptEngine.reload();
 		MessageEngine.reload();
 		MapEngine.reload();
 		MagicEngine.reload();
@@ -15,6 +16,7 @@ public class Engine {
 
 	public static synchronized void reload() throws Exception {
 		CmdEngine.init();
+		ScriptEngine.reload();
 		MessageEngine.reload();
 		MapEngine.reload();
 		MagicEngine.reload();

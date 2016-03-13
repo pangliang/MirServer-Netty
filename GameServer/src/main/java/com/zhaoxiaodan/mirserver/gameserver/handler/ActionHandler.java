@@ -10,16 +10,17 @@ public class ActionHandler extends PlayerHandler {
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 
-		ClientPacket.Action request = (ClientPacket.Action)packet;
+		ClientPacket.Action request = (ClientPacket.Action) packet;
 
 
-		if(!player.checkAndIncActionTime(Config.PLAYER_ACTION_INTERVAL_TIME)){
+		if (!player.checkAndIncActionTime(Config.PLAYER_ACTION_INTERVAL_TIME)) {
 			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Fail));
 			return;
 		}
 
+		player.direction = request.direction;
 		boolean isSucc = false;
-		switch (packet.protocol){
+		switch (packet.protocol) {
 			case CM_WALK:
 				isSucc = player.walk(request.direction);
 				break;
@@ -29,11 +30,16 @@ public class ActionHandler extends PlayerHandler {
 			case CM_TURN:
 				isSucc = player.turn(request.direction);
 				break;
+			case CM_LONGHIT: // TODO: 16/3/13 外挂的自动刺杀不会"开启刺杀", 只会使用 CM_LONGHIT 的 Hit,
+				isSucc = player.hit(request.direction, 12);
+				break;
+			case CM_FIREHIT: // TODO: 16/3/13 外挂会自动用Spell来"开启烈火", 使用烈火的时候发 CM_FIREHIT 的Hit
+				isSucc = player.hit(request.direction, 26);
+				break;
 			case CM_HIT:
 			case CM_BIGHIT:
 			case CM_HEAVYHIT:
 			case CM_POWERHIT:
-			case CM_LONGHIT:
 				isSucc = player.hit(request.direction);
 				break;
 			default:
@@ -41,7 +47,7 @@ public class ActionHandler extends PlayerHandler {
 				break;
 		}
 
-		if(isSucc)
+		if (isSucc)
 			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Good));
 		else
 			session.sendPacket(new ServerPacket.ActionStatus(ServerPacket.ActionStatus.Result.Fail));

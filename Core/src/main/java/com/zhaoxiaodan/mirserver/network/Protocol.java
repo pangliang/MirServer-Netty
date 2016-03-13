@@ -50,7 +50,7 @@ public enum Protocol {
 	CM_TAKEONITEM(1003, "TakeOnOffItem", null),
 	CM_TAKEOFFITEM(1004, "TakeOnOffItem", null),
 	CM_BUTCH(1007, null, null),
-	CM_MAGICKEYCHANGE(1008, null, null),
+	CM_MAGICKEYCHANGE(1008, "MagicKeyChange", null),
 	CM_LOGINNOTICEOK(1018, "LoginNoticeOk", null),
 	
 	
@@ -66,7 +66,7 @@ public enum Protocol {
 	CM_HIT(3014, "Action", null),
 	CM_HEAVYHIT(3015, "Action", null),
 	CM_BIGHIT(3016, "Action", null),
-	CM_SPELL(3017, null, null),
+	CM_SPELL(3017, "Spell", null),
 	CM_POWERHIT(3018, "Action", null),
 	CM_LONGHIT(3019, "Action", null),
 	CM_WIDEHIT(3024, "Action", null),
