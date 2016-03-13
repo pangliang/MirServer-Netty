@@ -29,6 +29,7 @@ public class ActionHandler extends PlayerHandler {
 				break;
 			case CM_TURN:
 				isSucc = player.turn(request.direction);
+				player.session.sendPacket(new ServerPacket.Turn(player));
 				break;
 			case CM_LONGHIT: // TODO: 16/3/13 外挂的自动刺杀不会"开启刺杀", 只会使用 CM_LONGHIT 的 Hit,
 				isSucc = player.hit(request.direction, 12);
@@ -48,6 +49,10 @@ public class ActionHandler extends PlayerHandler {
 			default:
 				isSucc = true;
 				break;
+		}
+
+		if (player.currMapPoint.x != request.x || player.currMapPoint.y != request.y) {
+			player.session.sendPacket(new ServerPacket.Turn(player));
 		}
 
 		if (isSucc)
