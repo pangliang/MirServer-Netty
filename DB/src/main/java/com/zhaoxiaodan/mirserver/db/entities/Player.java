@@ -86,11 +86,8 @@ public class Player extends AnimalObject {
 	public Map<WearPosition, PlayerItem> wearingItems = new HashMap<>();
 
 	@OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	@MapKeyJoinColumn(name = "stdMagic.id", nullable = false)
+	@MapKeyColumn(name = "stdMagicId")
 	public Map<Integer, PlayerMagic> magics = new HashMap<>();
-
-	@Transient
-	public Map<Integer, PlayerMagic> buffers = new ConcurrentHashMap<>();
 
 	/**
 	 * 最后动作时间, 用来防止加速
@@ -118,9 +115,9 @@ public class Player extends AnimalObject {
 		int               power   = getPower();
 		List<BaseObject>  targets = mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1);
 
-		PlayerMagic playerMagic = buffers.get(magicId);
+		PlayerMagic playerMagic = magics.get(magicId);
 		if(playerMagic != null){
-			power += (Integer) ScriptEngine.exce(playerMagic.stdMagic.scriptName, "useBuffer", this, playerMagic, power, targets);
+			power += (Integer) ScriptEngine.exce(playerMagic.stdMagic.scriptName, "useMagic", this, playerMagic, power, targets);
 		}
 
 		for (BaseObject object : targets) {

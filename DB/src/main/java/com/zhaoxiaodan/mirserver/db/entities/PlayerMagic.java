@@ -16,7 +16,7 @@ public class PlayerMagic implements Parcelable {
 	public Player player;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "stdMagicId",nullable = false)
 	public StdMagic stdMagic;
 
 	public short key;
@@ -31,9 +31,9 @@ public class PlayerMagic implements Parcelable {
 	@Override
 	public void writePacket(ByteBuf out) {
 		out.writeShort(key);
-		out.writeByte(level + 2);
+		out.writeByte(level);
 		out.writeByte(0);
-		out.writeInt(exp + 8);
+		out.writeInt(exp);
 		stdMagic.writePacket(out);
 	}
 }
