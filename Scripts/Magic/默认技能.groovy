@@ -13,7 +13,7 @@ class 默认技能 {
     }
 
     public int useBuffer(Player player, PlayerMagic playerMagic, int power, List<BaseObject> targets) {
-
+        return 0;
     }
 
     // 打开关闭技能
