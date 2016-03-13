@@ -36,6 +36,9 @@ public class ActionHandler extends PlayerHandler {
 			case CM_FIREHIT: // TODO: 16/3/13 外挂会自动用Spell来"开启烈火", 使用烈火的时候发 CM_FIREHIT 的Hit
 				isSucc = player.hit(request.direction, 26);
 				break;
+			case CM_WIDEHIT:
+				isSucc = player.hit(request.direction, 25);
+				break;
 			case CM_HIT:
 			case CM_BIGHIT:
 			case CM_HEAVYHIT:

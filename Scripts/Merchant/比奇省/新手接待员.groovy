@@ -29,6 +29,7 @@ public void 刷怪(Merchant merchant, Player player) {
 public void 学习技能(Merchant merchant, Player player) {
     player.learnMagic(MagicEngine.getStdMagicByName("烈火剑法"));
     player.learnMagic(MagicEngine.getStdMagicByName("刺杀剑术"));
+    player.learnMagic(MagicEngine.getStdMagicByName("半月弯刀"));
 }
 
 public void 遗忘所有技能(Merchant merchant, Player player) {
