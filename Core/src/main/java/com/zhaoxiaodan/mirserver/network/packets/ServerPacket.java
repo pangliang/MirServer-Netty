@@ -15,6 +15,7 @@ import io.netty.buffer.Unpooled;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -719,7 +720,7 @@ public class ServerPacket extends Packet {
 			this.status = status;
 		}
 
-		public Action(Protocol protocol,BaseObject object) {
+		public Action(Protocol protocol, BaseObject object) {
 			this(protocol,
 					object.inGameId,
 					object.direction,
@@ -782,7 +783,7 @@ public class ServerPacket extends Packet {
 					object.getStatus(),
 					object.light,
 					object.getName(),
-					object.nameColor.c);
+					object.nameColor.id);
 		}
 
 		@Override
@@ -805,11 +806,11 @@ public class ServerPacket extends Packet {
 			String   content = in.toString(Charset.defaultCharset());
 			String[] parts   = content.split(CONTENT_SEPARATOR_STR);
 			objName = parts[0];
-			nameColor = parts.length > 1 ? Integer.parseInt(parts[1]) : Color.White.c;
+			nameColor = parts.length > 1 ? Integer.parseInt(parts[1]) : Color.White.id;
 		}
 	}
 
-	public static final class Skeleton extends Turn{
+	public static final class Skeleton extends Turn {
 
 		public Skeleton(BaseObject object) {
 			super(object.inGameId,
@@ -820,12 +821,12 @@ public class ServerPacket extends Packet {
 					object.getStatus(),
 					object.light,
 					object.getName(),
-					object.nameColor.c);
+					object.nameColor.id);
 			this.protocol = Protocol.SM_SKELETON;
 		}
 	}
 
-	public static final class Death extends Turn{
+	public static final class Death extends Turn {
 
 		public Death(BaseObject object) {
 			super(object.inGameId,
@@ -836,7 +837,7 @@ public class ServerPacket extends Packet {
 					object.getStatus(),
 					object.light,
 					object.getName(),
-					object.nameColor.c);
+					object.nameColor.id);
 			this.protocol = Protocol.SM_DEATH;
 		}
 	}
@@ -896,7 +897,7 @@ public class ServerPacket extends Packet {
 		public SysMessage() {}
 
 		public SysMessage(int inGameId, String msg, Color ftCorol, Color bgColor) {
-			this(inGameId, msg, ftCorol.c, bgColor.c);
+			this(inGameId, msg, ftCorol.id, bgColor.id);
 		}
 
 		public SysMessage(int inGameId, String msg, short frontColor, short backgroundColor) {
@@ -967,11 +968,11 @@ public class ServerPacket extends Packet {
 
 	public static final class SendUseItems extends ServerPacket {
 
-		public Map<WearPosition,PlayerItem> wearingItems;
+		public Map<WearPosition, PlayerItem> wearingItems;
 
 		public SendUseItems() {}
 
-		public SendUseItems(Map<WearPosition,PlayerItem> wearingItems) {
+		public SendUseItems(Map<WearPosition, PlayerItem> wearingItems) {
 			super(Protocol.SM_SENDUSEITEMS);
 			this.wearingItems = wearingItems;
 		}
@@ -979,9 +980,9 @@ public class ServerPacket extends Packet {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-			if(this.wearingItems == null)
-				return ;
-			for(PlayerItem item: this.wearingItems.values()){
+			if (this.wearingItems == null)
+				return;
+			for (PlayerItem item : this.wearingItems.values()) {
 				out.writeByte(item.wearingPosition.id + '0');
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 
@@ -1013,9 +1014,9 @@ public class ServerPacket extends Packet {
 			this.damage = damage;
 
 			this.recog = inGameId;
-			this.p1 = (short)hp;
-			this.p2 = (short)maxHp;
-			this.p3 = (short)damage;
+			this.p1 = (short) hp;
+			this.p2 = (short) maxHp;
+			this.p3 = (short) damage;
 		}
 
 		@Override
@@ -1040,6 +1041,36 @@ public class ServerPacket extends Packet {
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
 			playerMagic.writePacket(out);
+		}
+	}
+
+	public static final class SendMyMagics extends ServerPacket {
+
+		public Map<Integer, PlayerMagic> magics = new HashMap<>();
+
+		public SendMyMagics() {}
+
+		public SendMyMagics(Map<Integer, PlayerMagic> magics) {
+			super(Protocol.SM_SENDMYMAGIC);
+			this.magics = magics;
+			this.p3 = (short) magics.size();
+		}
+
+		@Override
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			if (this.magics == null)
+				return;
+			for (PlayerMagic magic : this.magics.values()) {
+
+				ByteBuf tmp = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
+				magic.writePacket(tmp);
+				byte[] datas = new byte[tmp.readableBytes()];
+				tmp.readBytes(datas);
+				out.writeBytes(Bit6Coder.encoder6BitBuf(datas));
+
+				out.writeByte(CONTENT_SEPARATOR_CHAR);
+			}
 		}
 	}
 

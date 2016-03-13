@@ -12,7 +12,7 @@ public class PlayerMagic implements Parcelable {
 	@GeneratedValue
 	public int    id;
 	@ManyToOne
-	@JoinColumn(name = "playerId")
+	@JoinColumn(name = "PLAYERID")
 	public Player player;
 
 	@OneToOne

@@ -12,24 +12,24 @@ public enum Color {
 	Yellow(251),
 	Blue(252),
 	White(255),
-	Default(Color.Black.c);
-	public short c;
+	Default(Color.Black.id);
+	public short id;
 
-	Color(int c) {
-		this.c = (short)c;
+	Color(int id) {
+		this.id = (short) id;
 	}
 
 	private static final Map<Short, Color> colors = new HashMap<>();
 
 	static {
 		for (Color color : Color.values()) {
-			colors.put(color.c, color);
+			colors.put(color.id, color);
 		}
 	}
 
-	public static Color get(short c) {
-		if (colors.containsKey(c))
-			return colors.get(c);
+	public static Color get(short id) {
+		if (colors.containsKey(id))
+			return colors.get(id);
 		else
 			return Default;
 	}
