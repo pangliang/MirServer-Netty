@@ -2,6 +2,7 @@ package com.zhaoxiaodan.mirserver.db.entities;
 
 import com.zhaoxiaodan.mirserver.db.objects.AnimalObject;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.db.objects.DropItem;
 import com.zhaoxiaodan.mirserver.db.objects.Monster;
 import com.zhaoxiaodan.mirserver.db.types.*;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
@@ -163,16 +164,6 @@ public class Player extends AnimalObject {
 		}
 	}
 
-	public void deleteMagic(int magicId) {
-		if (!this.magics.containsKey(magicId))
-			return;
-
-		PlayerMagic playerMagic = this.magics.remove(magicId);
-		session.db.delete(playerMagic);
-
-		session.sendPacket(new ServerPacket(playerMagic.stdMagic.id, Protocol.SM_DELMAGIC, (short) 0, (short) 0, (short) 0));
-	}
-
 	public boolean takeOn(PlayerItem itemToWear, WearPosition wearPosition) {
 		if (itemToWear.player != this) {
 			itemToWear.player = this;
@@ -279,10 +270,13 @@ public class Player extends AnimalObject {
 	public boolean see(BaseObject object) {
 		boolean rs;
 		if (rs = super.see(object)) {
-			if (object instanceof AnimalObject && !((AnimalObject) object).isAlive) {
-				session.sendPacket(new ServerPacket.Death(object));
-			} else {
-				session.sendPacket(new ServerPacket.Turn(object));
+			if (object instanceof AnimalObject) {
+				if(((AnimalObject) object).isAlive)
+					session.sendPacket(new ServerPacket.Turn(object));
+				else
+					session.sendPacket(new ServerPacket.Death(object));
+			} else if(object instanceof DropItem){
+				session.sendPacket(new ServerPacket.ItemShow((DropItem)object));
 			}
 		}
 

@@ -2,6 +2,7 @@ package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.alibaba.fastjson.JSON;
 import com.zhaoxiaodan.mirserver.db.DB;
+import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
 import com.zhaoxiaodan.mirserver.db.objects.Monster;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
@@ -14,11 +15,13 @@ import java.util.*;
 
 public class MonsterEngine {
 
-	private static final Logger logger             = LogManager.getLogger();
-	private static final String MONSTER_GEN_CONFIG = "Envir/MonsterGen.cfg";
+	private static final Logger logger              = LogManager.getLogger();
+	private static final String MONSTER_GEN_CONFIG  = "Envir/MonsterGen.cfg";
+	private static final String MONSTER_DROP_CONFIG = "Envir/MonsterDrop.cfg";
 
-	private static Map<String, StdMonster> stdMonsterNames;
-	private static List<RefreshGroup>      refreshGroups;
+	private static Map<String, StdMonster>        stdMonsterNames;
+	private static List<RefreshGroup>             refreshGroups;
+	private static Map<String, List<MonsterDrop>> monsterDrops;
 
 	private static class RefreshGroup {
 
@@ -30,6 +33,17 @@ public class MonsterEngine {
 		public int      amount;
 
 		protected List<Monster> monsters = new ArrayList<>();
+	}
+
+	private static class MonsterDrop {
+
+		public final String stdItemName;
+		public final int    rate;
+
+		private MonsterDrop(String stdItemName, int rate) {
+			this.stdItemName = stdItemName;
+			this.rate = rate;
+		}
 	}
 
 	private static boolean running = false;
@@ -77,8 +91,6 @@ public class MonsterEngine {
 				}
 			}
 		}
-
-
 	}
 
 	public synchronized static void refresh(String mapId) throws Exception {
@@ -94,6 +106,8 @@ public class MonsterEngine {
 		for (RefreshGroup group : refreshGroups) {
 			refresh(group);
 		}
+
+		reloadMonsterDropConfig();
 	}
 
 	private static void reloadStdMonster() throws Exception {
@@ -163,6 +177,36 @@ public class MonsterEngine {
 		}
 	}
 
+	public static void reloadMonsterDropConfig() throws Exception {
+		Map<String, List<MonsterDrop>>     map        = new HashMap<>();
+		Map<String, List<StringTokenizer>> fileResult = ConfigFileLoader.loadIni(MONSTER_DROP_CONFIG, 2);
+		for (String sectionName : fileResult.keySet()) {
+			List<MonsterDrop> monsterDrops = new ArrayList<>();
+			map.put(sectionName, monsterDrops);
+			for (StringTokenizer stringTokenizer : fileResult.get(sectionName)) {
+				MonsterDrop monsterDrop = new MonsterDrop((String) stringTokenizer.nextElement(), Integer.parseInt((String) stringTokenizer.nextElement()));
+				monsterDrops.add(monsterDrop);
+			}
+		}
+
+		MonsterEngine.monsterDrops = map;
+	}
+
+	public static List<String> getMonsterDrops(String monsterName){
+		List<String> itemNames = new ArrayList<>();
+
+		List<MonsterDrop> drops = monsterDrops.get(monsterName);
+		if(drops != null){
+			for(MonsterDrop drop: drops){
+				int r = NumUtil.nextRandomInt(Config.MONSTER_DROP_RATE_BASE);
+				if(r >= drop.rate)
+					itemNames.add(drop.stdItemName);
+			}
+		}
+
+		return itemNames;
+	}
+
 	private static void remove(Monster monster) {
 		monster.leaveMap();
 	}
@@ -178,4 +222,6 @@ public class MonsterEngine {
 		}
 
 	}
+
+
 }

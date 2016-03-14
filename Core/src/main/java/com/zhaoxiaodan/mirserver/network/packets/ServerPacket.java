@@ -5,6 +5,7 @@ import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.db.objects.DropItem;
 import com.zhaoxiaodan.mirserver.db.types.*;
 import com.zhaoxiaodan.mirserver.network.Bit6Coder;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -681,6 +682,14 @@ public class ServerPacket extends Packet {
 
 			this.recog = itemId;
 			this.p3 = itemLook;
+		}
+
+		public ItemShow(DropItem dropItem) {
+			this(dropItem.inGameId,
+					dropItem.stdItem.attr.looks,
+					dropItem.currMapPoint.x,
+					dropItem.currMapPoint.y,
+					dropItem.getName());
 		}
 
 		@Override

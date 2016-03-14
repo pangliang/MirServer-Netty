@@ -3,7 +3,9 @@ package com.zhaoxiaodan.mirserver.db.objects;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
+import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
+import com.zhaoxiaodan.mirserver.gameserver.engine.MonsterEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
@@ -18,11 +20,18 @@ public class Monster extends AnimalObject {
 	}
 
 	@Override
+	public void beKilled() {
+		super.beKilled();
+
+		ItemEngine.createDropItems(MonsterEngine.getMonsterDrops(getName()), this.currMapPoint);
+	}
+
+	@Override
 	public void damage(AnimalObject source, int power) {
 		super.damage(source, power);
 
-		if(source instanceof Player)
-			ScriptEngine.exce(this.stdMonster.scriptName,"onDamage",this, (Player)source, power);
+		if (source instanceof Player)
+			ScriptEngine.exce(this.stdMonster.scriptName, "onDamage", this, (Player) source, power);
 	}
 
 	@Override

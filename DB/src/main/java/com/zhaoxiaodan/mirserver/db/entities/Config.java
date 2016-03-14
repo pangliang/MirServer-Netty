@@ -16,6 +16,7 @@ public class Config {
 	public static String GAME_POINT_NAME             = "游戏点数";
 	public static int    DEFAULT_VIEW_DISTANCE       = 5;
 	public static int    EXP_MULTIPLE                = 10;
+	public static int    MONSTER_DROP_RATE_BASE      = 10000;
 
 	@Entity
 	@Table(name = "Config")
