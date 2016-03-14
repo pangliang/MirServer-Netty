@@ -5,14 +5,33 @@ import com.zhaoxiaodan.mirserver.db.types.Race;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
-public class Merchant extends BaseObject {
+public class Merchant extends AnimalObject {
 
 	public String scriptName;
 	public String name;
 
+	public Merchant() {
+		this.hp = Integer.MAX_VALUE;
+	}
+
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int getPower() {
+		return 0;
+	}
+
+	@Override
+	public int getDefend() {
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public void kill(AnimalObject animalObject) {
+
 	}
 
 	@Override

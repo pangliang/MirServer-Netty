@@ -14,21 +14,6 @@ public class DropItem extends BaseObject {
 	}
 
 	@Override
-	public int getFeature() {
-		return 0;
-	}
-
-	@Override
-	public short getFeatureEx() {
-		return 0;
-	}
-
-	@Override
-	public int getStatus() {
-		return 0;
-	}
-
-	@Override
 	public void onTick() {
 
 	}

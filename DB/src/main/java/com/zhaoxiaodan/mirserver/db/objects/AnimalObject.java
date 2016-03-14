@@ -2,6 +2,7 @@ package com.zhaoxiaodan.mirserver.db.objects;
 
 import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
+import com.zhaoxiaodan.mirserver.db.types.Color;
 import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
@@ -11,6 +12,11 @@ import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import java.util.List;
 
 public abstract class AnimalObject extends BaseObject {
+
+	public Color nameColor = Color.White;
+	public byte light;
+
+	public Direction direction = Direction.DOWN;
 
 	public int hp;
 	public int maxHp;
@@ -124,4 +130,11 @@ public abstract class AnimalObject extends BaseObject {
 	public abstract int getDefend();
 
 	public abstract void kill(AnimalObject animalObject);
+
+	public abstract int getFeature();
+
+	public abstract short getFeatureEx();
+
+	public abstract int getStatus();
+
 }

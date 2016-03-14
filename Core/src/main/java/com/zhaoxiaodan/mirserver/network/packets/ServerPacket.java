@@ -4,7 +4,7 @@ import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic;
 import com.zhaoxiaodan.mirserver.db.entities.ServerInfo;
-import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.db.objects.AnimalObject;
 import com.zhaoxiaodan.mirserver.db.objects.DropItem;
 import com.zhaoxiaodan.mirserver.db.types.*;
 import com.zhaoxiaodan.mirserver.network.Bit6Coder;
@@ -438,7 +438,7 @@ public class ServerPacket extends Packet {
 			this.featureEx = featureEx;
 		}
 
-		public FeatureChanged(BaseObject object) {
+		public FeatureChanged(AnimalObject object) {
 			this(object.inGameId, object.getFeature(), (short) object.getFeatureEx());
 		}
 
@@ -665,7 +665,7 @@ public class ServerPacket extends Packet {
 		}
 	}
 
-	public static final class ItemShow extends XYPacket {
+	public static class ItemShow extends XYPacket {
 
 
 		public int    itemId;
@@ -709,6 +709,24 @@ public class ServerPacket extends Packet {
 		}
 	}
 
+	public static final class ItemHide extends ItemShow {
+
+		public ItemHide() {}
+
+		public ItemHide(int itemId, short itemLook, short x, short y, String itemName) {
+			super(itemId, itemLook, x, y, itemName);
+			this.protocol = Protocol.SM_ITEMHIDE;
+		}
+
+		public ItemHide(DropItem dropItem) {
+			this(dropItem.inGameId,
+					dropItem.stdItem.attr.looks,
+					dropItem.currMapPoint.x,
+					dropItem.currMapPoint.y,
+					dropItem.getName());
+		}
+	}
+
 	public static final class Action extends XYPacket {
 
 		public int       inGameId;
@@ -729,7 +747,7 @@ public class ServerPacket extends Packet {
 			this.status = status;
 		}
 
-		public Action(Protocol protocol, BaseObject object) {
+		public Action(Protocol protocol, AnimalObject object) {
 			this(protocol,
 					object.inGameId,
 					object.direction,
@@ -783,7 +801,7 @@ public class ServerPacket extends Packet {
 			this.nameColor = nameColor;
 		}
 
-		public Turn(BaseObject object) {
+		public Turn(AnimalObject object) {
 			this(object.inGameId,
 					object.direction,
 					object.currMapPoint.x,
@@ -821,7 +839,7 @@ public class ServerPacket extends Packet {
 
 	public static final class Skeleton extends Turn {
 
-		public Skeleton(BaseObject object) {
+		public Skeleton(AnimalObject object) {
 			super(object.inGameId,
 					object.direction,
 					object.currMapPoint.x,
@@ -837,7 +855,7 @@ public class ServerPacket extends Packet {
 
 	public static final class Death extends Turn {
 
-		public Death(BaseObject object) {
+		public Death(AnimalObject object) {
 			super(object.inGameId,
 					object.direction,
 					object.currMapPoint.x,

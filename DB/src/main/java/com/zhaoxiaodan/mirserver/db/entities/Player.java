@@ -117,7 +117,7 @@ public class Player extends AnimalObject {
 		List<BaseObject>  targets = mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1);
 
 		PlayerMagic playerMagic = magics.get(magicId);
-		if(playerMagic != null){
+		if (playerMagic != null) {
 			power += (Integer) ScriptEngine.exce(playerMagic.stdMagic.scriptName, "useMagic", this, playerMagic, power, targets);
 		}
 
@@ -271,12 +271,12 @@ public class Player extends AnimalObject {
 		boolean rs;
 		if (rs = super.see(object)) {
 			if (object instanceof AnimalObject) {
-				if(((AnimalObject) object).isAlive)
-					session.sendPacket(new ServerPacket.Turn(object));
+				if (((AnimalObject) object).isAlive)
+					session.sendPacket(new ServerPacket.Turn((AnimalObject)object));
 				else
-					session.sendPacket(new ServerPacket.Death(object));
-			} else if(object instanceof DropItem){
-				session.sendPacket(new ServerPacket.ItemShow((DropItem)object));
+					session.sendPacket(new ServerPacket.Death((AnimalObject)object));
+			} else if (object instanceof DropItem) {
+				session.sendPacket(new ServerPacket.ItemShow((DropItem) object));
 			}
 		}
 
@@ -288,7 +288,10 @@ public class Player extends AnimalObject {
 		super.lose(object);
 		if (object == this)
 			return;
-		session.sendPacket(new ServerPacket(object.inGameId, Protocol.SM_DISAPPEAR));
+		if (object instanceof AnimalObject)
+			session.sendPacket(new ServerPacket(object.inGameId, Protocol.SM_DISAPPEAR));
+		else if (object instanceof DropItem)
+			session.sendPacket(new ServerPacket.ItemHide((DropItem) object));
 	}
 
 	public void receive(ServerPacket packet) {
