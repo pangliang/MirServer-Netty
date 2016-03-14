@@ -18,7 +18,7 @@ public class Config {
 	public static int    EXP_MULTIPLE                           = 10;
 	public static int    MONSTER_DROP_RATE_BASE                 = 10000;
 	public static int    ENGINE_TICK_INTERVAL_TIME              = 1000;
-	public static int    PLAYER_CHECK_PICKUP_ITEM_INTERVAL_TIME = 5000;
+	public static int    PLAYER_CHECK_PICKUP_ITEM_INTERVAL_TIME = 1000;
 	public static int    DROP_ITEM_PROTECT_TIME                 = 30 * 1000;
 	public static int    DROP_ITEM_LIFE_TIME                    = 3 * 60 * 1000;
 

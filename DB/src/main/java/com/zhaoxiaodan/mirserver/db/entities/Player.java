@@ -387,11 +387,11 @@ public class Player extends AnimalObject {
 		for (BaseObject object : mapInfo.getObjects(this.currMapPoint)) {
 			if (object instanceof DropItem) {
 				DropItem dropItem = (DropItem) object;
-				if(dropItem.canPickUp(this)){
+				if (dropItem.canPickUp(this)) {
 					dropItem.leaveMap();
 					this.takeNewItem(dropItem.stdItem);
-				}else{
-					sendSysMsg(dropItem.getName()+" 在一定时间内不能拾取!");
+				} else {
+					sendSysMsg(dropItem.getName() + " 在一定时间内不能拾取!", Color.Yellow, Color.Red);
 				}
 			}
 		}
@@ -404,9 +404,9 @@ public class Player extends AnimalObject {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof Player))
+		if (!(obj instanceof Player))
 			return false;
-		if(this.id == ((Player)obj).id)
+		if (this.id == ((Player) obj).id)
 			return true;
 
 		return false;

@@ -35,7 +35,14 @@ public class Handler {
 		}
 
 		session.remove();
-		onDisconnect();
+		DB.getSession().getTransaction().begin();
+		try{
+			onDisconnect();
+			DB.getSession().getTransaction().commit();
+		}catch(Exception e){
+			if(DB.getSession().isOpen())
+				DB.getSession().getTransaction().rollback();
+		}
 	}
 
 	public void onPacket(ClientPacket packet) throws Exception{
