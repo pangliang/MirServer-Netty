@@ -88,8 +88,14 @@ public abstract class AnimalObject extends BaseObject {
 
 		MapPoint fromPoint = this.currMapPoint.clone();
 
-		if (mapInfo.getObjectsOnLine(fromPoint, direction, 1, distance).size() > 0)
-			return false;
+		for (BaseObject object : mapInfo.getObjectsOnLine(fromPoint, direction, 1, distance)) {
+			if (object instanceof Player && !mapInfo.canThroughPlayer)
+				return false;
+			if (object instanceof Monster && !mapInfo.canThroughMonster && ((Monster)object).isAlive)
+				return false;
+			if (object instanceof Merchant && !mapInfo.canThroughNpc)
+				return false;
+		}
 
 		MapPoint toPoint = this.currMapPoint.clone();
 		toPoint.move(direction, distance);

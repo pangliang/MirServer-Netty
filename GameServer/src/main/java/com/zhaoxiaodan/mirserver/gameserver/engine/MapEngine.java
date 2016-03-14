@@ -53,6 +53,10 @@ public class MapEngine {
 		public String mapDescription;
 		public String miniMapId;
 
+		public boolean canThroughPlayer  = true;
+		public boolean canThroughMonster = false;
+		public boolean canThroughNpc     = true;
+
 		/**
 		 * 服务器只关心当前格子是否能走
 		 */
@@ -160,8 +164,8 @@ public class MapEngine {
 					break;
 				objects.addAll(this.tiles[x][y].objects.values());
 
-				x+=diffX;
-				y+=diffY;
+				x += diffX;
+				y += diffY;
 			}
 
 			return objects;
