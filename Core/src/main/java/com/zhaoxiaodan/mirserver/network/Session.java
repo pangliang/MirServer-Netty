@@ -1,6 +1,5 @@
 package com.zhaoxiaodan.mirserver.network;
 
-import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
@@ -16,11 +15,9 @@ public class Session {
 
 	private final Map<String, Object> values = new ConcurrentHashMap<String, Object>();
 	private final ChannelHandlerContext socket;
-	public final DB                    db;
 
 	private Session(ChannelHandlerContext ctx){
 		this.socket = ctx;
-		this.db = new DB();
 	}
 
 	public void remove() {

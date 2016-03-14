@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.network;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
@@ -15,18 +16,15 @@ public class Handler {
 			logger.debug("new session for {}",ctx);
 			session = Session.create(ctx);
 		}
-		session.db.begin();
+		DB.getSession().getTransaction().begin();
 		try{
 			onPacket(packet);
-			session.db.commit();
-		}catch (Exception e){
-			try{
-				session.db.rollback();
-			}catch (Exception e1){
-				logger.error(e1);
-			}
-			throw e;
+			DB.getSession().getTransaction().commit();
+		}catch(Exception e){
+			if(DB.getSession().isOpen())
+				DB.getSession().getTransaction().rollback();
 		}
+
 	}
 
 	protected void onDisconnect(ChannelHandlerContext ctx) throws Exception{

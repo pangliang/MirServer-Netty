@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MessageEngine;
@@ -18,7 +19,7 @@ public class GameLoginHandler extends Handler {
 		ClientPacket.GameLogin request = (ClientPacket.GameLogin) packet;
 
 		if (session.get("player") == null) {
-			List<User> list = session.db.query(User.class, Restrictions.eq("loginId", request.loginId));
+			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
 			if (list.size() == 1) {
 				User user = list.get(0);
 

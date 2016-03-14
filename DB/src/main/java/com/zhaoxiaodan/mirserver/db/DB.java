@@ -1,6 +1,8 @@
 package com.zhaoxiaodan.mirserver.db;
 
-import org.hibernate.*;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.SimpleExpression;
@@ -12,7 +14,6 @@ public class DB {
 
 	private static SessionFactory  ourSessionFactory;
 	private static ServiceRegistry serviceRegistry;
-	private Session session = null;
 
 	public static void init() throws Exception {
 		Configuration configuration = new Configuration();
@@ -22,44 +23,29 @@ public class DB {
 		ourSessionFactory = configuration.buildSessionFactory();
 	}
 
-	public DB begin(){
-		session = ourSessionFactory.getCurrentSession();
-		session.getTransaction().begin();
-		return this;
+	public static Session getSession(){
+		return ourSessionFactory.getCurrentSession();
 	}
 
-	public void commit(){
-		session.getTransaction().commit();
+	public static void save(Object object) {
+		getSession().save(object);
 	}
 
-	public void rollback(){
-		if(session.isOpen())
-			session.getTransaction().rollback();
+	public static void update(Object object) {
+		getSession().update(object);
 	}
 
-	public void save(Object object) {
-		session.save(object);
+	public static void delete(Object object) {
+		getSession().delete(object);
 	}
 
-	public void update(Object object) {
-		session.update(object);
-	}
-
-	public void delete(Object object) {
-		session.delete(object);
-	}
-
-	public List query(Class clazz, SimpleExpression... simpleExpressions) {
-		Criteria criteria = session.createCriteria(clazz);
+	public static List query(Class clazz, SimpleExpression... simpleExpressions) {
+		Criteria criteria = getSession().createCriteria(clazz);
 		for (SimpleExpression simpleExpression : simpleExpressions) {
 			criteria.add(simpleExpression);
 		}
 		List result = criteria.list();
 		return result;
-	}
-
-	public SQLQuery createSQLQuery(String queryString){
-		return session.createSQLQuery(queryString);
 	}
 
 }

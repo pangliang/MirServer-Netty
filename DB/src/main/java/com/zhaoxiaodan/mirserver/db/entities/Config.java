@@ -31,10 +31,8 @@ public class Config {
 	}
 
 	public static void reload() throws Exception {
-		DB db = new DB();
-		db.begin();
 
-		List configEntityList = db.query(ConfigEntity.class);
+		List configEntityList = DB.query(ConfigEntity.class);
 
 		// TODO: 读取配置
 	}

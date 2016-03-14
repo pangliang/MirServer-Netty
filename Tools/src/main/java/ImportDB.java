@@ -1,4 +1,5 @@
 import com.zhaoxiaodan.mirserver.db.DB;
+import org.hibernate.Session;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 public class ImportDB {
 
-	DB db;
+	Session db;
 
 	public Map<String,String> tables = new HashMap<String,String>(){
 		{
@@ -25,19 +26,19 @@ public class ImportDB {
 	public void importAll() {
 		try {
 			DB.init();
-			db = new DB();
+			db = DB.getSession();
+			db.getTransaction().begin();
 
 			for(String tableName : tables.keySet()){
 				String dataFile = tables.get(tableName);
-				db.begin();
 				doImport(tableName, dataFile);
 				System.out.println("导入 "+dataFile+" 成功 !!!");
-				db.commit();
+				db.getTransaction().commit();
 			}
 
 
 		} catch (Exception e) {
-			db.rollback();
+			db.getTransaction().rollback();
 			e.printStackTrace();
 		}
 	}

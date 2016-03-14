@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
@@ -21,7 +22,7 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 
 			player.homeMapPoint = MapEngine.getStartPoint();
 
-			session.db.update(player);
+			DB.update(player);
 		}
 
 

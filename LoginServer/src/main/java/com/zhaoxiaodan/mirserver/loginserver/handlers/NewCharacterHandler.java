@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -29,7 +30,7 @@ public class NewCharacterHandler extends UserHandler {
 		try {
 			Player player = request.player;
 			player.user = user;
-			session.db.save(player);
+			DB.save(player);
 			user.players.add(player);
 			session.sendPacket(new ServerPacket(Protocol.SM_NEWCHR_SUCCESS));
 		} catch (Exception e) {

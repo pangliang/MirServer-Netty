@@ -77,7 +77,7 @@ public class MonsterEngine {
 	}
 
 	private static void reloadStdMonster() throws Exception {
-		List<StdMonster>        monsters     = new DB().begin().query(StdMonster.class);
+		List<StdMonster>        monsters     = DB.query(StdMonster.class);
 		Map<String, StdMonster> monsterNames = new HashMap<>();
 		for (StdMonster monster : monsters) {
 			monsterNames.put(monster.name, monster);

@@ -12,7 +12,7 @@ public class MagicEngine {
 	private static Map<String, StdMagic> magicNames = new HashMap<>();
 
 	public synchronized static void reload() throws Exception {
-		List<StdMagic>        list       = new DB().begin().query(StdMagic.class);
+		List<StdMagic>        list       = DB.query(StdMagic.class);
 		Map<String, StdMagic> magicNames = new HashMap<>();
 		for (StdMagic magic : list) {
 			magicNames.put(magic.name, magic);

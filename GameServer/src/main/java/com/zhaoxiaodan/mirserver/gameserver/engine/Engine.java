@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.apache.logging.log4j.LogManager;
@@ -23,20 +24,29 @@ public class Engine {
 
 	public static boolean running = true;
 
-	public static synchronized void init() throws Exception{
+	public static synchronized void init() throws Exception {
 		reload();
 		startTickThread();
 	}
 
 	public static synchronized void reload() throws Exception {
-
 		for (Class engineClazz : engineClasses) {
 			String funName = "reload";
 			try {
 				Method reloadMethod = engineClazz.getDeclaredMethod(funName);
-				reloadMethod.invoke(null);
 
-				logger.debug("引擎 {} 加载完成",engineClazz.getSimpleName());
+				try {
+					DB.getSession().getTransaction().begin();
+					reloadMethod.invoke(null);
+					DB.getSession().getTransaction().commit();
+				} catch (Exception e) {
+					if (DB.getSession().isOpen())
+						DB.getSession().getTransaction().rollback();
+					logger.error("invoke onTick error", e);
+				}
+
+
+				logger.debug("引擎 {} 加载完成", engineClazz.getSimpleName());
 
 			} catch (NoSuchMethodException e) {
 				logger.error("引擎 {} 没有实现 {} 方法 !", engineClazz.getSimpleName(), funName);
@@ -46,11 +56,9 @@ public class Engine {
 				throw e;
 			}
 		}
-
-
 	}
 
-	private static synchronized void startTickThread() throws Exception{
+	private static synchronized void startTickThread() throws Exception {
 		for (Class engineClazz : engineClasses) {
 			String funName = "onTick";
 			try {
@@ -60,9 +68,13 @@ public class Engine {
 					public void run() {
 						while (running) {
 							try {
+								DB.getSession().getTransaction().begin();
 								onTickMethod.invoke(null, NumUtil.getTickCount());
+								DB.getSession().getTransaction().commit();
 							} catch (Exception e) {
-								logger.error("invoke onTick error",e);
+								if (DB.getSession().isOpen())
+									DB.getSession().getTransaction().rollback();
+								logger.error("invoke onTick error", e);
 							}
 
 							try {
@@ -73,7 +85,7 @@ public class Engine {
 						}
 					}
 				}.start();
-				logger.debug("引擎 {} onTick 启动完成",engineClazz.getSimpleName());
+				logger.debug("引擎 {} onTick 启动完成", engineClazz.getSimpleName());
 
 			} catch (NoSuchMethodException e) {
 				logger.error("引擎 {} 没有实现 {} 方法 !", engineClazz.getSimpleName(), funName);

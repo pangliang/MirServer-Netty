@@ -19,8 +19,7 @@ public class User{
 	public Date lastLoginTime;
 	public byte certification;
 
-	@OneToMany(mappedBy = "user")
-	@MapKey(name = "id")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	public List<Player> players;
 
 

@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -33,7 +34,7 @@ public class QueryCharacterHandler extends Handler {
 		ClientPacket.QueryCharacter request = (ClientPacket.QueryCharacter) packet;
 		User                        user;
 		if ((user = (User)session.get("user")) == null) {
-			List<User> list = session.db.query(User.class, Restrictions.eq("loginId", request.loginId));
+			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
 			if (list.size() == 0) {
 				session.sendPacket(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
 				return;

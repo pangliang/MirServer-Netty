@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.User;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -15,7 +16,7 @@ public class DeleteCharacterHandler extends UserHandler {
 
 		for (Player player : user.players) {
 			if (player.name.equals(request.characterName)) {
-				session.db.delete(player);
+				DB.delete(player);
 
 				player.user.players.remove(player);
 				player.user = null;

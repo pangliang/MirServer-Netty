@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.db.entities;
 
+import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.db.objects.AnimalObject;
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
 import com.zhaoxiaodan.mirserver.db.objects.DropItem;
@@ -15,7 +16,10 @@ import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Player extends AnimalObject {
@@ -146,7 +150,7 @@ public class Player extends AnimalObject {
 		PlayerMagic playerMagic = new PlayerMagic();
 		playerMagic.player = this;
 		playerMagic.stdMagic = stdMagic;
-		session.db.save(playerMagic);
+		DB.save(playerMagic);
 
 		this.magics.put(stdMagic.id, playerMagic);
 		session.sendPacket(new ServerPacket.AddMagic(playerMagic));
@@ -158,7 +162,7 @@ public class Player extends AnimalObject {
 			PlayerMagic playerMagic = it.next();
 			it.remove();
 
-			session.db.delete(playerMagic);
+			DB.delete(playerMagic);
 			session.sendPacket(new ServerPacket(playerMagic.stdMagic.id, Protocol.SM_DELMAGIC, (short) 0, (short) 0, (short) 0));
 		}
 	}
@@ -176,7 +180,7 @@ public class Player extends AnimalObject {
 			wearingItems.remove(wearingItem.wearingPosition);
 			wearingItem.wearingPosition = null;
 			wearingItem.isWearing = false;
-			session.db.update(wearingItem);
+			DB.update(wearingItem);
 
 			items.put(wearingItem.id, wearingItem);
 
@@ -187,7 +191,7 @@ public class Player extends AnimalObject {
 
 		itemToWear.wearingPosition = wearPosition;
 		itemToWear.isWearing = true;
-		session.db.update(itemToWear);
+		DB.update(itemToWear);
 
 		checkAbility();
 		session.sendPacket(new ServerPacket.PlayerAbility(this));
@@ -203,7 +207,7 @@ public class Player extends AnimalObject {
 
 		wearingItem.isWearing = false;
 		wearingItem.wearingPosition = null;
-		session.db.update(wearingItem);
+		DB.update(wearingItem);
 
 		items.put(wearingItem.id, wearingItem);
 		session.sendPacket(new ServerPacket.AddItem(inGameId, wearingItem));
@@ -215,7 +219,7 @@ public class Player extends AnimalObject {
 
 	public void takeNewItem(StdItem stdItem) {
 		PlayerItem playerItem = new PlayerItem(stdItem, this);
-		session.db.save(playerItem);
+		DB.save(playerItem);
 		items.put(playerItem.id, playerItem);
 
 		session.sendPacket(new ServerPacket.AddItem(this.inGameId, playerItem));
