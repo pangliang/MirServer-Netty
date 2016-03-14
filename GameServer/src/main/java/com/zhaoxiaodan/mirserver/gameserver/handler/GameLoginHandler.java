@@ -27,7 +27,6 @@ public class GameLoginHandler extends Handler {
 						if (player.name.equals(request.characterName)) {
 							player.session = session;
 							session.put("player", player);
-
 							session.sendPacket(new ServerPacket.SendNotice(MessageEngine.getNotice()));
 							return;
 						}

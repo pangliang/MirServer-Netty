@@ -77,7 +77,7 @@ public abstract class AnimalObject extends BaseObject {
 	public void broadcast(ServerPacket serverPacket) {
 		for (BaseObject object : this.objectsInView.values()) {
 			if (object instanceof Player)
-				((Player) object).receive(serverPacket);
+				((Player) object).session.sendPacket(serverPacket);
 		}
 	}
 

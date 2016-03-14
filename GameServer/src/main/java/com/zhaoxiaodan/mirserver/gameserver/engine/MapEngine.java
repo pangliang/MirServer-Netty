@@ -102,6 +102,7 @@ public class MapEngine {
 			List<BaseObject> objects = new ArrayList<>();
 			if (startX > endX || startY > endY) {
 				logger.error("start > end ,{},{},{},{}", startX, endX, startY, endY);
+				return objects;
 			}
 			startX = startX < 0 ? 0 : startX;
 			startY = startY < 0 ? 0 : startY;
@@ -114,6 +115,14 @@ public class MapEngine {
 				}
 			}
 
+			return objects;
+		}
+
+		public List<BaseObject> getObjects(MapPoint point) {
+			List<BaseObject> objects = new ArrayList<>();
+			if (point.x >= this.width || point.y >= this.height)
+				return objects;
+			objects.addAll(this.tiles[point.x][point.y].objects.values());
 			return objects;
 		}
 

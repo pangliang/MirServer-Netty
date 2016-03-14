@@ -55,7 +55,7 @@ public class Merchant extends AnimalObject {
 	}
 
 	public void sayTo(String msg, Player player) {
-		player.receive(new ServerPacket.MerchantSay(this.inGameId, msg, this.getName()));
+		player.session.sendPacket(new ServerPacket.MerchantSay(this.inGameId, msg, this.getName()));
 	}
 
 	@Override

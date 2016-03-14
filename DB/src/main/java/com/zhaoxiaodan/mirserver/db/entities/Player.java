@@ -294,8 +294,23 @@ public class Player extends AnimalObject {
 			session.sendPacket(new ServerPacket.ItemHide((DropItem) object));
 	}
 
-	public void receive(ServerPacket packet) {
-		session.sendPacket(packet);
+	@Override
+	public boolean move(Direction direction, short distance) {
+		boolean rs = super.move(direction, distance);
+		if(rs)
+			pickUpDropItem();
+		return rs;
+	}
+
+	public void pickUpDropItem(){
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
+		for(BaseObject object:mapInfo.getObjects(this.currMapPoint)){
+			if(object instanceof DropItem){
+				DropItem dropItem = (DropItem)object;
+				dropItem.leaveMap();
+				this.takeNewItem(dropItem.stdItem);
+			}
+		}
 	}
 
 	@Override
