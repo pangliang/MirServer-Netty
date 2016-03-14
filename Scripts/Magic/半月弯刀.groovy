@@ -6,7 +6,7 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine
 import com.zhaoxiaodan.mirserver.network.Protocol
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket
 
-class 半月弯刀 extends 默认技能 {
+class 半月弯刀 {
 
     public void spell(Player player, PlayerMagic playerMagic) {
         player.metaClass.banyueFlag = false;

@@ -169,7 +169,7 @@ public class ServerPacket extends Packet {
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.hair).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
-				out.writeBytes(Integer.toString(cha.currentAbility().Level).getBytes());
+				out.writeBytes(Integer.toString(cha.Level).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
 				out.writeBytes(Integer.toString(cha.gender.ordinal()).getBytes());
 				out.writeByte(CONTENT_SEPARATOR_CHAR);
@@ -192,7 +192,7 @@ public class ServerPacket extends Packet {
 					cha.name = parts[i + 0];
 					cha.job = Job.values()[Byte.parseByte(parts[i + 1])];
 					cha.hair = Byte.parseByte(parts[i + 2]);
-					cha.currentAbility().Level = Short.parseShort(parts[i + 3]);
+					cha.Level = Short.parseShort(parts[i + 3]);
 					cha.gender = Gender.values()[Byte.parseByte(parts[i + 4])];
 
 					playerList.add(cha);
@@ -575,13 +575,13 @@ public class ServerPacket extends Packet {
 
 	public static final class PlayerAbility extends ServerPacket {
 
-		public Ability tAbility;
+		public Player player;
 
 		public PlayerAbility() {}
 
 		public PlayerAbility(Player player) {
 			super(Protocol.SM_ABILITY);
-			this.tAbility = player.currentAbility();
+			this.player = player;
 			this.recog = player.gold;
 			this.p1 = NumUtil.makeWord((byte) player.job.ordinal(), (byte) 99);
 			this.p2 = NumUtil.getLowWord(player.gameGold);
@@ -591,7 +591,7 @@ public class ServerPacket extends Packet {
 		@Override
 		public void writePacket(ByteBuf out) {
 			super.writePacket(out);
-			tAbility.writePacket(out);
+			player.writeAbilityPacket(out);
 		}
 	}
 

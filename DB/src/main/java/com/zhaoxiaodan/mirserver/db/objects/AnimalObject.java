@@ -9,17 +9,23 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.util.List;
 
+@MappedSuperclass
 public abstract class AnimalObject extends BaseObject {
 
+	@Transient
 	public Color nameColor = Color.White;
+	@Transient
 	public byte light;
-
+	@Transient
 	public Direction direction = Direction.DOWN;
 
 	public int hp;
 	public int maxHp;
+	@Transient
 	public boolean isAlive = true;
 
 	public boolean hit(Direction direction) {

@@ -54,7 +54,7 @@ public enum Protocol {
 	CM_LOGINNOTICEOK(1018, "LoginNoticeOk", null),
 	
 	
-	CM_EAT(1006, null, null),
+	CM_EAT(1006, "Eat", null),
 	
 	CM_CLICKNPC(1010, "Merchant", null),
 	CM_MERCHANTDLGSELECT(1011, "Merchant", null),

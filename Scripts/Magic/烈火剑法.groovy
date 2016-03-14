@@ -5,7 +5,7 @@ import com.zhaoxiaodan.mirserver.db.types.Color
 import com.zhaoxiaodan.mirserver.network.Protocol
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket
 
-class 烈火剑法 extends 默认技能 {
+class 烈火剑法 {
 
     public int useMagic(Player player, PlayerMagic playerMagic, int power, List<BaseObject> targets) {
         player.metaClass.liehuoFlag = false;

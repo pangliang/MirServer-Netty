@@ -473,4 +473,19 @@ public class ClientPacket extends Packet {
 			key = p1;
 		}
 	}
+
+	public static final class Eat extends ClientPacket {
+
+		public int    playerItemInGameId;
+		public String itemName;
+
+		public Eat() {}
+
+		@Override
+		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
+			super.readPacket(in);
+			playerItemInGameId = recog;
+			this.itemName = in.toString(Charset.defaultCharset()).trim();
+		}
+	}
 }

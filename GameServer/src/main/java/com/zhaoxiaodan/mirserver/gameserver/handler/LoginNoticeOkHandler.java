@@ -15,9 +15,9 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 
-		if (player.currentAbility().Level == 0) {
+		if (player.Level == 0) {
 			ScriptEngine.exce(Player.SCRIPT_NAME, "onCreate", player);
-			if (player.currentAbility().Level < 1)
+			if (player.Level < 1)
 				player.levelUp(1);
 
 			player.homeMapPoint = MapEngine.getStartPoint();

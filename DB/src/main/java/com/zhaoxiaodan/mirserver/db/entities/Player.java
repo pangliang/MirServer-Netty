@@ -13,6 +13,7 @@ import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.Session;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
+import io.netty.buffer.ByteBuf;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -48,6 +49,18 @@ public class Player extends AnimalObject {
 	public byte   hair;
 	public Job    job;
 	public Ability baseAbility = new Ability();
+
+	public short Level;
+	public int   mp;
+	public int   maxMp;
+	public int   Exp;
+	public int   MaxExp;
+	public short Weight;
+	public short MaxWeight;
+	public int   WearWeight;
+	public int   MaxWearWeight;
+	public int   HandWeight;
+	public int   MaxHandWeight;
 
 	@Transient
 	private Ability currentAbility = null;
@@ -141,6 +154,24 @@ public class Player extends AnimalObject {
 		ScriptEngine.exce(playerMagic.stdMagic.scriptName, "spell", this, playerMagic);
 
 		return true;
+	}
+
+	public void eat(int playerItemId) {
+		PlayerItem playerItem = items.get(playerItemId);
+		if (null == playerItem)
+			return;
+
+		playerItem.player = null;
+		DB.delete(playerItem);
+
+		ScriptEngine.exce(playerItem.stdItem.scriptName, "onEat", this, playerItem);
+	}
+
+	public void healthSpellChange(int healthChange, int spellChange) {
+		this.hp = this.hp + healthChange > this.maxHp ? this.maxHp : this.hp + healthChange;
+		this.mp = this.mp + spellChange > this.maxMp ? this.maxMp : this.mp + spellChange;
+
+		session.sendPacket(new ServerPacket(this.inGameId, Protocol.SM_HEALTHSPELLCHANGED, (short) this.hp, (short) this.mp, (short) this.maxHp));
 	}
 
 	public void learnMagic(StdMagic stdMagic) {
@@ -241,25 +272,25 @@ public class Player extends AnimalObject {
 	}
 
 	public void levelUp(int up) {
-		this.baseAbility.Level += up;
+		this.Level += up;
 		ScriptEngine.exce(SCRIPT_NAME, "onLevelUp", this);
-		session.sendPacket(new ServerPacket(this.baseAbility.Exp, Protocol.SM_LEVELUP, this.baseAbility.Level, (short) 0, (short) 0));
+		session.sendPacket(new ServerPacket(this.Exp, Protocol.SM_LEVELUP, this.Level, (short) 0, (short) 0));
 
 		checkAbility();
 		session.sendPacket(new ServerPacket.PlayerAbility(this));
 	}
 
 	private void checkLevelUp() {
-		if (this.baseAbility.Exp >= this.baseAbility.MaxExp) {
-			this.baseAbility.Exp = this.baseAbility.Exp - this.baseAbility.MaxExp;
+		if (this.Exp >= this.MaxExp) {
+			this.Exp = this.Exp - this.MaxExp;
 			levelUp(1);
 			checkLevelUp(); //可能会升很多级
 		}
 	}
 
 	public void winExp(int exp) {
-		this.baseAbility.Exp += exp * Config.EXP_MULTIPLE;
-		session.sendPacket(new ServerPacket(this.baseAbility.Exp, Protocol.SM_WINEXP, NumUtil.getLowWord(exp), NumUtil.getHighWord(exp), (short) 0));
+		this.Exp += exp * Config.EXP_MULTIPLE;
+		session.sendPacket(new ServerPacket(this.Exp, Protocol.SM_WINEXP, NumUtil.getLowWord(exp), NumUtil.getHighWord(exp), (short) 0));
 		checkLevelUp();
 		checkAbility();
 	}
@@ -395,6 +426,23 @@ public class Player extends AnimalObject {
 				}
 			}
 		}
+	}
+
+	public void writeAbilityPacket(ByteBuf out) {
+		out.writeShort(Level);
+		this.currentAbility().writePacket(out);
+		out.writeShort(hp);
+		out.writeShort(mp);
+		out.writeShort(maxHp);
+		out.writeShort(maxMp);
+		out.writeInt(Exp);
+		out.writeInt(MaxExp);
+		out.writeShort(Weight);
+		out.writeShort(MaxWeight);
+		out.writeShort(WearWeight);
+		out.writeShort(MaxWearWeight);
+		out.writeShort(HandWeight);
+		out.writeShort(MaxHandWeight);
 	}
 
 	@Override
