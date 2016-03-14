@@ -46,48 +46,14 @@ public class MonsterEngine {
 		}
 	}
 
-	private static boolean running = false;
-
-	public synchronized static void start() {
-		if (running)
-			return;
-		running = true;
-		new Thread() {
-			@Override
-			public void run() {
-				while (running) {
-					try {
-						onTick();
-						Thread.sleep(200);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();
-	}
-
-
-	private static void onTick() {
+	public static void onTick(long now) {
 		for (RefreshGroup group : refreshGroups) {
-			long now = NumUtil.getTickCount();
 			if (now > group.lastRefreshTime + group.refreshInterval) {
 				group.lastRefreshTime = now;
 				try {
 					refresh(group);
 				} catch (Exception e) {
 					logger.error("RefreshGroup error", e);
-				}
-			}
-
-			for (Monster monster : group.monsters) {
-				if (monster.objectsInView.size() > 0) {
-					try {
-						ScriptEngine.exce(monster.stdMonster.scriptName, "onTick", monster);
-					} catch (Exception e) {
-						logger.error("monster onTime error", e);
-					}
-
 				}
 			}
 		}
@@ -192,14 +158,14 @@ public class MonsterEngine {
 		MonsterEngine.monsterDrops = map;
 	}
 
-	public static List<String> getMonsterDrops(String monsterName){
+	public static List<String> getMonsterDrops(String monsterName) {
 		List<String> itemNames = new ArrayList<>();
 
 		List<MonsterDrop> drops = monsterDrops.get(monsterName);
-		if(drops != null){
-			for(MonsterDrop drop: drops){
+		if (drops != null) {
+			for (MonsterDrop drop : drops) {
 				int r = NumUtil.nextRandomInt(Config.MONSTER_DROP_RATE_BASE);
-				if(r >= drop.rate)
+				if (r >= drop.rate)
 					itemNames.add(drop.stdItemName);
 			}
 		}

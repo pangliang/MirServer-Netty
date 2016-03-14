@@ -10,7 +10,7 @@ public class CmdEngine {
 
 	public static final String SCRIPT_NAME = "Cmd";
 
-	public static void init() throws Exception {
+	public static void reload() throws Exception {
 		ScriptEngine.loadScript(SCRIPT_NAME);
 	}
 

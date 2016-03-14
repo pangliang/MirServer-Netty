@@ -11,12 +11,16 @@ public class Config {
 	/**
 	 * 用户动作间隔, 防止加速
 	 */
-	public static int    PLAYER_ACTION_INTERVAL_TIME = 200;
-	public static String GAME_GOLD_NAME              = "游戏金币";
-	public static String GAME_POINT_NAME             = "游戏点数";
-	public static int    DEFAULT_VIEW_DISTANCE       = 5;
-	public static int    EXP_MULTIPLE                = 10;
-	public static int    MONSTER_DROP_RATE_BASE      = 10000;
+	public static int    PLAYER_ACTION_INTERVAL_TIME            = 200;
+	public static String GAME_GOLD_NAME                         = "游戏金币";
+	public static String GAME_POINT_NAME                        = "游戏点数";
+	public static int    DEFAULT_VIEW_DISTANCE                  = 5;
+	public static int    EXP_MULTIPLE                           = 10;
+	public static int    MONSTER_DROP_RATE_BASE                 = 10000;
+	public static int    ENGINE_TICK_INTERVAL_TIME              = 1000;
+	public static int    PLAYER_CHECK_PICKUP_ITEM_INTERVAL_TIME = 5000;
+	public static int    DROP_ITEM_PROTECT_TIME                 = 30 * 1000;
+	public static int    DROP_ITEM_LIFE_TIME                    = 3 * 60 * 1000;
 
 	@Entity
 	@Table(name = "Config")

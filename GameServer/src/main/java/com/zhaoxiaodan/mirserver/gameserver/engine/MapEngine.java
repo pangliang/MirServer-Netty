@@ -224,6 +224,17 @@ public class MapEngine {
 		}
 	}
 
+	public static synchronized void onTick(long now){
+		for(MapInfo mapInfo : mapList.values()){
+			for(Tile[] tiles : mapInfo.tiles){
+				for(Tile tile : tiles){
+					for(BaseObject object : tile.objects.values())
+						object.onTick(now);
+				}
+			}
+		}
+	}
+
 	public static synchronized void reload() throws Exception {
 		Map<String, MapInfo> maps = new HashMap<>();
 		reloadMapInfo(maps);

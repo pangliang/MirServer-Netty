@@ -20,10 +20,11 @@ public class Monster extends AnimalObject {
 	}
 
 	@Override
-	public void beKilled() {
-		super.beKilled();
+	public void beKilled(AnimalObject source) {
+		super.beKilled(source);
 
-		ItemEngine.createDropItems(MonsterEngine.getMonsterDrops(getName()), this.currMapPoint);
+		if (source instanceof Player)
+			ItemEngine.createDropItems(MonsterEngine.getMonsterDrops(getName()), this.currMapPoint, (Player) source);
 	}
 
 	@Override
@@ -91,7 +92,7 @@ public class Monster extends AnimalObject {
 	}
 
 	@Override
-	public void onTick() {
-
+	public void onTick(long now) {
+		ScriptEngine.exce(stdMonster.scriptName, "onTick", this);
 	}
 }

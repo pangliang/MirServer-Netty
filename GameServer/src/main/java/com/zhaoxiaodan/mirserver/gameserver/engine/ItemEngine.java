@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.zhaoxiaodan.mirserver.db.DB;
+import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
 import com.zhaoxiaodan.mirserver.db.entities.StdItem;
 import com.zhaoxiaodan.mirserver.db.objects.DropItem;
@@ -47,7 +48,7 @@ public class ItemEngine {
 	 * @param dropItemNames
 	 * @param centerPoint
 	 */
-	public static void createDropItems(List<String> dropItemNames, MapPoint centerPoint) {
+	public static void createDropItems(List<String> dropItemNames, MapPoint centerPoint, Player belongTo) {
 		int       distance  = 1;
 		Direction direction = Direction.RIGHT;
 		for (String itemName : dropItemNames) {
@@ -57,6 +58,7 @@ public class ItemEngine {
 			}
 			DropItem dropItem = new DropItem();
 			dropItem.stdItem = itemNames.get(itemName);
+			dropItem.bolongTo = belongTo;
 
 			MapPoint dropPoint = centerPoint.clone();
 			dropPoint.move(direction, (short) 1);

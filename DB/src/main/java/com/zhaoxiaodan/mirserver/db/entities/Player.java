@@ -16,7 +16,6 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
 public class Player extends AnimalObject {
@@ -272,9 +271,9 @@ public class Player extends AnimalObject {
 		if (rs = super.see(object)) {
 			if (object instanceof AnimalObject) {
 				if (((AnimalObject) object).isAlive)
-					session.sendPacket(new ServerPacket.Turn((AnimalObject)object));
+					session.sendPacket(new ServerPacket.Turn((AnimalObject) object));
 				else
-					session.sendPacket(new ServerPacket.Death((AnimalObject)object));
+					session.sendPacket(new ServerPacket.Death((AnimalObject) object));
 			} else if (object instanceof DropItem) {
 				session.sendPacket(new ServerPacket.ItemShow((DropItem) object));
 			}
@@ -292,25 +291,6 @@ public class Player extends AnimalObject {
 			session.sendPacket(new ServerPacket(object.inGameId, Protocol.SM_DISAPPEAR));
 		else if (object instanceof DropItem)
 			session.sendPacket(new ServerPacket.ItemHide((DropItem) object));
-	}
-
-	@Override
-	public boolean move(Direction direction, short distance) {
-		boolean rs = super.move(direction, distance);
-		if(rs)
-			pickUpDropItem();
-		return rs;
-	}
-
-	public void pickUpDropItem(){
-		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
-		for(BaseObject object:mapInfo.getObjects(this.currMapPoint)){
-			if(object instanceof DropItem){
-				DropItem dropItem = (DropItem)object;
-				dropItem.leaveMap();
-				this.takeNewItem(dropItem.stdItem);
-			}
-		}
 	}
 
 	@Override
@@ -391,8 +371,40 @@ public class Player extends AnimalObject {
 		return true;
 	}
 
-	@Override
-	public void onTick() {
+	@Transient
+	private long lastCheckPickUpItemTime = 0;
 
+	private void checkPickUpItem(long now) {
+		if (now < lastCheckPickUpItemTime + Config.PLAYER_CHECK_PICKUP_ITEM_INTERVAL_TIME)
+			return;
+
+		lastCheckPickUpItemTime = now;
+		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
+		for (BaseObject object : mapInfo.getObjects(this.currMapPoint)) {
+			if (object instanceof DropItem) {
+				DropItem dropItem = (DropItem) object;
+				if(dropItem.canPickUp(this)){
+					dropItem.leaveMap();
+					this.takeNewItem(dropItem.stdItem);
+				}else{
+					sendSysMsg(dropItem.getName()+" 在一定时间内不能拾取!");
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onTick(long now) {
+		checkPickUpItem(now);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Player))
+			return false;
+		if(this.id == ((Player)obj).id)
+			return true;
+
+		return false;
 	}
 }

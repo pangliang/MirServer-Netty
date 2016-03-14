@@ -50,7 +50,7 @@ public class Merchant extends AnimalObject {
 	}
 
 	@Override
-	public void onTick() {
+	public void onTick(long now) {
 
 	}
 

@@ -38,7 +38,7 @@ public abstract class AnimalObject extends BaseObject {
 
 		this.hp = (this.hp - damage);
 		if (this.hp <= 0) {
-			this.beKilled();
+			this.beKilled(source);
 			source.kill(this);
 			return;
 		} else {
@@ -47,7 +47,7 @@ public abstract class AnimalObject extends BaseObject {
 		}
 	}
 
-	public void beKilled() {
+	public void beKilled(AnimalObject source) {
 		this.isAlive = false;
 		broadcast(new ServerPacket(this.inGameId, Protocol.SM_DEATH, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
 	}

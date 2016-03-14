@@ -96,6 +96,7 @@ public abstract class BaseObject {
 	/**
 	 * 每一秒钟引擎会触发一下, 让它获得执行机会, 处理一些自身的变化
 	 * 比如Npc自己变色, 玩家在经验房里增加经验, 中毒掉血等
+	 * @param now
 	 */
-	public abstract void onTick();
+	public abstract void onTick(long now);
 }
