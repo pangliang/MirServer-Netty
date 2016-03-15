@@ -30,8 +30,9 @@ public class PlayerMagic implements Parcelable {
 
 	@Override
 	public void writePacket(ByteBuf out) {
-		out.writeShort(key);
+		out.writeByte(key);
 		out.writeByte(level);
+		out.writeByte(0);
 		out.writeByte(0);
 		out.writeInt(exp);
 		stdMagic.writePacket(out);

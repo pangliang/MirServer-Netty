@@ -49,13 +49,13 @@ public class StdMagic implements Parcelable {
 		out.writeShort(spell);
 		out.writeShort(power);
 		out.writeBytes(new byte[]{(byte)11,(byte)12,(byte)13,(byte)14});
-		out.writeShort(1);
+		out.writeShort(0);
 
 		// 各技能等级最高修炼点
 		out.writeInt(10000);
-		out.writeInt(3);
-		out.writeInt(4);
-		out.writeInt(55);
+		out.writeInt(20000);
+		out.writeInt(30000);
+		out.writeInt(40000);
 
 		out.writeByte(2);
 

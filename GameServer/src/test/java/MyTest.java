@@ -1,3 +1,4 @@
+import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,5 +43,10 @@ public class MyTest {
 		A objB = new B();
 		Assert.assertEquals("A",testClassName(objA));
 		Assert.assertEquals("B",testClassName(objB));
+	}
+
+	@Test
+	public void test3(){
+		System.out.println(NumUtil.getLowByte((short)(65430 & 0xffff)) + ","+NumUtil.getHighByte((short)(65430 & 0xffff)));
 	}
 }
