@@ -42,8 +42,8 @@ void onLevelUp(Player player) {
 
     switch (player.job) {
         case Job.Warrior:
-            player.maxHp = 100 + 50 * player.Level;
-            player.maxMp = 10 + 10 * player.Level;
+            player.maxHp = 100 + 10 * player.Level;
+            player.maxMp = 10 + 2 * player.Level;
             break;
     }
 }

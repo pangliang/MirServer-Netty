@@ -12,6 +12,7 @@ public class Config {
 	 * 用户动作间隔, 防止加速
 	 */
 	public static int    PLAYER_ACTION_INTERVAL_TIME            = 200;
+	public static int    OBJECT_SPEED_BASE                      = 3000;
 	public static String GAME_GOLD_NAME                         = "游戏金币";
 	public static String GAME_POINT_NAME                        = "游戏点数";
 	public static int    DEFAULT_VIEW_DISTANCE                  = 5;

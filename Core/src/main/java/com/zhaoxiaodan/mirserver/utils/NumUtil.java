@@ -15,6 +15,8 @@ public class NumUtil {
 	}
 
 	public static int nextRandomInt(int bound) {
+		if (bound <= 0)
+			return 0;
 		return random.nextInt(bound);
 	}
 

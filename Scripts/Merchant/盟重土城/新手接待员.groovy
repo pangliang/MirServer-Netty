@@ -6,7 +6,7 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.MagicEngine
 public void main(Merchant merchant, Player player) {
     String msg = "欢迎来到 胖梁的传奇测试服务器\\ \\" +
             " <RealodAll/@RealodAll>  \\ \\" +
-            " <刷怪/@刷怪>\\ \\" +
+            " <刷怪/@刷怪>    <新人练级地图/@新人练级地图>   \\ \\" +
             " <学习技能/@学习技能>    <遗忘所有技能/@遗忘所有技能> \\ \\" +
             " <离开/@exit>"
 
@@ -16,6 +16,11 @@ public void main(Merchant merchant, Player player) {
 public void RealodAll(Merchant merchant, Player player) {
     Engine.reload();
     player.enterMap(player.currMapPoint);
+}
+
+void 新人练级地图(Merchant merchant, Player player) {
+    player.takeNewItem("回城卷");
+    player.enterMap("G003");
 }
 
 public void 学习技能(Merchant merchant, Player player) {

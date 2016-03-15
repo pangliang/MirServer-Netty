@@ -229,7 +229,12 @@ public class MapEngine {
 			for (Tile[] tiles : mapInfo.tiles) {
 				for (Tile tile : tiles) {
 					for (BaseObject object : tile.objects.values())
-						object.onTick(now);
+						try{
+							object.onTick(now);
+						}catch(Exception e){
+							logger.error("onTick error", null,  e);
+						}
+
 				}
 			}
 		}

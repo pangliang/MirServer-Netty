@@ -1,6 +1,7 @@
 package com.zhaoxiaodan.mirserver.db.objects;
 
 import com.zhaoxiaodan.mirserver.db.entities.Config;
+import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.db.types.MapPoint;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
@@ -18,7 +19,32 @@ public abstract class BaseObject {
 
 	public abstract String getName();
 
-	public Map<Integer, BaseObject> objectsInView = new ConcurrentHashMap<>();
+	public Map<Integer, BaseObject> objectsInView  = new ConcurrentHashMap<>();
+	public Map<String, Long>        lastActionTime = new ConcurrentHashMap<>();
+
+	public Direction directionTo(BaseObject target) {
+		int diffX = target.currMapPoint.x - this.currMapPoint.x;
+		int diffY = target.currMapPoint.y - this.currMapPoint.y;
+
+		if (diffX == 0 && diffY > 0)
+			return Direction.DOWN;
+		else if (diffX == 0 && diffY < 0)
+			return Direction.UP;
+		else if (diffX > 0 && diffY == 0)
+			return Direction.RIGHT;
+		else if (diffX < 0 && diffY == 0)
+			return Direction.LEFT;
+		else if (diffX > 0 && diffY > 0)
+			return Direction.DOWNRIGHT;
+		else if (diffX > 0 && diffY < 0)
+			return Direction.UPRIGHT;
+		else if (diffX < 0 && diffY > 0)
+			return Direction.DOWNLEFT;
+		else if (diffX < 0 && diffY < 0)
+			return Direction.UPLEFT;
+		else
+			return Direction.LEFT;
+	}
 
 	public boolean see(BaseObject object) {
 		if (object == this)
@@ -72,7 +98,7 @@ public abstract class BaseObject {
 		if (mapInfo == null)
 			return;
 
-		if(this.currMapPoint != null && this.currMapPoint.mapId != null && !this.currMapPoint.mapId.equals(mapPoint.mapId))
+		if (this.currMapPoint != null && this.currMapPoint.mapId != null && !this.currMapPoint.mapId.equals(mapPoint.mapId))
 			this.leaveMap();
 
 		this.currMapPoint = mapPoint;
@@ -91,6 +117,17 @@ public abstract class BaseObject {
 			//你也看见我
 			baseObject.see(this);
 		}
+	}
+
+	public boolean checkLastActionTime(String actionName, long now, int actionSpeed, int addTime){
+		if(!this.lastActionTime.containsKey(actionName)
+				|| now > (this.lastActionTime.get(actionName) + (Config.OBJECT_SPEED_BASE *1000/actionSpeed)))
+		{
+			this.lastActionTime.put(actionName,now + NumUtil.nextRandomInt(addTime));
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

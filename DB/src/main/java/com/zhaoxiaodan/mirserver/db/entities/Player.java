@@ -126,6 +126,20 @@ public class Player extends AnimalObject {
 		return this.hit(direction, 0);
 	}
 
+	@Override
+	public void damage(AnimalObject source, int power) {
+		super.damage(source, power);
+
+		session.sendPacket(new ServerPacket.Struck(this.inGameId, this.hp, this.maxHp, power));
+	}
+
+	@Override
+	public void beKilled(AnimalObject source) {
+		super.beKilled(source);
+
+//		session.sendPacket(new ServerPacket(this.inGameId, Protocol.SM_DEATH, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
+	}
+
 	public boolean hit(Direction direction, int magicId) {
 
 		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);

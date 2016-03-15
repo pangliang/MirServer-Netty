@@ -25,6 +25,9 @@ public class LoginNoticeOkHandler extends PlayerHandler {
 			DB.update(player);
 		}
 
+		if (player.hp <= 0)
+			player.hp = 10;// player.maxHp;
+
 
 		// 登录
 		session.sendPacket(new ServerPacket.Logon(player));

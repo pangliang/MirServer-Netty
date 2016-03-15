@@ -2,9 +2,7 @@ package com.zhaoxiaodan.mirserver.db.objects;
 
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
-import com.zhaoxiaodan.mirserver.db.types.Direction;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
-import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MonsterEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
@@ -12,6 +10,8 @@ import com.zhaoxiaodan.mirserver.utils.NumUtil;
 public class Monster extends AnimalObject {
 
 	public final StdMonster stdMonster;
+
+	public Player target;
 
 	public Monster(StdMonster stdMonster) {
 		this.stdMonster = stdMonster;
@@ -33,17 +33,6 @@ public class Monster extends AnimalObject {
 
 		if (source instanceof Player)
 			ScriptEngine.exce(this.stdMonster.scriptName, "onDamage", this, (Player) source, power);
-	}
-
-	@Override
-	public boolean hit(Direction direction) {
-		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
-		for (BaseObject object : mapInfo.getObjectsOnLine(this.currMapPoint, direction, 1, 1)) {
-			if (object instanceof Player)
-				((Player) object).damage(this, getPower());
-		}
-
-		return super.hit(direction);
 	}
 
 	@Override
@@ -93,6 +82,7 @@ public class Monster extends AnimalObject {
 
 	@Override
 	public void onTick(long now) {
-		ScriptEngine.exce(stdMonster.scriptName, "onTick", this);
+		if(this.objectsInView.size() > 0)
+			ScriptEngine.exce(stdMonster.scriptName, "onTick", this, now);
 	}
 }

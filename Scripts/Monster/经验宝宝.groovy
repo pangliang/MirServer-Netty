@@ -1,7 +1,7 @@
 import com.zhaoxiaodan.mirserver.db.entities.Player
 import com.zhaoxiaodan.mirserver.db.objects.Monster
 
-void onTick(Monster monster) {
+void onTick(Monster monster, long now) {
 
 }
 

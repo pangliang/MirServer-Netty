@@ -1,0 +1,22 @@
+import com.zhaoxiaodan.mirserver.db.entities.Player
+import com.zhaoxiaodan.mirserver.db.objects.Monster
+import com.zhaoxiaodan.mirserver.db.types.Direction
+import com.zhaoxiaodan.mirserver.utils.NumUtil
+
+class 和平怪物{
+    void onTick(Monster monster, long now) {
+
+        if (!monster.isAlive)
+            return;
+
+        if(monster.checkLastActionTime("move",now,monster.stdMonster.walkSpeed,1000)){
+            monster.direction = Direction.values()[NumUtil.nextRandomInt(Direction.values().length)];
+            monster.walk(monster.direction);
+        }
+    }
+
+    void onDamage(Monster monster, Player player, int damage) {
+
+    }
+}
+
