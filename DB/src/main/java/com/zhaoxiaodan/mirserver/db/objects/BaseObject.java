@@ -72,7 +72,7 @@ public abstract class BaseObject {
 		if (mapInfo == null)
 			return;
 
-		if(this.currMapPoint.mapId.equals(mapPoint.mapId))
+		if(this.currMapPoint != null && this.currMapPoint.mapId != null && !this.currMapPoint.mapId.equals(mapPoint.mapId))
 			this.leaveMap();
 
 		this.currMapPoint = mapPoint;
