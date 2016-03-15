@@ -41,7 +41,6 @@ public abstract class BaseObject {
 	public void leaveMap() {
 		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
 		mapInfo.removeObject(this);
-		this.currMapPoint = null;
 
 		for (BaseObject object : this.objectsInView.values()) {
 			object.lose(this);

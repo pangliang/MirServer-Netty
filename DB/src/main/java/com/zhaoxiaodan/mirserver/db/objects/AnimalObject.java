@@ -95,6 +95,11 @@ public abstract class AnimalObject extends BaseObject {
 		MapPoint fromPoint = this.currMapPoint.clone();
 
 		for (BaseObject object : mapInfo.getObjectsOnLine(fromPoint, direction, 1, distance)) {
+
+			//怪不要跟人重叠
+			if(this instanceof Monster && object instanceof Player)
+				return false;
+
 			if (object instanceof Player && !mapInfo.canThroughPlayer)
 				return false;
 			if (object instanceof Monster && !mapInfo.canThroughMonster && ((Monster)object).isAlive)

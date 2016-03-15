@@ -266,6 +266,26 @@ public class Player extends AnimalObject {
 		session.sendPacket(new ServerPacket.AddItem(this.inGameId, playerItem));
 	}
 
+	public boolean goldChange(int gold, int gameGold, int gamePoint) {
+		if (this.gold + gold < 0
+				|| this.gameGold + gameGold < 0
+				|| this.gamePoint + gamePoint < 0)
+			return false;
+
+		this.gold += gold;
+		this.gameGold += gameGold;
+		this.gamePoint += gamePoint;
+
+		if (gold != 0)
+			session.sendPacket(new ServerPacket(this.gold, Protocol.SM_GOLDCHANGED, NumUtil.getLowWord(this.gameGold), NumUtil.getHighWord(this.gameGold), (short) 0));
+
+		if (gamePoint != 0)
+			session.sendPacket(new ServerPacket.GameGoldName(this.gameGold, this.gamePoint, Config.GAME_GOLD_NAME, Config.GAME_POINT_NAME));
+
+		return true;
+
+	}
+
 	public Ability currentAbility() {
 		if (this.currentAbility == null)
 			checkAbility();
