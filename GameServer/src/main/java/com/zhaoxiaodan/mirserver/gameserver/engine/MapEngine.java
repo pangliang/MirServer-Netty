@@ -224,11 +224,11 @@ public class MapEngine {
 		}
 	}
 
-	public static synchronized void onTick(long now){
-		for(MapInfo mapInfo : mapList.values()){
-			for(Tile[] tiles : mapInfo.tiles){
-				for(Tile tile : tiles){
-					for(BaseObject object : tile.objects.values())
+	public static synchronized void onTick(long now) {
+		for (MapInfo mapInfo : mapList.values()) {
+			for (Tile[] tiles : mapInfo.tiles) {
+				for (Tile tile : tiles) {
+					for (BaseObject object : tile.objects.values())
 						object.onTick(now);
 				}
 			}
@@ -267,9 +267,10 @@ public class MapEngine {
 	private static void reloadMiniMap(Map<String, MapInfo> maps) throws Exception {
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(MINIMAP_CONFIG_FILE, 2)) {
 			String fileName = (String) tokenizer.nextElement();
-			if (!maps.containsKey(fileName))
-				throw new Exception("小地图对应的地图" + fileName + " 在地图配置中不存在, 先在地图配置文件" + MAP_CONFIG_FILE + "中添加");
-
+			if (!maps.containsKey(fileName)) {
+				logger.error("小地图对应的地图 {} 在地图配置中不存在, 先在地图配置文件 {} 中添加", fileName, MAP_CONFIG_FILE);
+				continue;
+			}
 			maps.get(fileName).miniMapId = (String) tokenizer.nextElement();
 		}
 	}

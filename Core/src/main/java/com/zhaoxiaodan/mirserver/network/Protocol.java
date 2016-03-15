@@ -58,6 +58,7 @@ public enum Protocol {
 	
 	CM_CLICKNPC(1010, "Merchant", null),
 	CM_MERCHANTDLGSELECT(1011, "Merchant", null),
+	CM_WANTMINIMAP(1033, "WantMiniMap", null),
 	
 	CM_TURN(3010, "Action", null),
 	CM_WALK(3011, "Action", null),
@@ -148,8 +149,14 @@ public enum Protocol {
 	SM_CHANGENAMECOLOR(656, null, null),
 	SM_CHARSTATUSCHANGED(657, null, null),
 	SM_SENDNOTICE(658, "SendNotice", null),
+
+
 	SM_AREASTATE(708, "AreaState", null),
+	SM_READMINIMAP_OK(710, null, null),
+	SM_READMINIMAP_FAIL(711, null, null),
 	SM_SUBABILITY(752, null, null),
+
+
 	SM_SHOWEVENT(804, "ShowEvent", null),
 	SM_HIDEEVENT(805, null, null),
 	SM_OPENHEALTH(1100, null, null),

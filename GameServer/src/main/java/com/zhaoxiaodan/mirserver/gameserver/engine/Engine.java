@@ -44,7 +44,8 @@ public class Engine {
 				} catch (Exception e) {
 					if (DB.getSession().isOpen())
 						DB.getSession().getTransaction().rollback();
-					logger.error("invoke onTick error", e);
+					logger.error("invoke reload error", e);
+					throw e;
 				}
 
 
