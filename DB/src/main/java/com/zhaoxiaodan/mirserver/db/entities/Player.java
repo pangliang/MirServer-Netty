@@ -137,7 +137,7 @@ public class Player extends AnimalObject {
 	public void beKilled(AnimalObject source) {
 		super.beKilled(source);
 
-//		session.sendPacket(new ServerPacket(this.inGameId, Protocol.SM_DEATH, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
+		session.sendPacket(new ServerPacket(this.inGameId, Protocol.SM_NOWDEATH, this.currMapPoint.x, this.currMapPoint.y, (short) direction.ordinal()));
 	}
 
 	public boolean hit(Direction direction, int magicId) {
