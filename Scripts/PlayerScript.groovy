@@ -12,10 +12,10 @@ void onCreate(Player c) {
 void setBaseAbility(Player player) {
     player.levelUp(1);
 
-    player.baseAbility.HP = 100;
-    player.baseAbility.MaxHP = 100;
-    player.baseAbility.MP = 10;
-    player.baseAbility.MaxMP = 10;
+    player.hp = 100;
+    player.maxHp = 100;
+    player.mp = 10;
+    player.maxMp = 10;
 
     player.baseAbility.AC = 1;
     player.baseAbility.AC2 = 1;
@@ -31,8 +31,8 @@ void setBaseAbility(Player player) {
     player.MaxExp = getMaxExp(player.Level + 1);
 
     player.gold = 10000;
-    player.gameGold = 1234;
-    player.gamePoint = 5678;
+    player.gameGold = 100;
+    player.gamePoint = 10;
 
     player.homeMapPoint = getStartPoint();        //设置出生点
 }
@@ -63,12 +63,14 @@ MapPoint getStartPoint() {
 
 void giveItems(Player c) {
 
-    c.takeNewItem(ItemEngine.getStdItemByName("金创药(小)包"));
+    c.takeNewItem(ItemEngine.getStdItemByName("超级金创药"));
     if (c.job == Job.Warrior) {
         c.takeNewItem(ItemEngine.getStdItemByName("裁决之杖"));
         c.takeNewItem(ItemEngine.getStdItemByName("圣战头盔"));
         c.takeNewItem(ItemEngine.getStdItemByName("圣战项链"));
         c.takeNewItem(ItemEngine.getStdItemByName("圣战手镯"));
+        c.takeNewItem(ItemEngine.getStdItemByName("圣战手镯"));
+        c.takeNewItem(ItemEngine.getStdItemByName("圣战戒指"));
         c.takeNewItem(ItemEngine.getStdItemByName("圣战戒指"));
     }
     if (c.gender == Gender.MALE) {

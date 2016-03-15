@@ -6,7 +6,7 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.MagicEngine
 public void main(Merchant merchant, Player player) {
     String msg = "欢迎来到 胖梁的传奇测试服务器\\ \\" +
             " <RealodAll/@RealodAll>  \\ \\" +
-            " <刷怪/@刷怪>    <新人练级地图/@新人练级地图>   \\ \\" +
+            " <新人练级地图/@新人练级地图>   \\ \\" +
             " <学习技能/@学习技能>    <遗忘所有技能/@遗忘所有技能> \\ \\" +
             " <离开/@exit>"
 

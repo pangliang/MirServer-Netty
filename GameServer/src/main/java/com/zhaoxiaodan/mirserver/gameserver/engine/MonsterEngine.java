@@ -167,7 +167,7 @@ public class MonsterEngine {
 		if (drops != null) {
 			for (MonsterDrop drop : drops) {
 				int r = NumUtil.nextRandomInt(Config.MONSTER_DROP_RATE_BASE);
-				if (r >= drop.rate)
+				if (r <= drop.rate)
 					itemNames.add(drop.stdItemName);
 			}
 		}
