@@ -72,6 +72,9 @@ public abstract class BaseObject {
 		if (mapInfo == null)
 			return;
 
+		if(this.currMapPoint.mapId.equals(mapPoint.mapId))
+			this.leaveMap();
+
 		this.currMapPoint = mapPoint;
 
 		mapInfo.putObject(this);
