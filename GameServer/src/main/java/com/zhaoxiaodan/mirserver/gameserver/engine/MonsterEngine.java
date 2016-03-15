@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MonsterEngine {
 
@@ -32,7 +33,7 @@ public class MonsterEngine {
 		public int      scope;
 		public int      amount;
 
-		protected List<Monster> monsters = new ArrayList<>();
+		protected Map<Integer, Monster> monsters = new ConcurrentHashMap<>();
 	}
 
 	private static class MonsterDrop {
@@ -61,8 +62,10 @@ public class MonsterEngine {
 
 	public synchronized static void refresh(String mapId) throws Exception {
 		for (RefreshGroup group : refreshGroups) {
-			if (group.mapPoint.mapId.equals(mapId))
+			if (group.mapPoint.mapId.equals(mapId)) {
 				refresh(group);
+			}
+
 		}
 	}
 
@@ -88,15 +91,13 @@ public class MonsterEngine {
 
 	private static void reloadMonsterGenConfig() throws Exception {
 
-		if (refreshGroups != null) {
-			for (RefreshGroup group : refreshGroups) {
-				for (Monster monster : group.monsters)
-					MonsterEngine.remove(monster);
+		if(refreshGroups != null){
+			for(RefreshGroup group: refreshGroups){
+				for (Monster monster : group.monsters.values()) {
+					monster.leaveMap();
+				}
 			}
-
-			refreshGroups.clear();
 		}
-
 
 		List<RefreshGroup> groups = new ArrayList<>();
 		for (StringTokenizer tokenizer : ConfigFileLoader.load(MONSTER_GEN_CONFIG, 7)) {
@@ -118,10 +119,11 @@ public class MonsterEngine {
 
 	private static void refresh(RefreshGroup group) throws Exception {
 		logger.debug("刷怪,{}", JSON.toJSONString(group));
-		for (Monster monster : group.monsters)
-			MonsterEngine.remove(monster);
 
-		group.monsters = new ArrayList<>();
+		for (Monster monster : group.monsters.values()) {
+			monster.leaveMap();
+		}
+		group.monsters.clear();
 
 		Random random = new Random();
 		for (int i = 0; i < group.amount; i++) {
@@ -139,7 +141,7 @@ public class MonsterEngine {
 				monster.enterMap(mapPoint);
 			}
 
-			group.monsters.add(monster);
+			group.monsters.put(monster.inGameId, monster);
 		}
 	}
 

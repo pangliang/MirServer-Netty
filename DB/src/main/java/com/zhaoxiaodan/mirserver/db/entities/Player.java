@@ -251,7 +251,14 @@ public class Player extends AnimalObject {
 		return true;
 	}
 
+	public void takeNewItem(String itemName) {
+		StdItem stdItem = ItemEngine.getStdItemByName(itemName);
+		this.takeNewItem(stdItem);
+	}
+
 	public void takeNewItem(StdItem stdItem) {
+		if (stdItem == null)
+			return;
 		PlayerItem playerItem = new PlayerItem(stdItem, this);
 		DB.save(playerItem);
 		items.put(playerItem.id, playerItem);
@@ -397,6 +404,10 @@ public class Player extends AnimalObject {
 
 	public void sendSysMsg(String msg, Color ftCorol, Color bgColor) {
 		session.sendPacket(new ServerPacket.SysMessage(this.inGameId, msg, ftCorol, bgColor));
+	}
+
+	public void sendAlarmMsg(String msg) {
+		sendSysMsg(msg, Color.Yellow, Color.Red);
 	}
 
 

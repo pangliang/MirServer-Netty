@@ -9,6 +9,7 @@ public class Merchant extends AnimalObject {
 
 	public String scriptName;
 	public String name;
+	public int looks = 12;
 
 	public Merchant() {
 		this.hp = Integer.MAX_VALUE;
@@ -36,7 +37,7 @@ public class Merchant extends AnimalObject {
 
 	@Override
 	public int getFeature() {
-		return NumUtil.makeLong(NumUtil.makeWord(Race.Merchant.id, (byte) 0), 12);
+		return NumUtil.makeLong(NumUtil.makeWord(Race.Merchant.id, (byte) 0), this.looks);
 	}
 
 	@Override

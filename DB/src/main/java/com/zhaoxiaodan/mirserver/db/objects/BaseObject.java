@@ -14,7 +14,7 @@ public abstract class BaseObject {
 
 	public final int inGameId = NumUtil.newAtomicId();
 
-	public MapPoint                 currMapPoint  = new MapPoint();
+	public MapPoint currMapPoint;
 
 	public abstract String getName();
 
@@ -41,6 +41,7 @@ public abstract class BaseObject {
 	public void leaveMap() {
 		MapEngine.MapInfo mapInfo = MapEngine.getMapInfo(this.currMapPoint.mapId);
 		mapInfo.removeObject(this);
+		this.currMapPoint = null;
 
 		for (BaseObject object : this.objectsInView.values()) {
 			object.lose(this);
@@ -72,9 +73,6 @@ public abstract class BaseObject {
 		if (mapInfo == null)
 			return;
 
-		if (!this.currMapPoint.mapId.equals(mapPoint.mapId))
-			leaveMap();
-
 		this.currMapPoint = mapPoint;
 
 		mapInfo.putObject(this);
@@ -96,6 +94,7 @@ public abstract class BaseObject {
 	/**
 	 * 每一秒钟引擎会触发一下, 让它获得执行机会, 处理一些自身的变化
 	 * 比如Npc自己变色, 玩家在经验房里增加经验, 中毒掉血等
+	 *
 	 * @param now
 	 */
 	public abstract void onTick(long now);

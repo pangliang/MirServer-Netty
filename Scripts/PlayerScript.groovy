@@ -9,37 +9,43 @@ void onCreate(Player c) {
     giveItems(c);
 }
 
-void setBaseAbility(Player c) {
-    c.levelUp(1);
+void setBaseAbility(Player player) {
+    player.levelUp(1);
 
-    c.baseAbility.HP = 100;
-    c.baseAbility.MaxHP = 100;
-    c.baseAbility.MP = 10;
-    c.baseAbility.MaxMP = 10;
+    player.baseAbility.HP = 100;
+    player.baseAbility.MaxHP = 100;
+    player.baseAbility.MP = 10;
+    player.baseAbility.MaxMP = 10;
 
-    c.baseAbility.AC = 1;
-    c.baseAbility.AC2 = 1;
-    c.baseAbility.MAC = 1;
-    c.baseAbility.MAC2 = 1;
-    c.baseAbility.DC = 1;
-    c.baseAbility.DC2 = 1;
-    c.baseAbility.MC = 1;
-    c.baseAbility.MC2 = 1;
-    c.baseAbility.SC = 1;
-    c.baseAbility.SC2 = 1;
+    player.baseAbility.AC = 1;
+    player.baseAbility.AC2 = 1;
+    player.baseAbility.MAC = 1;
+    player.baseAbility.MAC2 = 1;
+    player.baseAbility.DC = 1;
+    player.baseAbility.DC2 = 1;
+    player.baseAbility.MC = 1;
+    player.baseAbility.MC2 = 1;
+    player.baseAbility.SC = 1;
+    player.baseAbility.SC2 = 1;
 
-    c.baseAbility.MaxExp = getMaxExp(c.Level + 1);
+    player.MaxExp = getMaxExp(player.Level + 1);
 
+    player.gold = 10000;
+    player.gameGold = 1234;
+    player.gamePoint = 5678;
 
-    c.gold = 10000;
-    c.gameGold = 1234;
-    c.gamePoint = 5678;
-
-    c.homeMapPoint = getStartPoint();        //设置出生点
+    player.homeMapPoint = getStartPoint();        //设置出生点
 }
 
-void onLevelUp(Player c) {
-    c.baseAbility.MaxExp = getMaxExp(c.Level + 1);
+void onLevelUp(Player player) {
+    player.MaxExp = getMaxExp(player.Level + 1);
+
+    switch (player.job) {
+        case Job.Warrior:
+            player.maxHp = 100 + 50 * player.Level;
+            player.maxMp = 10 + 10 * player.Level;
+            break;
+    }
 }
 
 int getMaxExp(int nextLevel) {

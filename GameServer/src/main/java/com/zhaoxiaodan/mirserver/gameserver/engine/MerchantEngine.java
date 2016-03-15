@@ -33,13 +33,13 @@ public class MerchantEngine {
 		MerchantEngine.inGameIdIndexMap = loadNpcs;
 
 		for (Merchant merchat : loadNpcs.values()) {
-			merchat.enterMap( merchat.currMapPoint);
+			merchat.enterMap(merchat.currMapPoint);
 		}
 	}
 
 	private static void loadConfig(Map<Integer, Merchant> loadNpcs) throws Exception {
 
-		for (StringTokenizer tokenizer : ConfigFileLoader.load(NPC_CONFIG_FILE, 2)) {
+		for (StringTokenizer tokenizer : ConfigFileLoader.load(NPC_CONFIG_FILE, 6)) {
 
 			Merchant merchant = new Merchant();
 			merchant.name = (String) tokenizer.nextElement();
@@ -48,11 +48,12 @@ public class MerchantEngine {
 			merchant.currMapPoint.x = Short.parseShort((String) tokenizer.nextElement());
 			merchant.currMapPoint.y = Short.parseShort((String) tokenizer.nextElement());
 			merchant.scriptName = (String) tokenizer.nextElement();
+			merchant.looks = Integer.parseInt((String) tokenizer.nextElement());
 			loadNpcs.put(merchant.inGameId, merchant);
 
 			ScriptEngine.loadScript(merchant.scriptName);
 
-			logger.debug("加载Npc : {}" , JSON.toJSONString(merchant));
+			logger.debug("加载Npc : {}", JSON.toJSONString(merchant));
 		}
 	}
 

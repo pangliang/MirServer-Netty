@@ -9,9 +9,9 @@
         </Console>
     </appenders>
     <loggers>
-        <Logger name="org.hibernate.SQL" level="trace" />
-        <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />
-        <Logger name="org.hibernate.tool.hbm2ddl" level="trace" />
+        <Logger name="org.hibernate.SQL" level="warn" />
+        <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="warn" />
+        <Logger name="org.hibernate.tool.hbm2ddl" level="warn" />
         <Logger name="org.hibernate" level="warn" />
         <logger name="io.netty" level="warn"/>
         <logger name="io.netty.handler.logging.LoggingHandler" level="info"/>
