@@ -33,6 +33,8 @@ public class Engine {
 		for (Class engineClazz : engineClasses) {
 			String funName = "reload";
 			try {
+				logger.debug("引擎 {} 加载...", engineClazz.getSimpleName());
+
 				Method reloadMethod = engineClazz.getDeclaredMethod(funName);
 
 				try {

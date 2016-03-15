@@ -28,7 +28,7 @@ void setBaseAbility(Player c) {
     c.baseAbility.SC = 1;
     c.baseAbility.SC2 = 1;
 
-    c.baseAbility.MaxExp = getMaxExp(c.baseAbility.Level + 1);
+    c.baseAbility.MaxExp = getMaxExp(c.Level + 1);
 
 
     c.gold = 10000;
@@ -39,7 +39,7 @@ void setBaseAbility(Player c) {
 }
 
 void onLevelUp(Player c) {
-    c.baseAbility.MaxExp = getMaxExp(c.baseAbility.Level + 1);
+    c.baseAbility.MaxExp = getMaxExp(c.Level + 1);
 }
 
 int getMaxExp(int nextLevel) {

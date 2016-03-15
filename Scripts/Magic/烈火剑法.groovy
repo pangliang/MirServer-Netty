@@ -5,7 +5,7 @@ import com.zhaoxiaodan.mirserver.db.types.Color
 import com.zhaoxiaodan.mirserver.network.Protocol
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket
 
-class 烈火剑法 {
+class 烈火剑法 extends 默认技能 {
 
     public int useMagic(Player player, PlayerMagic playerMagic, int power, List<BaseObject> targets) {
         player.metaClass.liehuoFlag = false;
@@ -19,6 +19,10 @@ class 烈火剑法 {
     }
 
     public void spell(Player player, PlayerMagic playerMagic) {
+
+        if (!super.chackMp(player, playerMagic))
+            return;
+
         player.metaClass.liehuoFlag = false;
         player.liehuoFlag = true;
         player.session.sendPacket(new ServerPacket.ActionStatus("+FIR"));

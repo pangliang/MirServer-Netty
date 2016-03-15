@@ -28,9 +28,7 @@ public class ScriptEngine {
 
 	public static synchronized void reload() throws Exception {
 		engine = new GroovyScriptEngine(DEFUALT_SCRIPT_DIR);
-		for (String scriptName : scriptInstance.keySet()) {
-			loadScript(scriptName, true);
-		}
+		scriptInstance.clear();
 	}
 
 	public static synchronized void loadScript(String scriptName) throws Exception {

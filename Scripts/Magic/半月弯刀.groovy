@@ -27,6 +27,10 @@ class 半月弯刀 {
         if(!player.banyueFlag){
             player.sendSysMsg("半月弯刀还未开启, 不能使用 !!", Color.White, Color.Blue);
         }
+
+        if (!super.chackMp(player, playerMagic))
+            return 0;
+
         ServerPacket packet = new ServerPacket(player.inGameId, Protocol.SM_WIDEHIT, player.currMapPoint.x, (short) player.currMapPoint.y, (short) player.direction.ordinal());
         player.broadcast(packet);
 

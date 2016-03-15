@@ -171,6 +171,9 @@ public class Player extends AnimalObject {
 		this.hp = this.hp + healthChange > this.maxHp ? this.maxHp : this.hp + healthChange;
 		this.mp = this.mp + spellChange > this.maxMp ? this.maxMp : this.mp + spellChange;
 
+		this.hp = this.hp < 0 ? 0 : this.hp;
+		this.mp = this.mp < 0 ? 0 : this.mp;
+
 		session.sendPacket(new ServerPacket(this.inGameId, Protocol.SM_HEALTHSPELLCHANGED, (short) this.hp, (short) this.mp, (short) this.maxHp));
 	}
 
