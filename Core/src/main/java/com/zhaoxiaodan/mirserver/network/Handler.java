@@ -5,6 +5,7 @@ import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 
 public class Handler {
 	protected Logger logger = LogManager.getLogger(this.getClass().getName());
@@ -19,7 +20,8 @@ public class Handler {
 		DB.getSession().getTransaction().begin();
 		try{
 			onPacket(packet);
-			DB.getSession().getTransaction().commit();
+			if(DB.getSession().getTransaction().getStatus().isOneOf(TransactionStatus.ACTIVE))
+				DB.getSession().getTransaction().commit();
 		}catch(Exception e){
 			logger.error("onPacket error, {}", packet.protocol , e);
 			if(DB.getSession().isOpen())

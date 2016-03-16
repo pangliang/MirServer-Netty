@@ -7,7 +7,7 @@ import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine
 public void main(Merchant merchant, Player player) {
     String msg = "要合成的装备\\ \\" +
             " <选择要合成的装备/@buy> \\ \\" +
-            " <领3把裁决/@领3把裁决> \\ \\" +
+//            " <领3把裁决/@领3把裁决> \\ \\" +
             " <离开/@exit>"
 
     merchant.sayTo(msg, player);

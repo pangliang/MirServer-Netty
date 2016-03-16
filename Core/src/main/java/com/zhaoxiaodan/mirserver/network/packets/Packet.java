@@ -1,10 +1,7 @@
 package com.zhaoxiaodan.mirserver.network.packets;
 
-import com.alibaba.fastjson.JSON;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import io.netty.buffer.ByteBuf;
-
-import java.nio.charset.Charset;
 
 /**
  * 请求封包类, 封包数据格式: * #符号开头 + 头部 + body + !符号结尾
@@ -100,10 +97,10 @@ public class Packet implements Parcelable {
 			return new String(buf).trim();
 	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + ":" + JSON.toJSONString(this) + " ,remain:" + (in == null? "": in.toString(Charset.defaultCharset()));
-	}
+//	@Override
+//	public String toString() {
+//		return this.getClass().getSimpleName() + ":" + JSON.toJSONString(this) + " ,remain:" + (in == null? "": in.toString(Charset.defaultCharset()));
+//	}
 
 
 }

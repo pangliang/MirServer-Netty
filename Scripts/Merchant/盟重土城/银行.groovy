@@ -3,7 +3,7 @@ import com.zhaoxiaodan.mirserver.db.objects.Merchant
 
 public void main(Merchant merchant, Player player) {
     String msg = "要合成的装备\\ \\" +
-            " <领3个金条/@领3个金条> \\ \\" +
+//            " <领3个金条/@领3个金条> \\ \\" +
             " <离开/@exit>"
 
     merchant.sayTo(msg, player);

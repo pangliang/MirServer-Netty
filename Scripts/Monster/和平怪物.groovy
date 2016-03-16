@@ -9,7 +9,7 @@ class 和平怪物{
         if (!monster.isAlive)
             return;
 
-        if(monster.checkLastActionTime("move",now,monster.stdMonster.walkSpeed,1000)){
+        if(monster.checkLastActionTime("move",monster.stdMonster.walkSpeed,1000)){
             monster.direction = Direction.values()[NumUtil.nextRandomInt(Direction.values().length)];
             monster.walk(monster.direction);
         }

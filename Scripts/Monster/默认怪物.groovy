@@ -19,7 +19,7 @@ class 默认怪物 {
         if(monster.target == null)
             return false;
 
-        if(!monster.checkLastActionTime("move",now,monster.stdMonster.walkSpeed,1000))
+        if(!monster.checkLastActionTime("move",monster.stdMonster.walkSpeed,1000))
             return true;
 
         Direction direction = monster.directionTo(monster.target);
@@ -61,7 +61,7 @@ class 默认怪物 {
             return false;
 
         // 攻击间隔未到, 则中断后续ai, 等待攻击
-        if(!monster.checkLastActionTime("attack",now,monster.stdMonster.attackSpeed,0))
+        if(!monster.checkLastActionTime("attack",monster.stdMonster.attackSpeed,0))
             return true;
 
         Direction direction = monster.directionTo(monster.target);

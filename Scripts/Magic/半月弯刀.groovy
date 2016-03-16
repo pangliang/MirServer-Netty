@@ -42,6 +42,6 @@ class 半月弯刀 extends 默认技能{
         targets.addAll(mapInfo.getObjectsOnLine(player.currMapPoint, player.direction, 1, 1 ));
         targets.addAll(mapInfo.getObjectsOnLine(player.currMapPoint, player.direction.turn(1), 1, 1 ));
         targets.addAll(mapInfo.getObjectsOnLine(player.currMapPoint, player.direction.turn(2), 1, 1 ));
-        return 0;
+        return -power/2;
     }
 }

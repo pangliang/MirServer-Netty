@@ -1,5 +1,6 @@
 package com.zhaoxiaodan.mirserver.db.objects;
 
+import com.zhaoxiaodan.mirserver.db.entities.Config;
 import com.zhaoxiaodan.mirserver.db.entities.Player;
 import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
@@ -10,8 +11,8 @@ import com.zhaoxiaodan.mirserver.utils.NumUtil;
 public class Monster extends AnimalObject {
 
 	public final StdMonster stdMonster;
-
-	public Player target;
+	public       Player     target;
+	private long deadTime = 0;
 
 	public Monster(StdMonster stdMonster) {
 		this.stdMonster = stdMonster;
@@ -23,8 +24,12 @@ public class Monster extends AnimalObject {
 	public void beKilled(AnimalObject source) {
 		super.beKilled(source);
 
+		deadTime = NumUtil.getTickCount();
+
 		if (source instanceof Player)
 			ItemEngine.createDropItems(MonsterEngine.getMonsterDrops(getName()), this.currMapPoint, (Player) source);
+		else
+			ItemEngine.createDropItems(MonsterEngine.getMonsterDrops(getName()), this.currMapPoint, null);
 	}
 
 	@Override
@@ -82,7 +87,16 @@ public class Monster extends AnimalObject {
 
 	@Override
 	public void onTick(long now) {
-		if(this.objectsInView.size() > 0)
+		if (this.isAlive && this.objectsInView.size() > 0)
 			ScriptEngine.exce(stdMonster.scriptName, "onTick", this, now);
+
+		if (!this.isAlive || this.hp <= 0) {
+			if (this.deadTime == 0) {
+				this.deadTime = NumUtil.getTickCount();
+			}
+
+			if (NumUtil.getTickCount() > this.deadTime + Config.MONSTER_BONES_DISAPPEAR_TIME)
+				this.leaveMap();
+		}
 	}
 }

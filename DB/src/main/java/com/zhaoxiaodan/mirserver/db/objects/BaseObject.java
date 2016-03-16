@@ -101,6 +101,11 @@ public abstract class BaseObject {
 		if (this.currMapPoint != null && this.currMapPoint.mapId != null && !this.currMapPoint.mapId.equals(mapPoint.mapId))
 			this.leaveMap();
 
+		if (!mapInfo.canWalk(mapPoint)) {
+			enterMap(mapPoint.mapId);
+			return;
+		}
+
 		this.currMapPoint = mapPoint;
 
 		mapInfo.putObject(this);
@@ -119,11 +124,11 @@ public abstract class BaseObject {
 		}
 	}
 
-	public boolean checkLastActionTime(String actionName, long now, int actionSpeed, int addTime){
-		if(!this.lastActionTime.containsKey(actionName)
-				|| now > (this.lastActionTime.get(actionName) + (Config.OBJECT_SPEED_BASE *1000/actionSpeed)))
-		{
-			this.lastActionTime.put(actionName,now + NumUtil.nextRandomInt(addTime));
+	public boolean checkLastActionTime(String actionName, int actionSpeed, int addTime) {
+		long now = NumUtil.getTickCount();
+		if (!this.lastActionTime.containsKey(actionName)
+				|| now > (this.lastActionTime.get(actionName) + (Config.OBJECT_SPEED_BASE * 1000 / actionSpeed))) {
+			this.lastActionTime.put(actionName, now + NumUtil.nextRandomInt(addTime));
 			return true;
 		}
 

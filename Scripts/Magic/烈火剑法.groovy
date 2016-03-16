@@ -1,3 +1,4 @@
+import com.zhaoxiaodan.mirserver.db.entities.Config
 import com.zhaoxiaodan.mirserver.db.entities.Player
 import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic
 import com.zhaoxiaodan.mirserver.db.objects.BaseObject
@@ -9,7 +10,7 @@ class 烈火剑法 extends 默认技能 {
 
     public int useMagic(Player player, PlayerMagic playerMagic, int power, List<BaseObject> targets) {
         player.metaClass.liehuoFlag = false;
-        if(!player.liehuoFlag)
+        if (!player.liehuoFlag)
             return 0;
 
         player.liehuoFlag = false;
@@ -24,6 +25,11 @@ class 烈火剑法 extends 默认技能 {
             return;
 
         player.metaClass.liehuoFlag = false;
+        if (!player.checkLastActionTime("烈火剑法", (int)(Config.OBJECT_SPEED_BASE / 3), 0)) {
+            player.liehuoFlag = false;
+            return;
+        }
+
         player.liehuoFlag = true;
         player.session.sendPacket(new ServerPacket.ActionStatus("+FIR"));
         player.sendSysMsg("你的武器因烈火剑法而炙热", Color.White, Color.Blue);

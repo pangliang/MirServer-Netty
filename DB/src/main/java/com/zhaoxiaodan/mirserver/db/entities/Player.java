@@ -152,7 +152,9 @@ public class Player extends AnimalObject {
 
 		PlayerMagic playerMagic = magics.get(magicId);
 		if (playerMagic != null) {
-			power += (Integer) ScriptEngine.exce(playerMagic.stdMagic.scriptName, "useMagic", this, playerMagic, power, targets);
+			Integer addPower = (Integer) ScriptEngine.exce(playerMagic.stdMagic.scriptName, "useMagic", this, playerMagic, power, targets);
+			if (addPower != null)
+				power += addPower;
 		}
 
 		for (BaseObject object : targets) {

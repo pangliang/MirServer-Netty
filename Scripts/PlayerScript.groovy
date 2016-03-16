@@ -3,10 +3,12 @@ import com.zhaoxiaodan.mirserver.db.types.Gender
 import com.zhaoxiaodan.mirserver.db.types.Job
 import com.zhaoxiaodan.mirserver.db.types.MapPoint
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine
+import com.zhaoxiaodan.mirserver.gameserver.engine.MagicEngine
 
 void onCreate(Player c) {
     setBaseAbility(c);
     giveItems(c);
+    学习技能(c);
 }
 
 void setBaseAbility(Player player) {
@@ -49,7 +51,7 @@ void onLevelUp(Player player) {
 }
 
 int getMaxExp(int nextLevel) {
-    return 300 * nextLevel;
+    return Math.pow(nextLevel, 3) * 100;
 }
 
 MapPoint getStartPoint() {
@@ -78,4 +80,10 @@ void giveItems(Player c) {
     } else {
         c.takeNewItem(ItemEngine.getStdItemByName("圣战宝甲"));
     }
+}
+
+public void 学习技能(Player player) {
+    player.learnMagic(MagicEngine.getStdMagicByName("烈火剑法"));
+    player.learnMagic(MagicEngine.getStdMagicByName("刺杀剑术"));
+    player.learnMagic(MagicEngine.getStdMagicByName("半月弯刀"));
 }
