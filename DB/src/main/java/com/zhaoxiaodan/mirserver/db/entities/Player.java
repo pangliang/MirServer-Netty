@@ -14,6 +14,8 @@ import com.zhaoxiaodan.mirserver.network.Session;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import io.netty.buffer.ByteBuf;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -24,6 +26,8 @@ import java.util.Map;
 
 @Entity
 public class Player extends AnimalObject {
+
+	private static final Logger logger = LogManager.getLogger();
 
 	public static final String SCRIPT_NAME = "PlayerScript";
 
@@ -170,15 +174,18 @@ public class Player extends AnimalObject {
 		return true;
 	}
 
-	public void eat(int playerItemId) {
+	public boolean eat(int playerItemId) {
 		PlayerItem playerItem = items.get(playerItemId);
 		if (null == playerItem)
-			return;
+			return false;
 
 		playerItem.player = null;
 		DB.delete(playerItem);
 
-		ScriptEngine.exce(playerItem.stdItem.scriptName, "onEat", this, playerItem);
+		Boolean rs = (Boolean) ScriptEngine.exce(playerItem.stdItem.scriptName, "onEat", this, playerItem);
+		if (rs == null || !rs)
+			return true;
+		return false;
 	}
 
 	public void healthSpellChange(int healthChange, int spellChange) {
@@ -280,7 +287,35 @@ public class Player extends AnimalObject {
 		session.sendPacket(new ServerPacket.AddItem(this.inGameId, playerItem));
 	}
 
-	public boolean goldChange(int gold, int gameGold, int gamePoint) {
+	public void takeNewItem(PlayerItem playerItem) {
+		if (playerItem == null)
+			return;
+		DB.getSession().saveOrUpdate(playerItem);
+		items.put(playerItem.id, playerItem);
+
+		session.sendPacket(new ServerPacket.AddItem(this.inGameId, playerItem));
+	}
+
+	public boolean deleteItems(List<PlayerItem> itemList) {
+		if (itemList == null)
+			return false;
+
+		for (PlayerItem playerItem : itemList) {
+			if (!items.containsKey(playerItem.id)) {
+				DB.getSession().getTransaction().rollback();
+				return false;
+			}
+
+			DB.delete(playerItem);
+			items.remove(playerItem.id);
+
+		}
+
+		session.sendPacket(new ServerPacket.DeleteItems(itemList));
+		return true;
+	}
+
+	public synchronized boolean goldChange(int gold, int gameGold, int gamePoint) {
 		if (this.gold + gold < 0
 				|| this.gameGold + gameGold < 0
 				|| this.gamePoint + gamePoint < 0)

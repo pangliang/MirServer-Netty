@@ -21,6 +21,7 @@ public class Handler {
 			onPacket(packet);
 			DB.getSession().getTransaction().commit();
 		}catch(Exception e){
+			logger.error("onPacket error, {}", packet.protocol , e);
 			if(DB.getSession().isOpen())
 				DB.getSession().getTransaction().rollback();
 		}

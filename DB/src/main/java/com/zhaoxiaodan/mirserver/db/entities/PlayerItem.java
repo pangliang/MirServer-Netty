@@ -4,6 +4,7 @@ import com.zhaoxiaodan.mirserver.db.types.ItemAttr;
 import com.zhaoxiaodan.mirserver.db.types.WearPosition;
 import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -29,6 +30,9 @@ public class PlayerItem implements Parcelable{
 	public boolean isWearing;
 
 	public WearPosition wearingPosition ;
+
+	@ColumnDefault(value = "0")
+	public int level;
 
 	public PlayerItem(StdItem stdItem, Player player){
 		this.attr = stdItem.attr.clone();

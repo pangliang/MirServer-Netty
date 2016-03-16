@@ -22,6 +22,8 @@ public class Config {
 	public static int    PLAYER_CHECK_PICKUP_ITEM_INTERVAL_TIME = 1000;
 	public static int    DROP_ITEM_PROTECT_TIME                 = 30 * 1000;
 	public static int    DROP_ITEM_LIFE_TIME                    = 3 * 60 * 1000;
+	public static int    COMPOSE_REQURE_NUMBER                  = 3;
+	public static int    COMPOSE_REQURE_GOLD                    = 10000;
 
 	@Entity
 	@Table(name = "Config")

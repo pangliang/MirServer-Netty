@@ -3,6 +3,7 @@ import com.zhaoxiaodan.mirserver.db.objects.Merchant
 
 public void main(Merchant merchant, Player player) {
     String msg = "欢迎来到 胖梁的传奇测试服务器\\ \\" +
+            " <新人练级地图/@新人练级地图>   \\ \\" +
             " <野猪营/@野猪营> \\ \\" +
             " <离开/@exit>"
 

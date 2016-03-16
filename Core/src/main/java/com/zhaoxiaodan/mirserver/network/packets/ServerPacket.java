@@ -548,7 +548,7 @@ public class ServerPacket extends Packet {
 		}
 	}
 
-	public static final class AddItem extends ServerPacket {
+	public static class AddItem extends ServerPacket {
 
 		public PlayerItem item;
 
@@ -566,10 +566,29 @@ public class ServerPacket extends Packet {
 			super.writePacket(out);
 			item.writePacket(out);
 		}
+	}
+
+	public static final class DeleteItems extends ServerPacket {
+
+		List<PlayerItem> itemList;
+
+		public DeleteItems() {}
+
+		public DeleteItems(List<PlayerItem> itemList) {
+			super(Protocol.SM_DELITEMS);
+			this.itemList = itemList;
+			this.p3 = (short) itemList.size();
+		}
 
 		@Override
-		public void readPacket(ByteBuf in) throws Parcelable.WrongFormatException {
-			super.readPacket(in);
+		public void writePacket(ByteBuf out) {
+			super.writePacket(out);
+			if (itemList == null)
+				return;
+			for (PlayerItem playerItem : itemList) {
+				out.writeBytes((playerItem.attr.name + "/" + playerItem.id + "/").getBytes());
+			}
+
 		}
 	}
 

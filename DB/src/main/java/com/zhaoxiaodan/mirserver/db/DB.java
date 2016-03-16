@@ -23,7 +23,7 @@ public class DB {
 		ourSessionFactory = configuration.buildSessionFactory();
 	}
 
-	public static Session getSession(){
+	public static Session getSession() {
 		return ourSessionFactory.getCurrentSession();
 	}
 

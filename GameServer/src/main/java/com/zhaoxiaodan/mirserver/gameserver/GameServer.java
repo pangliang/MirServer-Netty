@@ -67,11 +67,11 @@ public class GameServer {
 //									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new ServerPacketEncoder(),
 									new MyLoggingHandler(MyLoggingHandler.Type.Write),
-
+									new ExceptionHandler(),
 									//分包分发
-									new PacketDispatcher(GameLoginHandler.class.getPackage().getName()),
+									new PacketDispatcher(GameLoginHandler.class.getPackage().getName())
 
-									new ExceptionHandler()
+
 							);
 						}
 					})

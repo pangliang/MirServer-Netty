@@ -8,28 +8,27 @@ import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
-public class MerchantHandler extends PlayerHandler {
+public class SellItemHandler extends PlayerHandler {
 
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 
-		ClientPacket.Merchant request = (ClientPacket.Merchant) packet;
+		int npcInGameId = packet.recog;
 
-		Merchant merchant = MerchantEngine.getMerchant(request.npcInGameId);
+		Merchant merchant = MerchantEngine.getMerchant(npcInGameId);
 		if (merchant == null) {
-			logger.error("点击了npc, 但是npc不存在. npcInGameId: {}", request.npcInGameId);
+			logger.error("点击了npc, 但是npc不存在. npcInGameId: {}", npcInGameId);
 			return;
 		}
 
+		int itemId = packet.p1;
 
-		String functionName = "main";
-		if (request.msg.length() > 0 && '@' == request.msg.charAt(0)) {
-			functionName = request.msg.substring(1);
+		Boolean rs = (Boolean) ScriptEngine.exce(merchant.scriptName, "sell", merchant, player, itemId);
+		if (rs == null || !rs) {
+			player.session.sendPacket(new ServerPacket(Protocol.SM_USERSELLITEM_FAIL));
+		}else {
+			player.session.sendPacket(new ServerPacket(player.gold,Protocol.SM_USERSELLITEM_OK));
 		}
-
-		ScriptEngine.exce(merchant.scriptName, functionName, merchant, player);
-
-		session.sendPacket(new ServerPacket(player.inGameId, Protocol.SM_MENU_OK));
 
 	}
 }

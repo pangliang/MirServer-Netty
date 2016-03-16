@@ -58,6 +58,7 @@ public enum Protocol {
 	
 	CM_CLICKNPC(1010, "Merchant", null),
 	CM_MERCHANTDLGSELECT(1011, "Merchant", null),
+	CM_USERSELLITEM(1013, "SellItem", null),
 	CM_WANTMINIMAP(1033, "WantMiniMap", null),
 	
 	CM_TURN(3010, "Action", null),
@@ -120,6 +121,8 @@ public enum Protocol {
 	
 	SM_ADDITEM(200, null, null),
 	SM_BAGITEMS(201, "BagItems", null),
+	SM_DELITEM(202, null, null),
+
 	SM_ADDMAGIC(210, "AddMagic", null),
 	SM_SENDMYMAGIC(211, "SendMyMagics", new int[0]),
 	SM_DELMAGIC(212, null, null),
@@ -143,7 +146,12 @@ public enum Protocol {
 	SM_MAGICFIRE(638, null, null),
 	SM_MAGIC_LVEXP(640, null, null),
 	SM_DURACHANGE(642, null, null),
+
 	SM_MERCHANTSAY(643, "MerchantSay", null),
+	SM_SENDUSERSELL(646, null, null),
+	SM_USERSELLITEM_OK(648, null, null),
+	SM_USERSELLITEM_FAIL(649, null, null),
+
 	SM_GOLDCHANGED(653, null, null),
 	SM_CHANGELIGHT(654, null, null),
 	SM_CHANGENAMECOLOR(656, null, null),
@@ -152,10 +160,12 @@ public enum Protocol {
 
 
 	SM_AREASTATE(708, "AreaState", null),
+	SM_DELITEMS(709, null, null),
 	SM_READMINIMAP_OK(710, null, null),
 	SM_READMINIMAP_FAIL(711, null, null),
 	SM_SUBABILITY(752, null, null),
 
+	SM_MENU_OK(767, null, null),
 
 	SM_SHOWEVENT(804, "ShowEvent", null),
 	SM_HIDEEVENT(805, null, null),
