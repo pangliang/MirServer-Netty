@@ -12,7 +12,7 @@ public class SayHandler extends PlayerHandler {
 		ClientPacket.Say request = (ClientPacket.Say) packet;
 
 		String msg = request.msg.trim();
-		if(msg.length() < 0)
+		if(msg.length() <= 0)
 			return;
 		if('@' == msg.charAt(0) && msg.length() >1){
 			CmdEngine.exce(msg,player);
