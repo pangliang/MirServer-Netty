@@ -1,6 +1,6 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.objects.Monster
-import com.zhaoxiaodan.mirserver.db.types.Direction
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.objects.Monster
+import com.zhaoxiaodan.mirserver.gameserver.types.Direction
 import com.zhaoxiaodan.mirserver.utils.NumUtil
 
 class 和平怪物{

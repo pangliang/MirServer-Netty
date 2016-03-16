@@ -1,7 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.StdMagic;
+import com.zhaoxiaodan.mirserver.gameserver.entities.StdMagic;
 
 import java.util.HashMap;
 import java.util.List;

@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 
-public class Handler {
+public abstract class Handler {
 	protected Logger logger = LogManager.getLogger(this.getClass().getName());
 	protected Session session;
 
@@ -48,9 +48,7 @@ public class Handler {
 		}
 	}
 
-	public void onPacket(ClientPacket packet) throws Exception{
-		logger.error("overwrite it !!");
-	}
+	public abstract void onPacket(ClientPacket packet) throws Exception;
 	public void onDisconnect() throws Exception{
 		logger.error("overwrite it !!");
 	}

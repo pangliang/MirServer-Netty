@@ -1,7 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.objects.Merchant;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.objects.Merchant;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MerchantEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;

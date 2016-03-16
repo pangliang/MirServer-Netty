@@ -1,6 +1,6 @@
-package com.zhaoxiaodan.mirserver.db.entities;
+package com.zhaoxiaodan.mirserver.gameserver.entities;
 
-import com.zhaoxiaodan.mirserver.db.types.Job;
+import com.zhaoxiaodan.mirserver.gameserver.types.Job;
 import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import io.netty.buffer.ByteBuf;
 

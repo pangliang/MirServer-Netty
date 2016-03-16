@@ -1,8 +1,8 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.gameserver.objects;
 
-import com.zhaoxiaodan.mirserver.db.entities.Config;
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Config;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.entities.StdMonster;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MonsterEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;

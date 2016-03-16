@@ -1,11 +1,12 @@
-package com.zhaoxiaodan.mirserver.db.entities;
+package com.zhaoxiaodan.mirserver.gameserver.entities;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.objects.AnimalObject;
-import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
-import com.zhaoxiaodan.mirserver.db.objects.DropItem;
-import com.zhaoxiaodan.mirserver.db.objects.Monster;
-import com.zhaoxiaodan.mirserver.db.types.*;
+import com.zhaoxiaodan.mirserver.gameserver.objects.AnimalObject;
+import com.zhaoxiaodan.mirserver.gameserver.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.gameserver.objects.DropItem;
+import com.zhaoxiaodan.mirserver.gameserver.objects.Monster;
+import com.zhaoxiaodan.mirserver.gameserver.types.*;
+import com.zhaoxiaodan.mirserver.gameserver.GameServerPackets;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
@@ -44,7 +45,7 @@ public class Player extends AnimalObject {
 	private int  id;
 	@ManyToOne
 	@JoinColumn(name = "userId")
-	public  User user;
+	public User user;
 
 	public String name;
 	/**
@@ -134,7 +135,7 @@ public class Player extends AnimalObject {
 	public void damage(AnimalObject source, int power) {
 		super.damage(source, power);
 
-		session.sendPacket(new ServerPacket.Struck(this.inGameId, this.hp, this.maxHp, power));
+		session.sendPacket(new GameServerPackets.Struck(this.inGameId, this.hp, this.maxHp, power));
 	}
 
 	@Override
@@ -210,7 +211,7 @@ public class Player extends AnimalObject {
 		DB.save(playerMagic);
 
 		this.magics.put(stdMagic.id, playerMagic);
-		session.sendPacket(new ServerPacket.AddMagic(playerMagic));
+		session.sendPacket(new GameServerPackets.AddMagic(playerMagic));
 	}
 
 	public void deleteAllMagic() {
@@ -241,7 +242,7 @@ public class Player extends AnimalObject {
 
 			items.put(wearingItem.id, wearingItem);
 
-			session.sendPacket(new ServerPacket.AddItem(inGameId, wearingItem));
+			session.sendPacket(new GameServerPackets.AddItem(inGameId, wearingItem));
 		}
 
 		wearingItems.put(wearPosition, itemToWear);
@@ -251,7 +252,7 @@ public class Player extends AnimalObject {
 		DB.update(itemToWear);
 
 		checkAbility();
-		session.sendPacket(new ServerPacket.PlayerAbility(this));
+		session.sendPacket(new GameServerPackets.PlayerAbility(this));
 
 		return true;
 	}
@@ -267,10 +268,10 @@ public class Player extends AnimalObject {
 		DB.update(wearingItem);
 
 		items.put(wearingItem.id, wearingItem);
-		session.sendPacket(new ServerPacket.AddItem(inGameId, wearingItem));
+		session.sendPacket(new GameServerPackets.AddItem(inGameId, wearingItem));
 
 		checkAbility();
-		session.sendPacket(new ServerPacket.PlayerAbility(this));
+		session.sendPacket(new GameServerPackets.PlayerAbility(this));
 		return true;
 	}
 
@@ -286,7 +287,7 @@ public class Player extends AnimalObject {
 		DB.save(playerItem);
 		items.put(playerItem.id, playerItem);
 
-		session.sendPacket(new ServerPacket.AddItem(this.inGameId, playerItem));
+		session.sendPacket(new GameServerPackets.AddItem(this.inGameId, playerItem));
 	}
 
 	public void takeNewItem(PlayerItem playerItem) {
@@ -295,7 +296,7 @@ public class Player extends AnimalObject {
 		DB.getSession().saveOrUpdate(playerItem);
 		items.put(playerItem.id, playerItem);
 
-		session.sendPacket(new ServerPacket.AddItem(this.inGameId, playerItem));
+		session.sendPacket(new GameServerPackets.AddItem(this.inGameId, playerItem));
 	}
 
 	public boolean deleteItems(List<PlayerItem> itemList) {
@@ -313,7 +314,7 @@ public class Player extends AnimalObject {
 
 		}
 
-		session.sendPacket(new ServerPacket.DeleteItems(itemList));
+		session.sendPacket(new GameServerPackets.DeleteItems(itemList));
 		return true;
 	}
 
@@ -331,7 +332,7 @@ public class Player extends AnimalObject {
 			session.sendPacket(new ServerPacket(this.gold, Protocol.SM_GOLDCHANGED, NumUtil.getLowWord(this.gameGold), NumUtil.getHighWord(this.gameGold), (short) 0));
 
 		if (gamePoint != 0)
-			session.sendPacket(new ServerPacket.GameGoldName(this.gameGold, this.gamePoint, Config.GAME_GOLD_NAME, Config.GAME_POINT_NAME));
+			session.sendPacket(new GameServerPackets.GameGoldName(this.gameGold, this.gamePoint, Config.GAME_GOLD_NAME, Config.GAME_POINT_NAME));
 
 		return true;
 
@@ -358,7 +359,7 @@ public class Player extends AnimalObject {
 		session.sendPacket(new ServerPacket(this.Exp, Protocol.SM_LEVELUP, this.Level, (short) 0, (short) 0));
 
 		checkAbility();
-		session.sendPacket(new ServerPacket.PlayerAbility(this));
+		session.sendPacket(new GameServerPackets.PlayerAbility(this));
 	}
 
 	private void checkLevelUp() {
@@ -387,11 +388,11 @@ public class Player extends AnimalObject {
 		if (rs = super.see(object)) {
 			if (object instanceof AnimalObject) {
 				if (((AnimalObject) object).isAlive)
-					session.sendPacket(new ServerPacket.Turn((AnimalObject) object));
+					session.sendPacket(new GameServerPackets.Turn((AnimalObject) object));
 				else
-					session.sendPacket(new ServerPacket.Death((AnimalObject) object));
+					session.sendPacket(new GameServerPackets.Death((AnimalObject) object));
 			} else if (object instanceof DropItem) {
-				session.sendPacket(new ServerPacket.ItemShow((DropItem) object));
+				session.sendPacket(new GameServerPackets.ItemShow((DropItem) object));
 			}
 		}
 
@@ -406,7 +407,7 @@ public class Player extends AnimalObject {
 		if (object instanceof AnimalObject)
 			session.sendPacket(new ServerPacket(object.inGameId, Protocol.SM_DISAPPEAR));
 		else if (object instanceof DropItem)
-			session.sendPacket(new ServerPacket.ItemHide((DropItem) object));
+			session.sendPacket(new GameServerPackets.ItemHide((DropItem) object));
 	}
 
 	@Override
@@ -460,8 +461,8 @@ public class Player extends AnimalObject {
 		session.sendPacket(new ServerPacket(Protocol.SM_CLEAROBJECTS));
 
 		// 新图信息发给玩家
-		session.sendPacket(new ServerPacket.ChangeMap(this.inGameId, mapPoint.x, mapPoint.y, (short) 0, mapInfo.mapFileId));
-		session.sendPacket(new ServerPacket.MapDescription(-1, mapInfo.mapId));
+		session.sendPacket(new GameServerPackets.ChangeMap(this.inGameId, mapPoint.x, mapPoint.y, (short) 0, mapInfo.mapFileId));
+		session.sendPacket(new GameServerPackets.MapDescription(-1, mapInfo.mapId));
 
 		// 是否安全区
 		session.sendPacket(new ServerPacket(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));
@@ -474,7 +475,7 @@ public class Player extends AnimalObject {
 	}
 
 	public void sendSysMsg(String msg, Color ftCorol, Color bgColor) {
-		session.sendPacket(new ServerPacket.SysMessage(this.inGameId, msg, ftCorol, bgColor));
+		session.sendPacket(new GameServerPackets.SysMessage(this.inGameId, msg, ftCorol, bgColor));
 	}
 
 	public void sendAlarmMsg(String msg) {

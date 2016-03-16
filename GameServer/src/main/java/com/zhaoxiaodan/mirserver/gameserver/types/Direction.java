@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.db.types;
+package com.zhaoxiaodan.mirserver.gameserver.types;
 
 /**
  * 0

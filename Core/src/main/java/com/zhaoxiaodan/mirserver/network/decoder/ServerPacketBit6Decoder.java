@@ -18,46 +18,37 @@ public class ServerPacketBit6Decoder extends MessageToMessageDecoder<ByteBuf> {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+		ByteBuf buf = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
+		in.readByte(); //  # , 在这里就去掉 头尾
 
-		if ('+' == in.getByte(1)) {
-			// Status 包: 格式如: #+GOOD/1234567
-			ServerPacket.ActionStatus actionStatus = new ServerPacket.ActionStatus();
-			actionStatus.readPacket(in);
-			out.add(actionStatus);
-		} else {
-			ByteBuf buf = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
-			in.readByte(); //  # , 在这里就去掉 头尾
+		byte[] headerByte = new byte[(int) (ServerPacket.DEFAULT_HEADER_SIZE * 4 / 3)];
+		in.readBytes(headerByte);
+		buf.writeBytes(Bit6Coder.decode6BitBuf(headerByte));
 
-			byte[] headerByte = new byte[(int) (ServerPacket.DEFAULT_HEADER_SIZE * 4 / 3)];
-			in.readBytes(headerByte);
-			buf.writeBytes(Bit6Coder.decode6BitBuf(headerByte));
-
-			Protocol protocol = Protocol.getServerProtocol(buf.getShort(4));
-			if (protocol != null && protocol.lenghtOfSections != null && protocol.lenghtOfSections.length == 0) {
-				byte[] bodyBytes = new byte[in.readableBytes() - 1];
-				in.readBytes(bodyBytes);
-				buf.writeBytes(bodyBytes);
-			} else if (protocol != null && protocol.lenghtOfSections != null) {
-				for (int lenght : protocol.lenghtOfSections) {
-					int bit6Len = (int) (lenght * 4 / 3.0 + 0.9); // 1.0 =1 , 1.1 =2
-					if (in.readableBytes() > bit6Len) {
-						byte[] bodyBytes = new byte[bit6Len];
-						in.readBytes(bodyBytes);
-						buf.writeBytes(Bit6Coder.decode6BitBuf(bodyBytes));
-					} else {
-						break;
-					}
-				}
-			}
-
+		Protocol protocol = Protocol.getServerProtocol(buf.getShort(4));
+		if (protocol != null && protocol.lenghtOfSections != null && protocol.lenghtOfSections.length == 0) {
 			byte[] bodyBytes = new byte[in.readableBytes() - 1];
 			in.readBytes(bodyBytes);
-			buf.writeBytes(Bit6Coder.decode6BitBuf(bodyBytes));
-
-			in.readByte(); //  !
-
-			out.add(buf);
+			buf.writeBytes(bodyBytes);
+		} else if (protocol != null && protocol.lenghtOfSections != null) {
+			for (int lenght : protocol.lenghtOfSections) {
+				int bit6Len = (int) (lenght * 4 / 3.0 + 0.9); // 1.0 =1 , 1.1 =2
+				if (in.readableBytes() > bit6Len) {
+					byte[] bodyBytes = new byte[bit6Len];
+					in.readBytes(bodyBytes);
+					buf.writeBytes(Bit6Coder.decode6BitBuf(bodyBytes));
+				} else {
+					break;
+				}
+			}
 		}
 
+		byte[] bodyBytes = new byte[in.readableBytes() - 1];
+		in.readBytes(bodyBytes);
+		buf.writeBytes(Bit6Coder.decode6BitBuf(bodyBytes));
+
+		in.readByte(); //  !
+
+		out.add(buf);
 	}
 }

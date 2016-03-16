@@ -15,14 +15,14 @@
         <property name="hibernate.connection.autocommit">true</property>
         <property name="hibernate.id.new_generator_mappings">TABLE</property>
 
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdMonster"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdItem"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.StdMagic"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.User"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.ServerInfo"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.Player"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.PlayerItem"/>
-        <mapping class="com.zhaoxiaodan.mirserver.db.entities.PlayerMagic"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.StdMonster"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.StdItem"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.StdMagic"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.User"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.ServerInfo"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.Player"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.PlayerItem"/>
+        <mapping class="com.zhaoxiaodan.mirserver.gameserver.entities.PlayerMagic"/>
 
     </session-factory>
 </hibernate-configuration>

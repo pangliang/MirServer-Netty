@@ -1,8 +1,8 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.gameserver.objects;
 
-import com.zhaoxiaodan.mirserver.db.entities.Config;
-import com.zhaoxiaodan.mirserver.db.types.Direction;
-import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Config;
+import com.zhaoxiaodan.mirserver.gameserver.types.Direction;
+import com.zhaoxiaodan.mirserver.gameserver.types.MapPoint;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 

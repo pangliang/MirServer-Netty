@@ -1,5 +1,7 @@
 package com.zhaoxiaodan.mirserver.mockclient;
 
+import com.zhaoxiaodan.mirserver.loginserver.LoginClientPackets;
+import com.zhaoxiaodan.mirserver.loginserver.LoginServerPackets;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
@@ -78,16 +80,16 @@ public class PacketProxy {
 													ByteBuf out    = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
 
 													// 把角色服游戏服ip地址封包改写成当前代理地址
-													if (packet instanceof ServerPacket.SelectServerOk) {
-														ServerPacket.SelectServerOk selectServerOk = (ServerPacket.SelectServerOk) packet;
+													if (packet instanceof LoginServerPackets.SelectServerOk) {
+														LoginServerPackets.SelectServerOk selectServerOk = (LoginServerPackets.SelectServerOk) packet;
 														serverChannel.close().sync();
 														serverChannel = server.connect(HOST, selectServerOk.selectserverPort).sync().channel();
-														packet = new ServerPacket.SelectServerOk(PROXY_HOST, PROXY_PORT, selectServerOk.cert);
-													} else if (packet instanceof ServerPacket.StartPlay) {
-														ServerPacket.StartPlay p1 = (ServerPacket.StartPlay) packet;
+														packet = new LoginServerPackets.SelectServerOk(PROXY_HOST, PROXY_PORT, selectServerOk.cert);
+													} else if (packet instanceof LoginServerPackets.StartPlay) {
+														LoginServerPackets.StartPlay p1 = (LoginServerPackets.StartPlay) packet;
 														serverChannel.close().sync();
 														serverChannel = server.connect(HOST, p1.serverPort).sync().channel();
-														packet = new ServerPacket.StartPlay(PROXY_HOST, PROXY_PORT);
+														packet = new LoginServerPackets.StartPlay(PROXY_HOST, PROXY_PORT);
 													}
 
 													LogManager.getLogger().debug("server packet => {}", packet.toString());
@@ -122,7 +124,7 @@ public class PacketProxy {
 									new DelimiterBasedFrameDecoder(4096, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ClientPacketBit6Decoder(),
 //									new MyLoggingHandler(MyLoggingHandler.Type.Read),
-									new ClientPacketDecoder(),
+									new ClientPacketDecoder(LoginClientPackets.class.getCanonicalName()),
 
 									new ExceptionHandler(),
 

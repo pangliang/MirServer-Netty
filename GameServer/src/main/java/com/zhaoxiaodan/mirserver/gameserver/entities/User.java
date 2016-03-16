@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.db.entities;
+package com.zhaoxiaodan.mirserver.gameserver.entities;
 
 
 import javax.persistence.*;
@@ -21,6 +21,4 @@ public class User{
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	public List<Player> players;
-
-
 }

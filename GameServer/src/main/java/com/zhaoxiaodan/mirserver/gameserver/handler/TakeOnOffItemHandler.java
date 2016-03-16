@@ -1,7 +1,8 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.entities.PlayerItem;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.entities.PlayerItem;
+import com.zhaoxiaodan.mirserver.gameserver.GameClientPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
@@ -12,16 +13,16 @@ public class TakeOnOffItemHandler extends PlayerHandler {
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 
 		if(packet.protocol == Protocol.CM_TAKEONITEM)
-			takeOn((ClientPacket.TakeOnOffItem)packet,player);
+			takeOn((GameClientPackets.TakeOnOffItem)packet,player);
 		else if( packet.protocol == Protocol.CM_TAKEOFFITEM)
-			takeOff((ClientPacket.TakeOnOffItem)packet,player);
+			takeOff((GameClientPackets.TakeOnOffItem)packet,player);
 		else
 			logger.error("TakeOnOffItemHandler packet protocol unkown : {} " , packet.protocol);
 
 
 	}
 
-	private void takeOff(ClientPacket.TakeOnOffItem request, Player player) throws Exception {
+	private void takeOff(GameClientPackets.TakeOnOffItem request, Player player) throws Exception {
 		if(!player.takeOff(request.wearPosition))
 		{
 			player.session.sendPacket(new ServerPacket(-1, Protocol.SM_TAKEOFF_FAIL));
@@ -31,7 +32,7 @@ public class TakeOnOffItemHandler extends PlayerHandler {
 		}
 	}
 
-	private void takeOn(ClientPacket.TakeOnOffItem request, Player player) throws Exception {
+	private void takeOn(GameClientPackets.TakeOnOffItem request, Player player) throws Exception {
 		PlayerItem itemToWear = player.items.get(request.playerItemId);
 		if(itemToWear == null)
 		{

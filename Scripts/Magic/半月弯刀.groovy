@@ -1,10 +1,11 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic
-import com.zhaoxiaodan.mirserver.db.objects.BaseObject
-import com.zhaoxiaodan.mirserver.db.types.Color
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.entities.PlayerMagic
+import com.zhaoxiaodan.mirserver.gameserver.objects.BaseObject
+import com.zhaoxiaodan.mirserver.gameserver.types.Color
+import com.zhaoxiaodan.mirserver.gameserver.GameServerPackets
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine
 import com.zhaoxiaodan.mirserver.network.Protocol
-import com.zhaoxiaodan.mirserver.network.packets.ServerPacket
 
 class 半月弯刀 extends 默认技能{
 
@@ -12,11 +13,11 @@ class 半月弯刀 extends 默认技能{
         player.metaClass.banyueFlag = false;
         if(player.banyueFlag){
             player.banyueFlag = false;
-            player.session.sendPacket(new ServerPacket.ActionStatus("+UWID"));
+            player.session.sendPacket(new GameServerPackets.ActionStatus("+UWID"));
             player.sendSysMsg("半月弯刀关闭...", Color.White, Color.Blue);
         }else{
             player.banyueFlag = true;
-            player.session.sendPacket(new ServerPacket.ActionStatus("+WID"));
+            player.session.sendPacket(new GameServerPackets.ActionStatus("+WID"));
             player.sendSysMsg("半月弯刀开启...", Color.White, Color.Blue);
         }
     }

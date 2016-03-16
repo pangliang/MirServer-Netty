@@ -1,8 +1,8 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
-import com.zhaoxiaodan.mirserver.db.objects.BaseObject;
-import com.zhaoxiaodan.mirserver.db.types.Direction;
-import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.gameserver.objects.BaseObject;
+import com.zhaoxiaodan.mirserver.gameserver.types.Direction;
+import com.zhaoxiaodan.mirserver.gameserver.types.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.apache.logging.log4j.LogManager;

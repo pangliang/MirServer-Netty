@@ -1,6 +1,8 @@
 package com.zhaoxiaodan.mirserver.mockclient;
 
-import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.gameserver.entities.User;
+import com.zhaoxiaodan.mirserver.gameserver.GameClientPackets;
+import com.zhaoxiaodan.mirserver.loginserver.LoginClientPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
 import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
@@ -88,13 +90,13 @@ public class MockClient {
 //			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			// login
-			packet = new ClientPacket.Login(cmdIndex, user);
+			packet = new LoginClientPackets.Login(cmdIndex, user);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			//select server
-			packet = new ClientPacket.SelectServer(cmdIndex, "功夫明星一区");
+			packet = new LoginClientPackets.SelectServer(cmdIndex, "功夫明星一区");
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
@@ -119,13 +121,13 @@ public class MockClient {
 //			cmdIndex = cmdIndex == 9?0:++cmdIndex;
 
 			// query player
-			packet = new ClientPacket.QueryCharacter(cmdIndex, user.loginId, certification);
+			packet = new LoginClientPackets.QueryCharacter(cmdIndex, user.loginId, certification);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
 
 			//select player
-			packet = new ClientPacket.SelectCharacter(cmdIndex, user.loginId, charName);
+			packet = new LoginClientPackets.SelectCharacter(cmdIndex, user.loginId, charName);
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;
@@ -133,7 +135,7 @@ public class MockClient {
 			// ************ game server
 			ch.closeFuture();
 			ch = b.connect(HOST, 7200).sync().channel();
-			packet = new ClientPacket.GameLogin(cmdIndex,user.loginId,charName,certification,"2020522");
+			packet = new GameClientPackets.GameLogin(cmdIndex,user.loginId,charName,certification,"2020522");
 			ch.writeAndFlush(packet);
 			in.readLine();
 			cmdIndex = cmdIndex == 9 ? 0 : ++cmdIndex;

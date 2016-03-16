@@ -1,5 +1,5 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.objects.Merchant
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.objects.Merchant
 
 public void main(Merchant merchant, Player player) {
     String msg = "欢迎来到 胖梁的传奇测试服务器\\ \\" +

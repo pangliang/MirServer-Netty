@@ -1,5 +1,5 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.types.MapPoint
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.types.MapPoint
 
 void test(Player player, List<String> args) {
 

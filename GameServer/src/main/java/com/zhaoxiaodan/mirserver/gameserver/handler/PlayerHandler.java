@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
-import com.zhaoxiaodan.mirserver.db.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 

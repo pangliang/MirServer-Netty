@@ -58,7 +58,7 @@ public class GameServer {
 									new DelimiterBasedFrameDecoder(REQUEST_MAX_FRAME_LENGTH, false, Unpooled.wrappedBuffer(new byte[]{'!'})),
 									new ClientPacketBit6Decoder(),
 //									new MyLoggingHandler(MyLoggingHandler.Type.Read),
-									new ClientPacketDecoder(),
+									new ClientPacketDecoder(GameClientPackets.class.getCanonicalName()),
 									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//编码

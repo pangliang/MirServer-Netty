@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.db.types;
+package com.zhaoxiaodan.mirserver.gameserver.types;
 
 import com.zhaoxiaodan.mirserver.network.packets.Parcelable;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;

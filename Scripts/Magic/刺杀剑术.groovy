@@ -1,10 +1,11 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic
-import com.zhaoxiaodan.mirserver.db.objects.BaseObject
-import com.zhaoxiaodan.mirserver.db.types.Color
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.entities.PlayerMagic
+import com.zhaoxiaodan.mirserver.gameserver.objects.BaseObject
+import com.zhaoxiaodan.mirserver.gameserver.types.Color
+import com.zhaoxiaodan.mirserver.gameserver.GameServerPackets
+import com.zhaoxiaodan.mirserver.network.packets.ServerPacket
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine
 import com.zhaoxiaodan.mirserver.network.Protocol
-import com.zhaoxiaodan.mirserver.network.packets.ServerPacket
 
 class 刺杀剑术 extends 默认技能 {
 
@@ -29,11 +30,11 @@ class 刺杀剑术 extends 默认技能 {
         player.metaClass.chishaFlag = false;
         if (player.chishaFlag) {
             player.chishaFlag = false;
-            player.session.sendPacket(new ServerPacket.ActionStatus("+ULNG"));
+            player.session.sendPacket(new GameServerPackets.ActionStatus("+ULNG"));
             player.sendSysMsg("刺杀剑术关闭...", Color.White, Color.Blue);
         } else {
             player.chishaFlag = true;
-            player.session.sendPacket(new ServerPacket.ActionStatus("+LNG"));
+            player.session.sendPacket(new GameServerPackets.ActionStatus("+LNG"));
             player.sendSysMsg("刺杀剑术开启...", Color.White, Color.Blue);
         }
     }

@@ -1,6 +1,6 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.entities.PlayerMagic
-import com.zhaoxiaodan.mirserver.db.objects.BaseObject
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.entities.PlayerMagic
+import com.zhaoxiaodan.mirserver.gameserver.objects.BaseObject
 
 //todo 原版逻辑混乱 ? "使用技能" 和 战士的 "打开技能" 重叠
 class 默认技能 {

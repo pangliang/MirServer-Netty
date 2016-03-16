@@ -1,4 +1,4 @@
-package com.zhaoxiaodan.mirserver.db.entities;
+package com.zhaoxiaodan.mirserver.gameserver.entities;
 
 import javax.persistence.*;
 

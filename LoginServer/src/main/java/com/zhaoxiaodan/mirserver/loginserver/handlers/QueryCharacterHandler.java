@@ -1,7 +1,9 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.gameserver.entities.User;
+import com.zhaoxiaodan.mirserver.loginserver.LoginClientPackets;
+import com.zhaoxiaodan.mirserver.loginserver.LoginServerPackets;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
@@ -31,7 +33,7 @@ public class QueryCharacterHandler extends Handler {
 
 	@Override
 	public void onPacket(ClientPacket packet) throws Exception {
-		ClientPacket.QueryCharacter request = (ClientPacket.QueryCharacter) packet;
+		LoginClientPackets.QueryCharacter request = (LoginClientPackets.QueryCharacter) packet;
 		User                        user;
 		if ((user = (User)session.get("user")) == null) {
 			List<User> list = DB.query(User.class, Restrictions.eq("loginId", request.loginId));
@@ -44,7 +46,7 @@ public class QueryCharacterHandler extends Handler {
 
 		if (user.certification == request.cert) {
 			session.put("user", user);
-			session.sendPacket(new ServerPacket.QueryCharactorOk(user.players));
+			session.sendPacket(new LoginServerPackets.QueryCharactorOk(user.players));
 		} else {
 			session.sendPacket(new ServerPacket(Protocol.SM_CERTIFICATION_FAIL));
 			return;

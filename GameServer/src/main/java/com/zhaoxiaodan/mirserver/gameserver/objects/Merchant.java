@@ -1,7 +1,8 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.gameserver.objects;
 
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.types.Race;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.types.Race;
+import com.zhaoxiaodan.mirserver.gameserver.GameServerPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
@@ -57,7 +58,7 @@ public class Merchant extends AnimalObject {
 	}
 
 	public void sayTo(String msg, Player player) {
-		player.session.sendPacket(new ServerPacket.MerchantSay(this.inGameId, msg, this.getName()));
+		player.session.sendPacket(new GameServerPackets.MerchantSay(this.inGameId, msg, this.getName()));
 	}
 
 	public void openSellDialog(Player player){

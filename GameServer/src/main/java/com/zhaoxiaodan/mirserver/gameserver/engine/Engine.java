@@ -1,7 +1,7 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.Config;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Config;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

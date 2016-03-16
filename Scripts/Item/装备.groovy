@@ -1,5 +1,5 @@
-import com.zhaoxiaodan.mirserver.db.entities.PlayerItem
-import com.zhaoxiaodan.mirserver.db.types.Ability
+import com.zhaoxiaodan.mirserver.gameserver.entities.PlayerItem
+import com.zhaoxiaodan.mirserver.gameserver.types.Ability
 
 void checkAbility(Ability ability, PlayerItem playerItem) {
     ability.AC += playerItem.attr.AC;

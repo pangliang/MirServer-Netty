@@ -1,5 +1,5 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.objects.Monster
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.objects.Monster
 
 void onTick(Monster monster, long now) {
 

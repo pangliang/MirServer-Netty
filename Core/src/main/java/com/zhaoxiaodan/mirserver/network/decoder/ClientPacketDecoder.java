@@ -12,6 +12,12 @@ import java.util.List;
 
 public class ClientPacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 
+	private final String packetPackageName;
+
+	public ClientPacketDecoder(String packetPackageName) {
+		this.packetPackageName = packetPackageName;
+	}
+
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
@@ -36,7 +42,7 @@ public class ClientPacketDecoder extends MessageToMessageDecoder<ByteBuf> {
 			return ;
 		} else {
 			try {
-				packetClass = (Class<? extends ClientPacket>) Class.forName(ClientPacket.class.getCanonicalName() + "$" + protocol.name);
+				packetClass = (Class<? extends ClientPacket>) Class.forName(packetPackageName + "$" + protocol.name);
 			} catch (ClassNotFoundException e) {
 				packetClass = ClientPacket.class;
 			}

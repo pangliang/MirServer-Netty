@@ -1,7 +1,7 @@
-import com.zhaoxiaodan.mirserver.db.entities.Config
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.entities.PlayerItem
-import com.zhaoxiaodan.mirserver.db.objects.Merchant
+import com.zhaoxiaodan.mirserver.gameserver.entities.Config
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.entities.PlayerItem
+import com.zhaoxiaodan.mirserver.gameserver.objects.Merchant
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine
 
 public void main(Merchant merchant, Player player) {

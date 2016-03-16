@@ -1,6 +1,6 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
-import com.zhaoxiaodan.mirserver.db.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
 
 import java.util.ArrayList;
 import java.util.List;

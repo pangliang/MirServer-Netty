@@ -2,10 +2,10 @@ package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.alibaba.fastjson.JSON;
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.Config;
-import com.zhaoxiaodan.mirserver.db.entities.StdMonster;
-import com.zhaoxiaodan.mirserver.db.objects.Monster;
-import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Config;
+import com.zhaoxiaodan.mirserver.gameserver.entities.StdMonster;
+import com.zhaoxiaodan.mirserver.gameserver.objects.Monster;
+import com.zhaoxiaodan.mirserver.gameserver.types.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 import org.apache.logging.log4j.LogManager;

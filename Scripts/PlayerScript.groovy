@@ -1,7 +1,7 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.types.Gender
-import com.zhaoxiaodan.mirserver.db.types.Job
-import com.zhaoxiaodan.mirserver.db.types.MapPoint
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.types.Gender
+import com.zhaoxiaodan.mirserver.gameserver.types.Job
+import com.zhaoxiaodan.mirserver.gameserver.types.MapPoint
 import com.zhaoxiaodan.mirserver.gameserver.engine.ItemEngine
 import com.zhaoxiaodan.mirserver.gameserver.engine.MagicEngine
 

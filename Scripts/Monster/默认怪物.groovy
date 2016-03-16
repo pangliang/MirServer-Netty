@@ -1,7 +1,7 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.objects.BaseObject
-import com.zhaoxiaodan.mirserver.db.objects.Monster
-import com.zhaoxiaodan.mirserver.db.types.Direction
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.objects.BaseObject
+import com.zhaoxiaodan.mirserver.gameserver.objects.Monster
+import com.zhaoxiaodan.mirserver.gameserver.types.Direction
 
 class 默认怪物 {
     void onTick(Monster monster, long now) {

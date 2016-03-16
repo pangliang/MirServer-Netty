@@ -1,8 +1,8 @@
 package com.zhaoxiaodan.mirserver.gameserver.engine;
 
 import com.alibaba.fastjson.JSON;
-import com.zhaoxiaodan.mirserver.db.objects.Merchant;
-import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.gameserver.objects.Merchant;
+import com.zhaoxiaodan.mirserver.gameserver.types.MapPoint;
 import com.zhaoxiaodan.mirserver.utils.ConfigFileLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

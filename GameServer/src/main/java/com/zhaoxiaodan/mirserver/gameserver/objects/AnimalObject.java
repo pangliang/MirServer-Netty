@@ -1,10 +1,11 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.gameserver.objects;
 
-import com.zhaoxiaodan.mirserver.db.entities.Config;
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.types.Color;
-import com.zhaoxiaodan.mirserver.db.types.Direction;
-import com.zhaoxiaodan.mirserver.db.types.MapPoint;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Config;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.types.Color;
+import com.zhaoxiaodan.mirserver.gameserver.types.Direction;
+import com.zhaoxiaodan.mirserver.gameserver.types.MapPoint;
+import com.zhaoxiaodan.mirserver.gameserver.GameServerPackets;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
@@ -48,7 +49,7 @@ public abstract class AnimalObject extends BaseObject {
 			source.kill(this);
 			return;
 		} else {
-			broadcast(new ServerPacket.Struck(this.inGameId, this.hp, this.maxHp, damage));
+			broadcast(new GameServerPackets.Struck(this.inGameId, this.hp, this.maxHp, damage));
 			return;
 		}
 	}
@@ -60,7 +61,7 @@ public abstract class AnimalObject extends BaseObject {
 
 	public boolean walk(Direction direction) {
 		if (this.move(direction, (short) 1)) {
-			broadcast(new ServerPacket.Action(Protocol.SM_WALK, this));
+			broadcast(new GameServerPackets.Action(Protocol.SM_WALK, this));
 			return true;
 		} else
 			return false;
@@ -68,7 +69,7 @@ public abstract class AnimalObject extends BaseObject {
 
 	public boolean run(Direction direction) {
 		if (this.move(direction, (short) 2)) {
-			broadcast(new ServerPacket.Action(Protocol.SM_RUN, this));
+			broadcast(new GameServerPackets.Action(Protocol.SM_RUN, this));
 			return true;
 		} else
 			return false;
@@ -76,7 +77,7 @@ public abstract class AnimalObject extends BaseObject {
 
 	public boolean turn(Direction direction) {
 		this.direction = direction;
-		broadcast(new ServerPacket.Turn(this));
+		broadcast(new GameServerPackets.Turn(this));
 		return true;
 	}
 

@@ -1,7 +1,8 @@
 package com.zhaoxiaodan.mirserver.loginserver.handlers;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import com.zhaoxiaodan.mirserver.db.entities.User;
+import com.zhaoxiaodan.mirserver.gameserver.entities.User;
+import com.zhaoxiaodan.mirserver.loginserver.LoginClientPackets;
 import com.zhaoxiaodan.mirserver.network.Handler;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
@@ -14,7 +15,7 @@ public class NewUserHandler extends Handler {
 
 	@Override
 	public void onPacket(ClientPacket packet) throws Exception {
-		ClientPacket.NewUser newUser = (ClientPacket.NewUser) packet;
+		LoginClientPackets.NewUser newUser = (LoginClientPackets.NewUser) packet;
 
 		List<User> list = DB.query(User.class,Restrictions.eq("loginId", newUser.user.loginId));
 		if(list.size() > 0)

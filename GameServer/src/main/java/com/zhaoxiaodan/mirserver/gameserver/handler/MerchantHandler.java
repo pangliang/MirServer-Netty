@@ -1,7 +1,8 @@
 package com.zhaoxiaodan.mirserver.gameserver.handler;
 
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.objects.Merchant;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.objects.Merchant;
+import com.zhaoxiaodan.mirserver.gameserver.GameClientPackets;
 import com.zhaoxiaodan.mirserver.gameserver.engine.MerchantEngine;
 import com.zhaoxiaodan.mirserver.gameserver.engine.ScriptEngine;
 import com.zhaoxiaodan.mirserver.network.Protocol;
@@ -13,7 +14,7 @@ public class MerchantHandler extends PlayerHandler {
 	@Override
 	public void onPacket(ClientPacket packet, Player player) throws Exception {
 
-		ClientPacket.Merchant request = (ClientPacket.Merchant) packet;
+		GameClientPackets.Merchant request = (GameClientPackets.Merchant) packet;
 
 		Merchant merchant = MerchantEngine.getMerchant(request.npcInGameId);
 		if (merchant == null) {

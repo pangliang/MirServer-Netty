@@ -1,8 +1,8 @@
-package com.zhaoxiaodan.mirserver.db.objects;
+package com.zhaoxiaodan.mirserver.gameserver.objects;
 
-import com.zhaoxiaodan.mirserver.db.entities.Config;
-import com.zhaoxiaodan.mirserver.db.entities.Player;
-import com.zhaoxiaodan.mirserver.db.entities.StdItem;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Config;
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player;
+import com.zhaoxiaodan.mirserver.gameserver.entities.StdItem;
 import com.zhaoxiaodan.mirserver.utils.NumUtil;
 
 public class DropItem extends BaseObject {

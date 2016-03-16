@@ -1,5 +1,5 @@
-import com.zhaoxiaodan.mirserver.db.entities.Player
-import com.zhaoxiaodan.mirserver.db.entities.PlayerItem
+import com.zhaoxiaodan.mirserver.gameserver.entities.Player
+import com.zhaoxiaodan.mirserver.gameserver.entities.PlayerItem
 import com.zhaoxiaodan.mirserver.gameserver.engine.MapEngine
 
 void onEat(Player player, PlayerItem playerItem) {
