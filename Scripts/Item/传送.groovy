@@ -15,6 +15,5 @@ void onEat(Player player, PlayerItem playerItem) {
 }
 
 void 回城卷(Player player) {
-
     player.enterMap(MapEngine.getStartPoint());
 }

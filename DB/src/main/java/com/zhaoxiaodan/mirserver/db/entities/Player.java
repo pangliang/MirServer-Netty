@@ -460,8 +460,8 @@ public class Player extends AnimalObject {
 		session.sendPacket(new ServerPacket(Protocol.SM_CLEAROBJECTS));
 
 		// 新图信息发给玩家
-		session.sendPacket(new ServerPacket.ChangeMap(this.inGameId, mapPoint.x, mapPoint.y, (short) 0, mapPoint.mapId));
-		session.sendPacket(new ServerPacket.MapDescription(-1, mapInfo.mapDescription));
+		session.sendPacket(new ServerPacket.ChangeMap(this.inGameId, mapPoint.x, mapPoint.y, (short) 0, mapInfo.mapFileId));
+		session.sendPacket(new ServerPacket.MapDescription(-1, mapInfo.mapId));
 
 		// 是否安全区
 		session.sendPacket(new ServerPacket(2, Protocol.SM_AREASTATE, (byte) 0, (byte) 0, (byte) 0));

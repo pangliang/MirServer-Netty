@@ -10,9 +10,14 @@ public void main(Merchant merchant, Player player) {
     merchant.sayTo(msg, player);
 }
 
+public void 新人练级地图(Merchant merchant, Player player) {
+    player.takeNewItem("回城卷")
+    player.enterMap("新人练级");
+}
+
 public void 野猪营(Merchant merchant, Player player) {
     player.takeNewItem("回城卷")
-    player.enterMap("D2006");
+    player.enterMap("野猪营");
 }
 
 

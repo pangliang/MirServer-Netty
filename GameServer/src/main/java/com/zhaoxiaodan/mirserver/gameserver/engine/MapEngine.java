@@ -18,7 +18,6 @@ public class MapEngine {
 	private static Logger logger = LogManager.getLogger();
 
 	private static final String MAP_CONFIG_FILE        = "Envir/MapInfo.cfg";
-	private static final String MINIMAP_CONFIG_FILE    = "Envir/MiniMap.cfg";
 	private static final String STARTPOINT_CONFIG_FILE = "Envir/StartPoint.cfg";
 	private static final String MAP_FILES_DIR          = "Envir/Maps";
 
@@ -43,13 +42,14 @@ public class MapEngine {
 		public short height;
 
 		public String mapId;
+		public String mapFileId;
 		/**
 		 * 地图文件里的地图标题
 		 */
 		public String mapTitle;
 		/**
-		 * 自己配置的地图名
-		 */
+		* 自己配置的地图名
+		*/
 		public String mapDescription;
 		public String miniMapId;
 
@@ -184,7 +184,7 @@ public class MapEngine {
 
 			FileInputStream in = null;
 			try {
-				String filename = MAP_FILES_DIR + "/" + mapId + ".map";
+				String filename = MAP_FILES_DIR + "/" + mapFileId + ".map";
 				try {
 					in = new FileInputStream(filename);
 				} catch (FileNotFoundException e) {
@@ -229,10 +229,10 @@ public class MapEngine {
 			for (Tile[] tiles : mapInfo.tiles) {
 				for (Tile tile : tiles) {
 					for (BaseObject object : tile.objects.values())
-						try{
+						try {
 							object.onTick(now);
-						}catch(Exception e){
-							logger.error("onTick error", null,  e);
+						} catch (Exception e) {
+							logger.error("onTick error", null, e);
 						}
 
 				}
@@ -243,7 +243,6 @@ public class MapEngine {
 	public static synchronized void reload() throws Exception {
 		Map<String, MapInfo> maps = new HashMap<>();
 		reloadMapInfo(maps);
-		reloadMiniMap(maps);
 		MapPoint startPoint = reloadStartPoint(maps);
 
 		// 保证读出来的无异常再替换原有的;
@@ -253,11 +252,12 @@ public class MapEngine {
 
 	private static void reloadMapInfo(Map<String, MapInfo> maps) throws Exception {
 
-		for (StringTokenizer tokenizer : ConfigFileLoader.load(MAP_CONFIG_FILE, 2)) {
+		for (StringTokenizer tokenizer : ConfigFileLoader.load(MAP_CONFIG_FILE, 3)) {
 
 			MapInfo info = new MapInfo();
+			info.mapFileId = (String) tokenizer.nextElement();
 			info.mapId = (String) tokenizer.nextElement();
-			info.mapDescription = (String) tokenizer.nextElement();
+			info.miniMapId = (String) tokenizer.nextElement();
 
 			if (maps.containsKey(info.mapId)) {
 				throw new Exception("地图名 " + info.mapId + " 的配置已经存在, 检查是否重复.");
@@ -266,17 +266,6 @@ public class MapEngine {
 			info.loadMapFile();
 
 			maps.put(info.mapId, info);
-		}
-	}
-
-	private static void reloadMiniMap(Map<String, MapInfo> maps) throws Exception {
-		for (StringTokenizer tokenizer : ConfigFileLoader.load(MINIMAP_CONFIG_FILE, 2)) {
-			String fileName = (String) tokenizer.nextElement();
-			if (!maps.containsKey(fileName)) {
-				logger.error("小地图对应的地图 {} 在地图配置中不存在, 先在地图配置文件 {} 中添加", fileName, MAP_CONFIG_FILE);
-				continue;
-			}
-			maps.get(fileName).miniMapId = (String) tokenizer.nextElement();
 		}
 	}
 
