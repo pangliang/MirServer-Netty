@@ -67,7 +67,7 @@ public class Engine {
         for (Class engineClazz : engineClasses) {
             String funName = "onTick";
             try {
-                Method onTickMethod = engineClazz.getDeclaredMethod(funName, long.class);
+                final Method onTickMethod = engineClazz.getDeclaredMethod(funName, long.class);
                 new Thread() {
                     @Override
                     public void run() {

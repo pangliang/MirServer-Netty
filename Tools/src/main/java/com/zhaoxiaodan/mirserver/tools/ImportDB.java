@@ -16,10 +16,10 @@ public class ImportDB {
 
     public Map<String, String> tables = new HashMap<String, String>() {
         {
-            put("STDITEM", "数据文件/MIR2_PUBLIC_SERVERINFO.csv");
-            put("STDITEM", "数据文件/MIR2_PUBLIC_STDITEM.csv");
-            put("STDMONSTER", "数据文件/MIR2_PUBLIC_STDMONSTER.csv");
-            put("STDMAGIC", "数据文件/MIR2_PUBLIC_STDMAGIC.csv");
+            put("SERVERINFO", "StdDataCVS/MIR2_PUBLIC_SERVERINFO.csv");
+            put("STDITEM", "StdDataCVS/MIR2_PUBLIC_STDITEM.csv");
+            put("STDMONSTER", "StdDataCVS/MIR2_PUBLIC_STDMONSTER.csv");
+            put("STDMAGIC", "StdDataCVS/MIR2_PUBLIC_STDMAGIC.csv");
         }
     };
 

@@ -50,7 +50,7 @@ public class PacketProxy {
 	public void run() throws Exception {
 		try {
 
-			Bootstrap server = new Bootstrap();
+			final Bootstrap server = new Bootstrap();
 			server.group(new NioEventLoopGroup())
 					.channel(NioSocketChannel.class)
 					.handler(
