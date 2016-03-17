@@ -12,7 +12,6 @@ void onCreate(Player c) {
 }
 
 void setBaseAbility(Player player) {
-    player.levelUp(1);
 
     player.hp = 100;
     player.maxHp = 100;
@@ -30,7 +29,7 @@ void setBaseAbility(Player player) {
     player.baseAbility.SC = 1;
     player.baseAbility.SC2 = 1;
 
-    player.MaxExp = getMaxExp(player.Level + 1);
+    player.levelUp(28);
 
     player.gold = 10000;
     player.gameGold = 100;

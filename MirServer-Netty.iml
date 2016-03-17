@@ -50,5 +50,6 @@
     <orderEntry type="library" name="Gradle: org.codehaus.groovy:groovy-all:2.4.6" level="project" />
     <orderEntry type="module" module-name="LoginServer" />
     <orderEntry type="module" module-name="GameServer" />
+    <orderEntry type="module" module-name="Tools" />
   </component>
 </module>
