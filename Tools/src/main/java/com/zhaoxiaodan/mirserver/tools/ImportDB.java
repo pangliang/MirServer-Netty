@@ -1,7 +1,6 @@
 package com.zhaoxiaodan.mirserver.tools;
 
 import com.zhaoxiaodan.mirserver.db.DB;
-import org.hibernate.Session;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -11,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImportDB {
-
-    Session db;
 
     public Map<String, String> tables = new HashMap<String, String>() {
         {
@@ -34,21 +31,20 @@ public class ImportDB {
 
 
             for (String tableName : tables.keySet()) {
-                db = DB.getSession();
-                db.getTransaction().begin();
+               DB.getSession().getTransaction().begin();
 
                 String dataFile = tables.get(tableName);
                 doImport(tableName, dataFile);
                 System.out.println("导入 " + dataFile + " 成功 !!!");
 
-                db.getTransaction().commit();
+                DB.getSession().getTransaction().commit();
             }
 
-
+            DB.getSession().close();
         } catch (Exception e) {
             e.printStackTrace();
-            if (db.isOpen())
-                db.getTransaction().rollback();
+            if (DB.getSession().isOpen())
+                DB.getSession().getTransaction().rollback();
 
         }
     }
@@ -57,7 +53,7 @@ public class ImportDB {
     public void doImport(String tableName, String fileName) throws Exception {
 
         String deleteSql = "delete from " + tableName + ";";
-        db.createSQLQuery(deleteSql).executeUpdate();
+        DB.getSession().createSQLQuery(deleteSql).executeUpdate();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), Charset.forName("UTF-8")));
         String line = reader.readLine();
@@ -79,7 +75,7 @@ public class ImportDB {
 
             String sql = sb.substring(0, sb.length() - 1) + ";";
 //            System.out.println(sql);
-            db.createSQLQuery(sql).executeUpdate();
+            DB.getSession().createSQLQuery(sql).executeUpdate();
         }
     }
 

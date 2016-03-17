@@ -10,20 +10,25 @@ import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
 
 public class SelectCharacterHandler extends UserHandler {
 
-	@Override
-	public void onPacket(ClientPacket packet, User user) throws Exception {
+    @Override
+    public void onPacket(ClientPacket packet, User user) throws Exception {
 
-		LoginClientPackets.SelectCharacter request = (LoginClientPackets.SelectCharacter) packet;
+        LoginClientPackets.SelectCharacter request = (LoginClientPackets.SelectCharacter) packet;
 
-		for(Player player :user.players){
-			if(player.name.equals(request.characterName)){
-				session.sendPacket(new LoginServerPackets.StartPlay("192.168.0.166",7400));
-				return;
-			}
-		}
+        if (null == user.selectServer) {
+            session.sendPacket(new ServerPacket(Protocol.SM_STARTFAIL));
+            return;
+        }
 
-		session.sendPacket(new ServerPacket(Protocol.SM_STARTFAIL));
-		return ;
-	}
+        for (Player player : user.players) {
+            if (player.name.equals(request.characterName)) {
+                session.sendPacket(new LoginServerPackets.StartPlay(user.selectServer.gameServerIp, user.selectServer.gameServerPort));
+                return;
+            }
+        }
+
+        session.sendPacket(new ServerPacket(Protocol.SM_STARTFAIL));
+        return;
+    }
 
 }

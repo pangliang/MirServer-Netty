@@ -4,7 +4,6 @@ import com.zhaoxiaodan.mirserver.db.DB;
 import com.zhaoxiaodan.mirserver.loginserver.handlers.LoginHandler;
 import com.zhaoxiaodan.mirserver.network.PacketDispatcher;
 import com.zhaoxiaodan.mirserver.network.debug.ExceptionHandler;
-import com.zhaoxiaodan.mirserver.network.debug.MyLoggingHandler;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketBit6Decoder;
 import com.zhaoxiaodan.mirserver.network.decoder.ClientPacketDecoder;
 import com.zhaoxiaodan.mirserver.network.encoder.ServerPacketBit6Encoder;
@@ -55,13 +54,13 @@ public class LoginServer {
 									new ClientPacketBit6Decoder(),
 //									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 									new ClientPacketDecoder(LoginClientPackets.class.getCanonicalName()),
-									new MyLoggingHandler(MyLoggingHandler.Type.Read),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Read),
 
 									//编码
 									new ServerPacketBit6Encoder(),
 //									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 									new ServerPacketEncoder(),
-									new MyLoggingHandler(MyLoggingHandler.Type.Write),
+//									new MyLoggingHandler(MyLoggingHandler.Type.Write),
 
 									new ExceptionHandler(),
 									//分包分发
