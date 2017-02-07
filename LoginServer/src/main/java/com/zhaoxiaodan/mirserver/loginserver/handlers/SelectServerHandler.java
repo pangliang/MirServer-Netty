@@ -8,7 +8,6 @@ import com.zhaoxiaodan.mirserver.loginserver.LoginServerPackets;
 import com.zhaoxiaodan.mirserver.network.Protocol;
 import com.zhaoxiaodan.mirserver.network.packets.ClientPacket;
 import com.zhaoxiaodan.mirserver.network.packets.ServerPacket;
-import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 import java.util.Random;
@@ -19,7 +18,7 @@ public class SelectServerHandler extends UserHandler {
     public void onPacket(ClientPacket packet, User user) throws Exception {
         LoginClientPackets.SelectServer selectServer = (LoginClientPackets.SelectServer) packet;
 
-        List<ServerInfo> list = DB.query(ServerInfo.class, Restrictions.eq("name", selectServer.serverName));
+        List<ServerInfo> list = DB.query(ServerInfo.class);//, Restrictions.eq("name", selectServer.serverName));
         if (1 != list.size()) {
             session.sendPacket(new ServerPacket(Protocol.SM_ID_NOTFOUND));
             return;
