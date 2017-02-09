@@ -37,7 +37,7 @@ public class LoginServer {
 		// db init
 		DB.init();
 
-		EventLoopGroup bossGroup   = new NioEventLoopGroup(4);
+		EventLoopGroup bossGroup   = new NioEventLoopGroup(1);
 		EventLoopGroup workerGroup = new NioEventLoopGroup(10);
 		try {
 			ServerBootstrap b = new ServerBootstrap();
